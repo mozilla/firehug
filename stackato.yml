@@ -1,0 +1,8 @@
+name: firehug
+mem: 128M
+framework:
+  type: node
+hooks:
+  pre-staging:
+    - npm install
+ignores: ['node_modules', '.git']
