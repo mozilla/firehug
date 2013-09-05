@@ -8,20 +8,16 @@ var querystring = require('querystring');
 var hbs = require('hbs');
 var connect = require('connect');
 var cookie = require('connect').utils;
-var apikey = require('./apikey-real');
+var nconf = require('nconf');
 
-var config =  {
-	sessionSecret: 'REALLY SECRET!',
-	sessionName: 'sid',
-	treshold: 5000
-};
+nconf.argv().env().file({ file: 'local.json' });
 
 var app = express();
 
 // Setup express
 app.use(express.logger());
 app.use(express.bodyParser());
-var cookieParser = express.cookieParser(config.sessionSecret);
+var cookieParser = express.cookieParser(nconf.get('sessionSecret'));
 app.use(cookieParser);
 app.use(express.static(__dirname + '/public'));
 
@@ -34,7 +30,7 @@ app.engine('html', hbs.__express);
 // Define storage object and cookie name for later use
 var sessionStore = new connect.session.MemoryStore();
 app.use(express.session({
-	key: config.sessionName,
+	key: nconf.get('sessionName'),
 	store: sessionStore
 }));
 
@@ -51,7 +47,8 @@ app.get('/realmozillians', function(request, response) {
   var options = {
     host: 'mozillians.org',
     headers: {accept: 'application/json, text/plain, */*'},
-    path: 'https://mozillians.org/api/v1/users/?limit=500&format=json&app_name=' + apikey.getAPIAppName() + '&app_key=' + apikey.getAPIKey() + '&' + querystring,
+    path: 'https://mozillians.org/api/v1/users/?limit=500&format=json&app_name=' +
+    			nconf.get('apiApp') + '&app_key=' + nconf.get('apiKey') + '&' + querystring,
     method: 'GET'
   };
 
@@ -60,16 +57,17 @@ app.get('/realmozillians', function(request, response) {
 
   https.get(options, function(backendResponse) {
     console.log("statusCode: ", backendResponse.statusCode);
-    console.log("headers: ", backendResponse.headers);   
+    console.log("headers: ", backendResponse.headers);
 
-     var data = [];
-     backendResponse.on('data', function(chunk) {
-       data.push(chunk);
-     });
-     backendResponse.on('end', function() {
-       var result = JSON.parse(data.join(''))
-       response.send(result);
-     });
+		var data = [];
+		backendResponse.on('data', function(chunk) {
+		 data.push(chunk);
+		});
+
+		backendResponse.on('end', function() {
+		 var result = JSON.parse(data.join(''))
+		 response.send(result);
+		});
   });
 
 });
@@ -112,7 +110,7 @@ sio.set('authorization', function(data, accept) {
 		if (err) {
 			return accept(err, false);
 		}
-		var sid = data.sessionId = data.signedCookies[config.sessionName];
+		var sid = data.sessionId = data.signedCookies[nconf.get('sessionName')];
 
 		sessionStore.get(sid, function(err, session) {
 			if (err || !session) {
@@ -178,7 +176,7 @@ sio.on('connection', function(socket) {
 			time: time
 		});
 
-		var treshold = config.treshold;
+		var treshold = nconf.get('treshold');
 		// Initial set
 		var seeds = persistent.announces.filter(function(other) {
 			return other.email != email && (time - other.time) < treshold;
