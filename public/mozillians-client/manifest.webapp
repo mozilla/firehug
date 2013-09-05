@@ -1,0 +1,22 @@
+{
+  "version": "0.1",
+  "name": "AngularMozillians",
+  "description": "AngularJS front-end to mozillians.org",
+  "launch_path": "/index.html",
+  "icons": {
+    "16": "./icon-16.png",
+    "48": "./icon-48.png",
+    "128": "./icon-128.png"
+  },
+  "developer": {
+    "name": "Bill Walker",
+    "url": "http://wfwalker.github.com/angular-mozillians/"
+  },
+  "installs_allowed_from": ["*"],
+  "locales": {
+  },
+  "default_locale": "en",
+  "permissions": {
+    "geolocation": {}
+  }
+}
