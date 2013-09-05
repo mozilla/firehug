@@ -8,6 +8,7 @@ var querystring = require('querystring');
 var hbs = require('hbs');
 var connect = require('connect');
 var cookie = require('connect').utils;
+var apikey = require('./apikey-real');
 
 var config =  {
 	sessionSecret: 'REALLY SECRET!',
@@ -36,6 +37,44 @@ app.use(express.session({
 	key: config.sessionName,
 	store: sessionStore
 }));
+
+app.get('/realmozillians', function(request, response) {
+  console.log("query ");
+  console.log(request.query);
+
+  var querystring = '';
+
+  for (var paramName in request.query) {
+    querystring += '&' + paramName + '=' + request.query[paramName];
+  }
+
+  var options = {
+    host: 'mozillians.org',
+    headers: {accept: 'application/json, text/plain, */*'},
+    path: 'https://mozillians.org/api/v1/users/?limit=500&format=json&app_name=' + apikey.getAPIAppName() + '&app_key=' + apikey.getAPIKey() + '&' + querystring,
+    method: 'GET'
+  };
+
+  console.log("options");
+  console.log(options);
+
+  https.get(options, function(backendResponse) {
+    console.log("statusCode: ", backendResponse.statusCode);
+    console.log("headers: ", backendResponse.headers);   
+
+     var data = [];
+     backendResponse.on('data', function(chunk) {
+       data.push(chunk);
+     });
+     backendResponse.on('end', function() {
+       var result = JSON.parse(data.join(''))
+       response.send(result);
+     });
+  });
+
+});
+
+
 
 // Start express server
 var server = http.createServer(app);
