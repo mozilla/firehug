@@ -1,0 +1,7 @@
+{
+    "sessionSecret": "secret",
+    "sessionName": "sid",
+    "threshold": 5000,
+    "apiKey": "",
+    "apiApp": ""
+}

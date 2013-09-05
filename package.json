@@ -8,7 +8,8 @@
     "connect": "2.x",
     "socket.io": "0.9.x",
     "cookie": "0.1.x",
-    "hbs": "2.3.x"
+    "hbs": "2.3.x",
+    "nconf": ">= 0.6.7"
   },
   "scripts": {
     "start": "node app.js"
