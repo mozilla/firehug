@@ -8,9 +8,12 @@ var querystring = require('querystring');
 var hbs = require('hbs');
 var connect = require('connect');
 var cookie = require('connect').utils;
+var request = require('request');
 var nconf = require('nconf');
 
-nconf.argv().env().file({ file: 'local.json' });
+nconf.argv().env().file({
+	file: 'local.json'
+});
 
 var app = express();
 
@@ -34,44 +37,44 @@ app.use(express.session({
 	store: sessionStore
 }));
 
-app.get('/realmozillians', function(request, response) {
-  console.log("query ");
-  console.log(request.query);
+app.get('/realmozillians', function(req, res) {
+	console.log('query %j', req.query);
 
-  var querystring = '';
+	if (!nconf.get('apiKey')) {
+		res.send(500, 'Oops, missing configuration!');
+		return;
+	}
 
-  for (var paramName in request.query) {
-    querystring += '&' + paramName + '=' + request.query[paramName];
-  }
+	var querystring = {
+		limit: 500,
+		format: 'json',
+		app_name: nconf.get('apiApp'),
+		app_key: nconf.get('apiKey')
+	};
 
-  var options = {
-    host: 'mozillians.org',
-    headers: {accept: 'application/json, text/plain, */*'},
-    path: 'https://mozillians.org/api/v1/users/?limit=500&format=json&app_name=' +
-    			nconf.get('apiApp') + '&app_key=' + nconf.get('apiKey') + '&' + querystring,
-    method: 'GET'
-  };
+	// TODO: Sanatize and whitelist filters
+	for (var paramName in req.query) {
+		querystring[paramName] = req.query[paramName];
+	}
 
-  console.log("options");
-  console.log(options);
-
-  https.get(options, function(backendResponse) {
-    console.log("statusCode: ", backendResponse.statusCode);
-    console.log("headers: ", backendResponse.headers);
-
-		var data = [];
-		backendResponse.on('data', function(chunk) {
-		 data.push(chunk);
-		});
-
-		backendResponse.on('end', function() {
-		 var result = JSON.parse(data.join(''))
-		 response.send(result);
-		});
-  });
-
+	request({
+		method: 'GET',
+		strictSSL: true,
+		headers: {
+			accept: 'application/json, text/plain, */*'
+		},
+		uri: 'https://mozillians.org/api/v1/users/',
+		qs: querystring
+	}, function(err, r, body) {
+		if (err || r.statusCode != 200) {
+			console.error('Request failed', err, r.statusCode, body);
+			res.send(500, 'Oops, something failed!');
+			return;
+		}
+		var result = JSON.parse(body);
+		res.send(result);
+	});
 });
-
 
 
 // Start express server
@@ -85,8 +88,8 @@ server.listen(process.env.PORT || 5000, function() {
 var sio = io.listen(server);
 
 sio.configure(function() {
-  sio.set('transports', ['xhr-polling']);
-  sio.set('polling duration', 20);
+	sio.set('transports', ['xhr-polling']);
+	sio.set('polling duration', 20);
 });
 
 var sockets = {};
