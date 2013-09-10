@@ -1,0 +1,91 @@
+#!/usr/bin/env node
+
+var http = require('http');
+var https = require('https');
+var redis = require('redis');
+var client = redis.createClient();
+var nconf = require('nconf');
+var gravatar = require('gravatar');
+
+nconf.argv().env().file({ file: '../local.json' });
+
+var LIMIT = 100;
+var API_URL = 'https://mozillians.org/api/v1/users/?limit=' + LIMIT +
+              '&app_name=' + nconf.get('apiApp') + '&is_vouched=true&app_key=' +
+              nconf.get('apiKey') + '&offset=';
+
+var totalPages = 0;
+var offset = 0;
+
+var options = {
+  host: 'mozillians.org',
+  headers: {accept: 'application/json, text/plain, */*'},
+  path: API_URL + offset,
+  method: 'GET'
+};
+
+// Save user to redis
+var setUser = function (user) {
+  var id = user.id;
+  var avatar = user.photo || '';
+
+  if (!avatar) {
+    avatar = gravatar.url(user.email, { d: nconf.get('domain') + '/default_avatar.png' });
+  }
+
+  client.hmset('user:' + id, {
+    fullName: user.full_name,
+    ircName: user.ircname,
+    email: user.email,
+    avatar: avatar
+  }, function (err) {
+    if (err) {
+      console.log('Could not save user ', err);
+    } else {
+      client.hgetall('user:' + id, function (err, u) {
+        console.log(u.fullName, u.avatar)
+      });
+    }
+  });
+};
+
+var getUsers = function (first, callback) {
+  https.get(options, function (backendResponse) {
+    var data = [];
+
+    backendResponse.on('data', function (chunk) {
+      data.push(chunk);
+    });
+
+    backendResponse.on('end', function () {
+      var result = JSON.parse(data.join(''));
+
+      if (first) {
+        totalPages = Math.floor(result.meta.total_count / LIMIT); // removing the first response
+      }
+
+      offset ++;
+
+      options.path = API_URL + (offset * LIMIT);
+
+      if (result) {
+        for (var user in result.objects) {
+          setUser(result.objects[user]);
+        }
+      }
+
+      if (callback) {
+        callback();
+      }
+    });
+  });
+};
+
+// This is the first hit to the API. Now we get the remainder and calculate the
+// rest of the offsets available from the metadata.
+getUsers(true, function () {
+  for (var i = 0; i < totalPages; i ++) {
+    // Subsequent offsets
+    getUsers(false);
+  }
+});
