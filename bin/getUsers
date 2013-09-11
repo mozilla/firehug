@@ -26,27 +26,30 @@ var options = {
 
 // Save user to redis
 var setUser = function (user) {
-  var id = user.id;
   var avatar = user.photo || '';
+  var email = user.email.toLowerCase();
 
-  if (!avatar) {
-    avatar = gravatar.url(user.email, { d: nconf.get('domain') + '/default_avatar.png' });
-  }
-
-  client.hmset('user:' + id, {
-    fullName: user.full_name,
-    ircName: user.ircname,
-    email: user.email,
-    avatar: avatar
-  }, function (err) {
-    if (err) {
-      console.log('Could not save user ', err);
-    } else {
-      client.hgetall('user:' + id, function (err, u) {
-        console.log(u.fullName, u.avatar)
-      });
+  if (email) {
+    if (!avatar) {
+      avatar = gravatar.url(email, { d: nconf.get('domain') + '/default_avatar.png' });
     }
-  });
+
+    client.hmset('user:' + email, {
+      fullName: user.full_name,
+      ircName: user.ircname,
+      email: user.email,
+      avatar: avatar
+    }, function (err) {
+      if (err) {
+        console.log('Could not save user ', err);
+      } else {
+        client.sadd('emails', email);
+        client.hgetall('user:' + email, function (err, u) {
+          console.log(u.fullName, u.avatar)
+        });
+      }
+    });
+  }
 };
 
 var getUsers = function (first, callback) {
