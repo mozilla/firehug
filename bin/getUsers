@@ -10,17 +10,17 @@ var gravatar = require('gravatar');
 nconf.argv().env().file({ file: '../local.json' });
 
 var LIMIT = 100;
-var API_URL = 'https://mozillians.org/api/v1/users/?limit=' + LIMIT +
+var DOMAIN = nconf.get('mozilliansURL');
+var API_URL = DOMAIN + '/api/v1/users/?limit=' + LIMIT +
               '&app_name=' + nconf.get('apiApp') + '&is_vouched=true&app_key=' +
-              nconf.get('apiKey') + '&offset=';
+              nconf.get('apiKey');
 
-var totalPages = 0;
-var offset = 0;
+var finished = false;
 
 var options = {
-  host: 'mozillians.org',
+  host: nconf.get('mozilliansURL').split('://')[1],
   headers: {accept: 'application/json, text/plain, */*'},
-  path: API_URL + offset,
+  path: API_URL,
   method: 'GET'
 };
 
@@ -29,14 +29,14 @@ var setUser = function (user) {
   var avatar = user.photo || '';
   var email = user.email.toLowerCase();
 
-  if (email) {
+  if (email && user.username) {
     if (!avatar) {
       avatar = gravatar.url(email, { d: nconf.get('domain') + '/default_avatar.png' });
     }
 
     client.hmset('user:' + email, {
       fullName: user.full_name,
-      ircName: user.ircname,
+      username: user.username,
       email: user.email,
       avatar: avatar
     }, function (err) {
@@ -45,50 +45,51 @@ var setUser = function (user) {
       } else {
         client.sadd('emails', email);
         client.hgetall('user:' + email, function (err, u) {
-          console.log(u.fullName, u.avatar)
+       //   console.log(u.fullName, u.avatar)
         });
       }
     });
   }
 };
 
-var getUsers = function (first, callback) {
-  https.get(options, function (backendResponse) {
-    var data = [];
+var getUsers = function (callback) {
+  process.nextTick(function () {
+    https.get(options, function (backendResponse) {
+      var data = [];
 
-    backendResponse.on('data', function (chunk) {
-      data.push(chunk);
-    });
+      backendResponse.on('data', function (chunk) {
+        data.push(chunk);
+      });
 
-    backendResponse.on('end', function () {
-      var result = JSON.parse(data.join(''));
+      backendResponse.on('end', function () {
+        var result = JSON.parse(data.join(''));
 
-      if (first) {
-        totalPages = Math.floor(result.meta.total_count / LIMIT); // removing the first response
-      }
-
-      offset ++;
-
-      options.path = API_URL + (offset * LIMIT);
-
-      if (result) {
-        for (var user in result.objects) {
-          setUser(result.objects[user]);
+        if (result.meta.next === null) {
+          finished = true;
+        } else {
+          options.path = DOMAIN + result.meta.next;
+          console.log(options.path)
         }
-      }
 
-      if (callback) {
+        if (result) {
+          for (var user in result.objects) {
+            setUser(result.objects[user]);
+          }
+        }
+
         callback();
-      }
+      });
     });
   });
 };
 
-// This is the first hit to the API. Now we get the remainder and calculate the
-// rest of the offsets available from the metadata.
-getUsers(true, function () {
-  for (var i = 0; i < totalPages; i ++) {
-    // Subsequent offsets
-    getUsers(false);
-  }
-});
+(function getMoreUsers() {
+  getUsers(function () {
+    if (!finished) {
+      getMoreUsers();
+    } else {
+      console.log('finished');
+      process.exit();
+    }
+  });
+}());
