@@ -1,0 +1,132 @@
+#!/usr/bin/env node
+
+var redis = require('redis');
+var client = redis.createClient();
+var nconf = require('nconf');
+var GoogleSpreadsheet = require('google-spreadsheets');
+
+nconf.argv().env().file({ file: '../local.json' });
+
+var getObjSize = function (obj) {
+  var size = 0;
+  var key;
+
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      size ++;
+    }
+  }
+
+  return size;
+};
+
+var setType = function (opts, cell) {
+  var value = cell.value || '';
+
+  switch (cell.col) {
+    case '1':
+      opts.startTime = value;
+      break;
+
+    case '2':
+      opts.endTime = value;
+      break;
+
+    case '3':
+      opts.location = value;
+      break;
+
+    case '4':
+      opts.name = value;
+      break;
+
+    case '5':
+      opts.description = value;
+      break;
+
+    case '6':
+      opts.link = value;
+      break;
+
+    case '7':
+      opts.speaker = value;
+      break;
+  }
+
+  return opts;
+};
+
+var readWorksheet = function (worksheet, worksheetLength, currCount) {
+  process.nextTick(function () {
+    var title = worksheet.title.toLowerCase();
+
+    worksheet.cells({
+      range: 'R1C1:R' + worksheet.rowCount + 'C' + worksheet.colCount
+
+    }, function (err, cells) {
+      if (!err) {
+        var rowCount = 1;
+        var count = 1;
+
+        for (var cell in cells) {
+          var count = 1;
+          var events = {};
+
+          for (var ev in cells[cell]) {
+            var row = cells[cell][ev];
+            var opts = {};
+
+            if (row && count > 1) {
+              for (var c in row) {
+                opts = setType(opts, row[c]);
+              }
+            }
+
+            if (getObjSize(opts)) {
+              events[rowCount] = opts;
+              rowCount ++;
+            }
+
+            count ++;
+          }
+
+          client.set('schedule:' + title, JSON.stringify(events),
+            function (err) {
+
+            if (err) {
+              console.log('Could not save schedule ', title, events);
+            } else {
+              client.sadd('schedules', title);
+              client.get('schedule:' + title, function (err, evs) {
+                if (evs) {
+                  console.log(JSON.parse(evs));
+                }
+
+                if (worksheetLength === currCount) {
+                  console.log('finished');
+                  process.exit();
+                }
+              });
+            }
+          });
+        }
+      }
+    });
+  });
+};
+
+GoogleSpreadsheet({
+  key: nconf.get('googleKey')
+
+}, function (err, spreadsheets) {
+  if (err) {
+    throw new Error('Error reading spreadsheets data ', err);
+
+  } else {
+    var worksheetLength = spreadsheets.worksheets.length;
+
+    for (var i = 0; i < worksheetLength; i ++) {
+      readWorksheet(spreadsheets.worksheets[i], worksheetLength - 1, i);
+    }
+  }
+});
