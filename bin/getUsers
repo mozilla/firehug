@@ -45,7 +45,7 @@ var setUser = function (user) {
       } else {
         client.sadd('emails', email);
         client.hgetall('user:' + email, function (err, u) {
-       //   console.log(u.fullName, u.avatar)
+          console.log(u.fullName, u.avatar)
         });
       }
     });
@@ -68,7 +68,6 @@ var getUsers = function (callback) {
           finished = true;
         } else {
           options.path = DOMAIN + result.meta.next;
-          console.log(options.path)
         }
 
         if (result) {
