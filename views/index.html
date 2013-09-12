@@ -1,67 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
+<html ng-app="summit" ng-controller="AppCtrl as app">
 <head>
-		<meta charset="utf-8">
-		<title>FireHug</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=false;">
-		<link href="//netdna.bootstrapcdn.com/bootswatch/3.0.0/flatly/bootstrap.min.css" rel="stylesheet">
-		<link rel="stylesheet" href="app.css">
+	<meta charset="utf-8">
+	<meta name="viewport" content="user-scalable=no, width=device-width">
+	<title>Mozilla Summit</title>
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
-	<header class="navbar navbar-fixed-top" role="banner">
+	<header class="navbar" role="banner">
 		<div class="container">
 			<div class="navbar-header">
-				<a href="./" class="navbar-brand">The Summit FireHug</a>
+				<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a href="/" class="navbar-brand">Summit</a>
 			</div>
+			<nav class="collapse navbar-collapse" role="navigation" ng-show="ready">
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="#/home">Home</a>
+					</li>
+					<li>
+						<a href="#/schedule">Schedule</a>
+					</li>
+					<li>
+						<a href="#/logout">Logout</a>
+					</li>
+				</ul>
+			</nav>
 		</div>
 	</header>
-	<div class="container" id="main">
-		<div class="col-md-6 col-md-offset-3 text-center" id="panel-login">
-			<a id="action-login">
-				<img src="https://developer.mozilla.org/files/3961/persona_sign_in_black.png" alt="Sign in with Persona" />
-			</a>
-			<p class="text-muted">Sign in to gather and issue hugs!</p>
-		</div>
 
-		<div id="panel-welcome">
-			<div class="col-md-6">
-				<p class="lead">Hey, I just met you. This is crazy.</p>
-				<p>
-					<button class="btn btn-lg btn-block btn-primary" id="action-announce"><strong>Let's Hug!</strong></button>
-				</p>
-			</div>
-			<div class="col-md-6">
-				<div class="panel panel-info" id="panel-announce-empty-info">
-					<div class="panel-heading">No hugs found, try again!</div>
-					<div class="panel-body">Make sure you are pressing "Let's Hug" at the same time as people nearby to connect.</div>
-				</div>
-				<p class="text-muted">How to hug with other Mozillians:</p>
-				<ol class="list-group">
-					<li class="list-group-item">
-						<strong>1.</strong> Gather together, having FireHug app open
-					</li>
-					<li class="list-group-item">
-						<strong>2.</strong> Press <em>"Let's Hug!"</em> at the same time
-					</li>
-					<li class="list-group-item">
-						<strong>3.</strong> Give a warm welcome hug
-					</li>
-				</ol>
-			</div>
-		</div>
+	<main class="container" role="main">
+		<div ng-view></div>
+	</main>
 
-		<div id="panel-announce" class="col-md-6 col-md-offset-3">
-			<div class="list-group"></div>
-			<p class="text-primary text-loading">Gathering and issuing hugs, please wait</p>
-			<p class="text-success panels-success">Select the Mozillians that you hugged and want to keep!</p>
-			<p class="panels-success">
-				<button class="btn btn-block btn-success" id="action-announce-save">I'm Done</button>
-			</p>
-		</div>
+	<footer class="container" role="contentinfo">
+		<p>Footer</p>
+	</footer>
+
+	<div ng-hide="ready" id="splash-screen">
+		<h1>{Splashscreen}</h1>
 	</div>
-	<div id="loading">
-		Fueling the fire …
-	</div>
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="app.js"></script>
+
+	<!-- Scripts -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.js"></script>
+	<script src="//code.angularjs.org/1.2.0-rc.2/angular.js"></script>
+	<script src="//code.angularjs.org/1.2.0-rc.2/angular-route.js"></script>
+	<script src="//code.angularjs.org/1.2.0-rc.2/angular-cookies.js"></script>
+	<script src="js/app.js"></script>
+
 </body>
 </html>

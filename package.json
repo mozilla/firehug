@@ -10,7 +10,9 @@
     "cookie": "0.1.x",
     "hbs": "2.3.x",
     "request": "2.27.x",
-    "nconf": ">= 0.6.7"
+    "nconf": ">= 0.6.7",
+    "stylus": ">= 0.37.0",
+    "nib": "~1.0.1"
   },
   "scripts": {
     "start": "node app.js"

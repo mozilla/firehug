@@ -6,6 +6,8 @@ var io = require('socket.io');
 var https = require('https');
 var querystring = require('querystring');
 var hbs = require('hbs');
+var stylus = require('stylus');
+var nib = require('nib');
 var connect = require('connect');
 var cookie = require('connect').utils;
 var request = require('request');
@@ -22,6 +24,15 @@ app.use(express.logger());
 app.use(express.bodyParser());
 var cookieParser = express.cookieParser(nconf.get('sessionSecret'));
 app.use(cookieParser);
+
+app.use(stylus.middleware({
+	src: __dirname + '/public',
+	compile: function compile(str, path) {
+   return stylus(str)
+     .set('filename', path)
+     .use(nib());
+ }
+}));
 app.use(express.static(__dirname + '/public'));
 
 // Template engine
@@ -37,6 +48,45 @@ app.use(express.session({
 	store: sessionStore
 }));
 
+app.get('/', function(request, response) {
+	if (!nconf.get('audience')) {
+		nconf.set('audience', request.headers.host);
+	}
+	response.render('index');
+});
+
+app.get('/hugs', function(request, response) {
+	if (!nconf.get('audience')) {
+		nconf.set('audience', request.headers.host);
+	}
+	response.render('hugs/index');
+});
+
+app.post('/verify', function(request, response) {
+	var assertion = request.params.assertion;
+	if (!assertion) {
+		response.send({
+			status: 0,
+			error: 'Missing assertion!'
+		});
+	}
+	Users.emailFromAssertion(assertion, nconf.get('audience'), function(err, result) {
+		console.log(err, result);
+		if (err) {
+			response.send({
+				status: 0,
+				error: 'Assertion failed!'
+			});
+			return;
+		}
+		response.send({
+			status: 1,
+			email: result.email
+		});
+	});
+})
+
+// FIXME: This is just an example
 app.get('/realmozillians', function(req, res) {
 	console.log('query %j', req.query);
 
@@ -97,8 +147,7 @@ var sockets = {};
 var persistent = {
 	users: {},
 	announces: [],
-	ignitions: [],
-	audience: null
+	ignitions: []
 };
 
 function broadcastStatus() {
@@ -152,7 +201,7 @@ sio.on('connection', function(socket) {
 	broadcastStatus();
 
 	socket.on('assertLogin', function(data) {
-		Users.emailFromAssertion(data.assertion, persistent.audience, function(err, result) {
+		Users.emailFromAssertion(data.assertion, nconf.get('audience'), function(err, result) {
 			console.log(err, result);
 			if (err) {
 				socket.emit('login', {
@@ -225,13 +274,6 @@ sio.on('connection', function(socket) {
 		}
 		broadcastStatus();
 	});
-});
-
-app.get('/', function(request, response) {
-	if (!persistent.audience) {
-		persistent.audience = request.headers.host;
-	}
-	response.render('index');
 });
 
 var Users = {
