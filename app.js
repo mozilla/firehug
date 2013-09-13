@@ -20,7 +20,7 @@ nconf.argv().env().file({
 var app = express();
 
 // Setup express
-app.use(express.logger());
+// app.use(express.logger());
 app.use(express.bodyParser());
 var cookieParser = express.cookieParser(nconf.get('sessionSecret'));
 app.use(cookieParser);
@@ -52,9 +52,20 @@ app.get('/', function(request, response) {
 	if (!nconf.get('audience')) {
 		nconf.set('audience', request.headers.host);
 	}
-	response.render('index');
+	var payload = {};
+	if (request.session.email) {
+		console.log('/', request.session.email);
+		payload.user = {
+			email: request.session.email
+		};
+	}
+
+	response.render('index', {
+		jsonPayload: JSON.stringify(payload)
+	});
 });
 
+// DEPRECATED: Remove when hugs got merged/killed
 app.get('/hugs', function(request, response) {
 	if (!nconf.get('audience')) {
 		nconf.set('audience', request.headers.host);
@@ -63,28 +74,54 @@ app.get('/hugs', function(request, response) {
 });
 
 app.post('/verify', function(request, response) {
-	var assertion = request.params.assertion;
+	console.log('/verify', !!request.body.assertion);
+
+	var assertion = request.body.assertion;
 	if (!assertion) {
-		response.send({
-			status: 0,
-			error: 'Missing assertion!'
+		response.status(400).send({
+			error: 'No assertion'
 		});
 	}
+	console.log('Verifying with %s', nconf.get('audience'));
 	Users.emailFromAssertion(assertion, nconf.get('audience'), function(err, result) {
 		console.log(err, result);
 		if (err) {
-			response.send({
-				status: 0,
-				error: 'Assertion failed!'
+			return response.status(400).send({
+				error: 'Invalid assertion'
 			});
-			return;
 		}
+
+		var email = result.email;
+
+		// FIXME: Verify email and get location/group
+
+		request.session.email = email;
 		response.send({
 			status: 1,
-			email: result.email
+			user: {
+				email: email
+			}
 		});
 	});
-})
+});
+
+app.get('/schedule', function(request, response) {
+	if (!request.session.email) {
+		return response.status(401).send({status: 0});
+	}
+
+	response.send({
+		schedule: [{
+
+		}]
+	});
+});
+
+app.post('/logout', function(request, response) {
+ 	console.log('/logout', request.session ? request.session.email : 'none');
+	request.session.destroy();
+	response.status(200).send();
+});
 
 // FIXME: This is just an example
 app.get('/realmozillians', function(req, res) {

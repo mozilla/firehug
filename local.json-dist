@@ -1,6 +1,8 @@
 {
+    "domain": "http://localhost:5000",
     "sessionSecret": "secret",
     "sessionName": "sid",
+    "mozilliansURL": "https://mozillians.org",
     "threshold": 5000,
     "apiKey": "",
     "apiApp": ""

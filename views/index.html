@@ -4,36 +4,35 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="user-scalable=no, width=device-width">
 	<title>Mozilla Summit</title>
+	<meta name="fragment" content="!">
 
 	<!-- CSS -->
 	<link rel="stylesheet" href="css/bootstrap.css" />
 	<link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
-	<header class="navbar" role="banner">
+	<header class="navbar navbar-default navbar-inverse" role="banner" ng-show="user">
 		<div class="container">
 			<div class="navbar-header">
+				<!--
 				<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a href="/" class="navbar-brand">Summit</a>
+				-->
+				<a href="#!/" class="navbar-brand" ng-show="path != '/'">◀</a>
 			</div>
+			<!--
 			<nav class="collapse navbar-collapse" role="navigation" ng-show="ready">
 				<ul class="nav navbar-nav">
 					<li>
-						<a href="#/home">Home</a>
-					</li>
-					<li>
-						<a href="#/schedule">Schedule</a>
-					</li>
-					<li>
-						<a href="#/logout">Logout</a>
+						<a href="#!/logout">Logout</a>
 					</li>
 				</ul>
 			</nav>
+			-->
 		</div>
 	</header>
 
@@ -42,11 +41,14 @@
 	</main>
 
 	<footer class="container" role="contentinfo">
-		<p>Footer</p>
+		<hr>
+		<p class="text-center">
+			<a href="#!/logout" ng-show="user">Logout</a>
+		</p>
 	</footer>
 
 	<div ng-hide="ready" id="splash-screen">
-		<h1>{Splashscreen}</h1>
+		<h1>{Logo}</h1>
 	</div>
 
 	<!-- Scripts -->
@@ -56,6 +58,8 @@
 	<script src="//code.angularjs.org/1.2.0-rc.2/angular-route.js"></script>
 	<script src="//code.angularjs.org/1.2.0-rc.2/angular-cookies.js"></script>
 	<script src="js/app.js"></script>
-
+	<script>
+		bootstrapApp({{{jsonPayload}}});
+	</script>
 </body>
 </html>
