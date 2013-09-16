@@ -4,7 +4,7 @@ window.bootstrapApp = function(payload) {
   // Call only once
   window.bootstrapApp = function() {};
 
-  var app = angular.module('summit', ['ngRoute', 'ngCookies']);
+  var app = angular.module('summit', ['ngRoute']);
 
   app.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
