@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="summit" ng-controller="AppCtrl as app">
+<html ng-app="summit" ng-controller="AppCtrl as app" ng-class="{'state-ready': ready}">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="user-scalable=no, width=device-width">
@@ -7,56 +7,38 @@
 	<meta name="fragment" content="!">
 
 	<!-- CSS -->
-	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="css/vendor/bootstrap.css" />
 	<link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
-	<header class="navbar navbar-default navbar-inverse" role="banner" ng-show="user">
-		<div class="container">
-			<div class="navbar-header">
-				<!--
-				<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				-->
-				<a href="#!/" class="navbar-brand" ng-show="path != '/'">◀</a>
-			</div>
-			<!--
-			<nav class="collapse navbar-collapse" role="navigation" ng-show="ready">
-				<ul class="nav navbar-nav">
-					<li>
-						<a href="#!/logout">Logout</a>
-					</li>
-				</ul>
-			</nav>
-			-->
-		</div>
+	<header class="container" role="banner">
+		<nav class="row" ng-show="user">
+			<a href="#!/" class="menu-icn menu-back" ng-show="path != '/'"></a>
+			<ul>
+				<li>
+					<a href="#" class="menu-icn menu-dropdown"></a>
+					<ul>
+						<li>
+							<a href="/#!/logout">Logout</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
 	</header>
 
 	<main class="container" role="main">
 		<div ng-view></div>
 	</main>
 
-	<footer class="container" role="contentinfo">
-		<hr>
-		<p class="text-center">
-			<a href="#!/logout" ng-show="user">Logout</a>
-		</p>
-	</footer>
-
-	<div ng-hide="ready" id="splash-screen">
-		<h1>{Logo}</h1>
+	<div id="splash-screen">
+		<img src="/img/splash.png" alt="Splash" />
 	</div>
 
 	<!-- Scripts -->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.js"></script>
+	<script src="js/vendor/jquery.js"></script>
 	<script src="//code.angularjs.org/1.2.0-rc.2/angular.js"></script>
 	<script src="//code.angularjs.org/1.2.0-rc.2/angular-route.js"></script>
-	<script src="//code.angularjs.org/1.2.0-rc.2/angular-cookies.js"></script>
 	<script src="js/app.js"></script>
 	<script>
 		bootstrapApp({{{jsonPayload}}});

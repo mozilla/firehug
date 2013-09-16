@@ -1,12 +1,115 @@
 @import 'nib'
+@import 'config'
+@import 'fonts'
+@import 'type'
 
 html, body
 	margin 0
 	padding 0
 	min-height 100%
 
-#main
-	margin-top 0px
+body
+	background #f5f1e8 url('/img/sandstone/bg-sand.png') repeat
+	background url('/img/sandstone/bg-gradient-sand.png') repeat-x 0 0, url('/img/sandstone/bg-sand.png') repeat 0 0, #f5f1e8
+
+a
+	color text-color-link
+	text-decoration none
+	&:hover, &:active
+		color text-color-link-hover
+		text-decoration underline
+
+	&.row
+		display block
+		padding 12px 0
+
+
+header
+	height 50px
+
+	nav
+
+		a
+			display block
+			cursor pointer
+			&, &:link, &:visited
+				color text-color-secondary
+
+			&.menu-icn
+				height 50px
+				width 50px
+
+		.menu-back
+			float left
+			background url('/img/icn-back.png') 50% 50% no-repeat
+
+		ul
+			margin 0
+			padding 0
+
+		> ul
+			float right
+			list-style none
+
+			> li
+				display block
+				position relative
+
+				ul
+					position absolute
+					width 200px
+					right 0px
+					top 45px
+					z-index 99
+					background-color #fff
+					border-radius 10px
+					box-shadow 0 1px 3px 0 rgba(0, 0, 0, .5)
+					display none
+
+					li
+						display block
+
+						a
+							padding 12px 35px 12px 10px
+							background 94% 50% no-repeat url('/img/sandstone/arrow-go.png')
+
+							&:hover
+								text-decoration none
+								color #fff
+								background-image url('/img/sandstone/arrow-go.png'), linear-gradient(#43a6e2, #247ac1)
+
+						&:first-child
+							a
+								border-radius 10px 10px 0 0
+
+						&:last-child
+							a
+								border-radius 0 0 10px 10px
+
+						&:first-child:last-child
+							a
+								border-radius 10px 10px 10px 10px
+
+				&:before
+					content ""
+					display block
+					width 28px
+					height 10px
+					background no-repeat url('/media/img/sandstone/menu-point.png')
+					position absolute
+					left 12px
+					top -10px
+
+				&:hover, &:active, &.hover
+					ul
+						display block
+
+		.menu-dropdown
+			background url('/img/sandstone/icn-menu.png') 50% 8px no-repeat
+
+			&:hover, &:active
+				background-position 50% -92px
+
 
 #splash-screen
 	position absolute
@@ -14,8 +117,30 @@ html, body
 	left 0
 	height 100%
 	width 100%
-	z-index 999
-	background-color rgba(0, 0, 0, 1)
-	opacity 0.8
-	color #fff
+	z-index 99
 	text-align center
+	margin 20px 0 0 0
+	display none
+	background url('/img/logo-home.png') no-repeat 50% 295px
+
+@media only screen and (max-width: 480px)
+
+	// Splash screen only for mobile screens
+	#splash-screen
+		display block
+
+	html, body
+		overflow hidden
+
+	#main, nav
+		display none
+
+	.state-ready
+		#splash-screen
+			display none
+		html, body
+			overflow-y auto
+
+	.state-ready
+		#main, nav
+			display block
