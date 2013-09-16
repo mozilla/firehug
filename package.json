@@ -12,10 +12,11 @@
     "request": "2.27.x",
     "nconf": ">= 0.6.7",
     "stylus": ">= 0.37.0",
-    "nib": "=> 1.0.1",
+    "nib": ">= 1.0.1",
     "hiredis": ">= 0.1.15",
     "redis": ">= 0.8.4",
-    "gravatar": ">= 1.0.6"
+    "gravatar": ">= 1.0.6",
+    "google-spreadsheets": ">= 0.3.0"
   },
   "scripts": {
     "start": "node app.js"

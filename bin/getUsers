@@ -29,7 +29,7 @@ var setUser = function (user) {
   var avatar = user.photo || '';
   var email = user.email.toLowerCase();
 
-  if (email && user.username) {
+  if (email) {
     if (!avatar) {
       avatar = gravatar.url(email, { d: nconf.get('domain') + '/default_avatar.png' });
     }
