@@ -23,6 +23,14 @@ nconf.argv().env().file({
 
 var app = express();
 
+var isLoggedIn = function(req, res, next) {
+  if (req.session.email) {
+    next();
+  } else {
+    return res.status(401).send({status: 0});
+  }
+};
+
 // Setup express
 if (!process.NODE_ENV) {
   app.use(express.logger());
@@ -114,26 +122,48 @@ app.post('/verify', function(request, response) {
   });
 });
 
-app.get('/schedule', function(request, response) {
-  if (!request.session.email) {
-    return response.status(401).send({status: 0});
-  }
+app.get('/schedule', function(req, res, next) {
+  client.smembers('schedules', function (err, schedules) {
+    if (err) {
+      res.status(400).send();
+    } else {
+      var scheduleList = {};
+      var count = 0;
+      var title;
 
-  response.send({
-    schedule: [{
+      schedules.forEach(function (title, idx) {
+        client.get('schedule:' + title, function (err, s) {
+          count ++;
 
-    }]
+          if (err) {
+            res.status(400).send({ error: err });
+          } else {
+            try {
+              scheduleList[title] = JSON.parse(s);
+            } catch(e) {
+              console.log('Could not parse schedule ', s);
+            }
+          }
+
+          if (count === schedules.length) {
+            res.send({
+              schedule: scheduleList
+            });
+          }
+        });
+      });
+    }
   });
+
 });
 
 app.post('/logout', function(request, response) {
-  console.log('/logout', request.session ? request.session.email : 'none');
   request.session.destroy();
   response.status(200).send();
 });
 
 // FIXME: This is just an example
-app.get('/realmozillians', function(req, res) {
+app.get('/realmozillians', isLoggedIn, function(req, res) {
   console.log('query %j', req.query);
   var users = [];
 
