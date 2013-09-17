@@ -137,6 +137,14 @@ a.row {
   display: block;
   padding: 12px 0;
 }
+.events {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+time {
+  display: block;
+}
 header {
   height: 50px;
 }

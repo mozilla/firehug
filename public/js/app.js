@@ -246,9 +246,18 @@ window.bootstrapApp = function(payload) {
     }
   ]);
 
-  app.controller('ScheduleCtrl', ['$scope',
-    function($scope) {
+  app.controller('ScheduleCtrl', ['$scope', '$http',
+    function($scope, $http) {
       console.log('Schedule');
+
+      $http({
+        url: '/schedule',
+        method: 'GET'
+      }).then(function(data) {
+        $scope.data = data.data.schedule;
+      }, function(data, status) {
+        $scope.status = status;
+      });
     }
   ]);
 

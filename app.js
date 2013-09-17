@@ -122,12 +122,13 @@ app.post('/verify', function(request, response) {
   });
 });
 
-app.get('/schedule', function(req, res, next) {
+app.get('/schedule', isLoggedIn, function (req, res, next) {
   client.smembers('schedules', function (err, schedules) {
     if (err) {
       res.status(400).send();
     } else {
       var scheduleList = {};
+      var sortedSchedule = {};
       var count = 0;
       var title;
 
@@ -146,15 +147,28 @@ app.get('/schedule', function(req, res, next) {
           }
 
           if (count === schedules.length) {
+            var keys = [];
+
+            for (var key in scheduleList) {
+              if (scheduleList.hasOwnProperty(key)) {
+                keys.push(key);
+              }
+            }
+
+            keys.sort();
+
+            for (var i = 0; i < keys.length; i ++) {
+              sortedSchedule[keys[i]] = scheduleList[keys[i]];
+            }
+
             res.send({
-              schedule: scheduleList
+              schedule: sortedSchedule
             });
           }
         });
       });
     }
   });
-
 });
 
 app.post('/logout', function(request, response) {
@@ -162,7 +176,6 @@ app.post('/logout', function(request, response) {
   response.status(200).send();
 });
 
-// FIXME: This is just an example
 app.get('/realmozillians', isLoggedIn, function(req, res) {
   console.log('query %j', req.query);
   var users = [];
@@ -193,13 +206,11 @@ app.get('/realmozillians', isLoggedIn, function(req, res) {
   });
 });
 
-
 // Start express server
 var server = http.createServer(app);
 server.listen(process.env.PORT || 5000, function() {
   console.log('Listening on %j', server.address());
 });
-
 
 // Start socket.io server
 var sio = io.listen(server);
@@ -399,11 +410,29 @@ var Users = {
         console.log('found email ', email);
         session.email = email;
 
+        // TODO: Change to proper city name based on mozillians api. Currently hardcoded for testing.
+        var location = 'summit2013-toronto';
+
+        switch (location) {
+          case 'summit2013-toronto':
+            session.location = 'to';
+            break;
+
+          case 'summit2013-santa-clara':
+            session.location = 'sc';
+            break;
+
+          default:
+            session.location = 'br';
+            break;
+        }
+
         var user = {
           fullName: u.fullName,
           email: u.email,
           ircName: u.ircName,
-          announceResults: []
+          announceResults: [],
+          city: location
         };
 
         user.sessionId = session.sessionId;

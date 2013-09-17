@@ -1,4 +1,12 @@
 <article class="col-sm-8 col-sm-offset-2">
-	<h2>Schedule</h2>
-	<h3>{TODO}</h3>
+  <h2>Schedule</h2>
+  <ul class="events">
+    <li data-ng-repeat="(key, value) in data">
+      <div data-ng-repeat="(k, v) in value">
+        <h3>{{ v.name }}</h3>
+        <time>{{ v.startTime }} - {{ v.endTime }}</time>
+        <p>{{ v.location }}</p>
+      </div>
+    </li>
+  </ul>
 </article>
