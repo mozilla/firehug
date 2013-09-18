@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "repository": "git@github.com:digitarald/firehug.git",
   "private": true,
+  "license": "MPL",
   "dependencies": {
     "express": "3.x",
     "connect": "2.x",
