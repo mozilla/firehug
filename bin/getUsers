@@ -9,22 +9,9 @@ var nconf = require('nconf');
 var gravatar = require('gravatar');
 var async = require('async');
 
-nconf.argv().env().file({
-  file: __dirname + '/../local.json'
-});
-
-function getRedisClient() {
-  if (process.env.VCAP_SERVICES) {
-    var redisconf = JSON.parse(process.env.VCAP_SERVICES).redis[0].credentials;
-    var db = redis.createClient(redisconf.port,
-      redisconf.host);
-    db.auth(redisconf.password);
-  } else {
-    var db = redis.createClient();
-  }
-  return db;
-}
-var client = getRedisClient();
+var shared = require('./../shared');
+var nconf = shared.nconf;
+var client = shared.redisClient;
 
 var LIMIT = 100;
 var DOMAIN = nconf.get('mozilliansURL');

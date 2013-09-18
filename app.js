@@ -11,28 +11,13 @@ var nib = require('nib');
 var connect = require('connect');
 var cookie = require('connect').utils;
 var request = require('request');
-var redis = require('redis');
-var nconf = require('nconf');
+
+var shared = require('./shared');
+var nconf = shared.nconf;
+var client = shared.redisClient;
 
 // Job scheduler
 require('./bin');
-
-nconf.argv().env().file({
-  file: 'local.json'
-});
-
-function getRedisClient() {
-  if (process.env.VCAP_SERVICES) {
-    var redisconf = JSON.parse(process.env.VCAP_SERVICES).redis[0].credentials;
-    var db = redis.createClient(redisconf.port,
-      redisconf.host);
-    db.auth(redisconf.password);
-  } else {
-    var db = redis.createClient();
-  }
-  return db;
-}
-var client = getRedisClient();
 
 var app = express();
 
@@ -225,7 +210,8 @@ app.get('/realmozillians', isLoggedIn, function(req, res) {
 // Start express server
 var server = http.createServer(app);
 server.listen(process.env.PORT || 5000, function() {
-  console.log('Listening on %j', server.address());
+  var address = server.address();
+  console.log('Listening on http://%s:%d', address.address, address.port);
 });
 
 // Start socket.io server

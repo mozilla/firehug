@@ -7,34 +7,12 @@ var nconf = require('nconf');
 var async = require('async');
 var GoogleSpreadsheet = require('google-spreadsheets');
 
-nconf.argv().env().file({
-  file: __dirname + '/../local.json'
-});
-
-function getRedisClient() {
-  if (process.env.VCAP_SERVICES) {
-    var redisconf = JSON.parse(process.env.VCAP_SERVICES).redis[0].credentials;
-    var db = redis.createClient(redisconf.port,
-      redisconf.host);
-    db.auth(redisconf.password);
-  } else {
-    var db = redis.createClient();
-  }
-  return db;
-}
-var client = getRedisClient();
+var shared = require('./../shared');
+var nconf = shared.nconf;
+var client = shared.redisClient;
 
 var getObjSize = function (obj) {
-  var size = 0;
-  var key;
-
-  for (key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      size ++;
-    }
-  }
-
-  return size;
+  return Object.keys(obj).length;
 };
 
 var setType = function (opts, cell) {
@@ -127,7 +105,6 @@ var readWorksheet = function (worksheet, next) {
 
 GoogleSpreadsheet({
   key: nconf.get('googleKey')
-
 }, function (err, spreadsheets) {
   if (err) {
     throw new Error('Error reading spreadsheets data ', err);

@@ -10,12 +10,13 @@ var rule30min = new schedule.RecurrenceRule();
 rule30min.minute = 30;
 
 schedule.scheduleJob(rule15min, function() {
-	console.log('getUsers');
+	console.log('Starting getUsers');
 	fork(__dirname + '/getUsers');
 });
 fork(__dirname + '/getUsers');
 
 schedule.scheduleJob(rule30min, function() {
-	console.log('getSchedule');
+	console.log('Starting getSchedule');
 	fork(__dirname + '/getSchedule');
 });
+fork(__dirname + '/getSchedule');
