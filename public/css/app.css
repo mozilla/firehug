@@ -107,6 +107,8 @@ small {
 }
 .lead {
   font-size: 18px;
+  color: #666;
+  font-family: 'Open Sans Light', sans-serif;
 }
 .text-center {
   text-align: center;
@@ -240,6 +242,44 @@ header nav .menu-dropdown:hover,
 header nav .menu-dropdown:active {
   background-position: 50% -92px;
 }
+#view-home img {
+  margin-top: -30px;
+}
+#view-home ul {
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+}
+#view-home ul li {
+  display: block;
+}
+#view-home ul li a {
+  display: block;
+  color: #fefefe;
+  background-color: #11acdd;
+  font-family: 'Open Sans Light', sans-serif;
+  font-size: 28px;
+  padding: 7px 0 10px;
+  margin-bottom: 10px;
+  -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+}
+#view-home ul li a:hover,
+#view-home ul li a:active {
+  text-decoration: none;
+}
+#view-home ul li:nth-child(2) a {
+  background-color: #4d4e53;
+  color: #ffcb41;
+}
+#view-home ul li:nth-child(3) a {
+  background-color: #ffcb41;
+  color: #4d4e53;
+}
+#view-home ul li:nth-child(4) a {
+  background-color: #e1ddd5;
+  color: #11acdd;
+}
 #splash-screen {
   position: absolute;
   top: 0;
@@ -255,10 +295,7 @@ header nav .menu-dropdown:active {
 @media only screen and (max-width: 480px) {
   #splash-screen {
     display: block;
-  }
-  html,
-  body {
-    overflow: hidden;
+    cursor: progress;
   }
   #main,
   nav {
@@ -266,10 +303,6 @@ header nav .menu-dropdown:active {
   }
   .state-ready #splash-screen {
     display: none;
-  }
-  .state-ready html,
-  .state-ready body {
-    overflow-y: auto;
   }
   .state-ready #main,
   .state-ready nav {

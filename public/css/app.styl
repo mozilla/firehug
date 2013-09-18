@@ -117,6 +117,46 @@ header
 			&:hover, &:active
 				background-position 50% -92px
 
+#view-home
+
+	img
+		margin-top -30px
+
+	ul
+		list-style none
+		margin 20px 0
+		padding 0
+
+		li
+			display block
+
+			a
+				display block
+				color #fefefe
+				background-color #11acdd
+				font-family 'Open Sans Light', sans-serif
+				font-size 28px
+				padding 7px 0 10px
+				margin-bottom 10px
+				box-shadow 0 1px 0 rgba(0, 0, 0, 0.1)
+
+				&:hover, &:active
+					text-decoration none
+
+			&:nth-child(2)
+				a
+					background-color #4d4e53
+					color #ffcb41
+
+			&:nth-child(3)
+				a
+					background-color #ffcb41
+					color #4d4e53
+
+			&:nth-child(4)
+				a
+					background-color #e1ddd5
+					color #11acdd
 
 #splash-screen
 	position absolute
@@ -135,19 +175,15 @@ header
 	// Splash screen only for mobile screens
 	#splash-screen
 		display block
-
-	html, body
-		overflow hidden
+		cursor progress
 
 	#main, nav
 		display none
 
+	// JS and Persona ready!
 	.state-ready
+
 		#splash-screen
 			display none
-		html, body
-			overflow-y auto
-
-	.state-ready
 		#main, nav
 			display block
