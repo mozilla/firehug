@@ -8,7 +8,7 @@ How to run:
     npm install
     npm start
 
-Get missing API keys for `local.json` from [@digitarald](https://github.com/digitarald).
+Open an issue if you need API keys for `local.json`.
 
 ## License
 
