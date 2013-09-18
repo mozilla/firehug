@@ -20,7 +20,8 @@
     "google-spreadsheets": ">= 0.3.0",
     "edit-google-spreadsheet": ">= 0.2.2",
     "async": ">= 0.2.9",
-    "node-schedule": ">= 0.1.10"
+    "node-schedule": ">= 0.1.10",
+    "connect-redis": ">= 1.4.5"
   },
   "scripts": {
     "start": "node app.js"

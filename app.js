@@ -9,6 +9,7 @@ var hbs = require('hbs');
 var stylus = require('stylus');
 var nib = require('nib');
 var connect = require('connect');
+var connectRedis = require('connect-redis');
 var cookie = require('connect').utils;
 var request = require('request');
 
@@ -54,10 +55,13 @@ app.set('views', __dirname + '/views');
 app.engine('html', hbs.__express);
 
 // Define storage object and cookie name for later use
-var sessionStore = new connect.session.MemoryStore();
+var RedisStore = connectRedis(express);
+var sessionStore = new RedisStore({
+  client: client
+});
 app.use(express.session({
-  key: nconf.get('sessionName'),
-  store: sessionStore
+  store: sessionStore,
+  key: nconf.get('sessionName')
 }));
 
 app.get('/', function(request, response) {
