@@ -246,15 +246,34 @@ window.bootstrapApp = function(payload) {
     }
   ]);
 
-  app.controller('ScheduleCtrl', ['$scope', '$http',
-    function($scope, $http) {
+  app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http',
+    function($scope, $rootScope, $http) {
       console.log('Schedule');
 
       $http({
         url: '/schedule',
         method: 'GET'
       }).then(function(data) {
-        $scope.data = data.data.schedule;
+        $scope.friday = [];
+        $scope.saturday = [];
+        $scope.sunday = [];
+        $scope.location = $rootScope.user.location;
+
+        for (var s in data.data.schedule) {
+          var evt = data.data.schedule[s];
+
+          if (s.indexOf('4') > -1) {
+            $scope.friday.push(evt);
+
+          } else if (s.indexOf('5') > -1) {
+            $scope.saturday.push(evt);
+
+          } else if (s.indexOf('6') > -1) {
+            $scope.sunday.push(evt);
+
+          }
+        }
+
       }, function(data, status) {
         $scope.status = status;
       });

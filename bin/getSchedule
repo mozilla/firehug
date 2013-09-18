@@ -77,6 +77,8 @@ var readWorksheet = function (worksheet, next) {
           for (var c in row) {
             opts = setType(opts, row[c]);
           }
+
+          opts.id = title.split('-')[0].toLowerCase();
         }
 
         if (getObjSize(opts)) {

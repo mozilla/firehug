@@ -139,12 +139,35 @@ a.row {
   display: block;
   padding: 12px 0;
 }
-.events {
+article {
+  position: relative;
+}
+article > section {
+  left: 0;
+  position: absolute;
+  width: 100%;
+}
+article > section h3.friday {
+  text-align: left;
+}
+article > section h3.saturday {
+  text-align: center;
+}
+article > section h3.sunday {
+  text-align: right;
+}
+article > section .events {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-time {
+article > section .city {
+  width: 100%;
+}
+article > section .city.hidden {
+  display: none;
+}
+article > section time {
   display: block;
 }
 header {

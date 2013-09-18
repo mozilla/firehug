@@ -23,13 +23,34 @@ a
 		display block
 		padding 12px 0
 
-.events
-	list-style-type none
-	margin 0
-	padding 0
+article
+	position relative
+	> section
+		left 0
+		position absolute
+		width 100%
 
-time
-	display block
+		h3
+			&.friday
+				text-align left
+			&.saturday
+				text-align center
+			&.sunday
+				text-align right
+
+		.events
+			list-style-type none
+			margin 0
+			padding 0
+
+		.city
+			width 100%
+
+			&.hidden
+				display none
+
+		time
+			display block
 
 header
 	height 50px
