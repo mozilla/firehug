@@ -1,21 +1,36 @@
 #!/usr/bin/env node
 
+'use strict';
+
 var http = require('http');
 var https = require('https');
 var redis = require('redis');
-var client = redis.createClient();
 var nconf = require('nconf');
 var gravatar = require('gravatar');
+var async = require('async');
 
-nconf.argv().env().file({ file: '../local.json' });
+nconf.argv().env().file({
+  file: __dirname + '/../local.json'
+});
+
+function getRedisClient() {
+  if (process.env.VCAP_SERVICES) {
+    var redisconf = JSON.parse(process.env.VCAP_SERVICES).redis[0].credentials;
+    var db = redis.createClient(redisconf.port,
+      redisconf.host);
+    db.auth(redisconf.password);
+  } else {
+    var db = redis.createClient();
+  }
+  return db;
+}
+var client = getRedisClient();
 
 var LIMIT = 100;
 var DOMAIN = nconf.get('mozilliansURL');
 var API_URL = DOMAIN + '/api/v1/users/?limit=' + LIMIT +
               '&app_name=' + nconf.get('apiApp') + '&is_vouched=true&app_key=' +
               nconf.get('apiKey');
-
-var finished = false;
 
 var options = {
   host: nconf.get('mozilliansURL').split('://')[1],
@@ -25,69 +40,72 @@ var options = {
 };
 
 // Save user to redis
-var setUser = function (user) {
+var setUser = function (user, next) {
   var avatar = user.photo || '';
   var email = user.email.toLowerCase();
 
-  if (email) {
-    if (!avatar) {
-      avatar = gravatar.url(email, { d: nconf.get('domain') + '/default_avatar.png' });
-    }
+  if (!email) {
+    next('No email');
+    return;
+  }
 
-    client.hmset('user:' + email, {
-      fullName: user.full_name,
-      username: user.username,
-      email: user.email,
-      avatar: avatar
-    }, function (err) {
-      if (err) {
-        console.log('Could not save user ', err);
-      } else {
-        client.sadd('emails', email);
-        client.hgetall('user:' + email, function (err, u) {
-          console.log(u.fullName, u.avatar)
-        });
-      }
+  if (!avatar) {
+    avatar = gravatar.url(email, {
+      d: nconf.get('domain') + '/default_avatar.png'
     });
   }
+
+  client.hmset('user:' + email, {
+    fullName: user.full_name,
+    username: user.username,
+    email: user.email,
+    avatar: avatar
+  }, function (err) {
+    if (err) {
+      console.log('Could not save user ', err);
+      next(err);
+      return
+    }
+    client.sadd('emails', email);
+    // console.log('user: %s', email);
+    next();
+  });
 };
 
 var getUsers = function (callback) {
-  process.nextTick(function () {
-    https.get(options, function (backendResponse) {
-      var data = [];
+  var finished = false;
+  https.get(options, function (backendResponse) {
+    var data = [];
 
-      backendResponse.on('data', function (chunk) {
-        data.push(chunk);
-      });
+    backendResponse.on('data', function (chunk) {
+      data.push(chunk);
+    });
 
-      backendResponse.on('end', function () {
-        var result = JSON.parse(data.join(''));
+    backendResponse.on('end', function () {
+      var result = JSON.parse(data.join(''));
 
-        if (result.meta.next === null) {
-          finished = true;
-        } else {
-          options.path = DOMAIN + result.meta.next;
-        }
+      if (result.meta.next === null) {
+        finished = true;
+      } else {
+        options.path = DOMAIN + result.meta.next;
+      }
 
-        if (result) {
-          for (var user in result.objects) {
-            setUser(result.objects[user]);
-          }
-        }
-
-        callback();
-      });
+      if (result) {
+        async.each(result.objects, setUser, function(err) {
+          // console.log('user batch: %d', Object.keys(result.objects).length);
+          callback(finished);
+        });
+      }
     });
   });
 };
 
 (function getMoreUsers() {
-  getUsers(function () {
+  getUsers(function (finished) {
     if (!finished) {
       getMoreUsers();
     } else {
-      console.log('finished');
+      console.log('getUsers success');
       process.exit();
     }
   });

@@ -1,11 +1,28 @@
 #!/usr/bin/env node
 
+'use strict';
+
 var redis = require('redis');
-var client = redis.createClient();
 var nconf = require('nconf');
+var async = require('async');
 var GoogleSpreadsheet = require('google-spreadsheets');
 
-nconf.argv().env().file({ file: '../local.json' });
+nconf.argv().env().file({
+  file: __dirname + '/../local.json'
+});
+
+function getRedisClient() {
+  if (process.env.VCAP_SERVICES) {
+    var redisconf = JSON.parse(process.env.VCAP_SERVICES).redis[0].credentials;
+    var db = redis.createClient(redisconf.port,
+      redisconf.host);
+    db.auth(redisconf.password);
+  } else {
+    var db = redis.createClient();
+  }
+  return db;
+}
+var client = getRedisClient();
 
 var getObjSize = function (obj) {
   var size = 0;
@@ -56,62 +73,55 @@ var setType = function (opts, cell) {
   return opts;
 };
 
-var readWorksheet = function (worksheet, worksheetLength, currCount) {
-  process.nextTick(function () {
-    var title = worksheet.title.toLowerCase();
+var readWorksheet = function (worksheet, next) {
+  var title = worksheet.title.toLowerCase();
 
-    worksheet.cells({
-      range: 'R1C1:R' + worksheet.rowCount + 'C' + worksheet.colCount
+  worksheet.cells({
+    range: 'R1C1:R' + worksheet.rowCount + 'C' + worksheet.colCount
 
-    }, function (err, cells) {
-      if (!err) {
-        var rowCount = 1;
-        var count = 1;
+  }, function (err, cells) {
+    if (err) {
+      next(err);
+      return;
+    }
+    var rowCount = 1;
+    var count = 1;
 
-        for (var cell in cells) {
-          var count = 1;
-          var events = {};
+    for (var cell in cells) {
+      var count = 1;
+      var events = {};
 
-          for (var ev in cells[cell]) {
-            var row = cells[cell][ev];
-            var opts = {};
+      for (var ev in cells[cell]) {
+        var row = cells[cell][ev];
+        var opts = {};
 
-            if (row && count > 1) {
-              for (var c in row) {
-                opts = setType(opts, row[c]);
-              }
-            }
-
-            if (getObjSize(opts)) {
-              events[rowCount] = opts;
-              rowCount ++;
-            }
-
-            count ++;
+        if (row && count > 1) {
+          for (var c in row) {
+            opts = setType(opts, row[c]);
           }
-
-          client.set('schedule:' + title, JSON.stringify(events),
-            function (err) {
-
-            if (err) {
-              console.log('Could not save schedule ', title, events);
-            } else {
-              client.sadd('schedules', title);
-              client.get('schedule:' + title, function (err, evs) {
-                if (evs) {
-                  console.log(JSON.parse(evs));
-                }
-
-                if (worksheetLength === currCount) {
-                  console.log('finished');
-                  process.exit();
-                }
-              });
-            }
-          });
         }
+
+        if (getObjSize(opts)) {
+          events[rowCount] = opts;
+          rowCount ++;
+        }
+
+        count ++;
       }
-    });
+
+      client.set('schedule:' + title, JSON.stringify(events),
+        function (err) {
+        if (err) {
+          console.log('Could not save schedule ', title, events);
+          next(err);
+          return;
+        }
+        client.sadd('schedules', title);
+
+        console.log('%s: %d - Saved schedule', title, count);
+        next(null);
+      });
+    }
   });
 };
 
@@ -121,12 +131,12 @@ GoogleSpreadsheet({
 }, function (err, spreadsheets) {
   if (err) {
     throw new Error('Error reading spreadsheets data ', err);
-
-  } else {
-    var worksheetLength = spreadsheets.worksheets.length;
-
-    for (var i = 0; i < worksheetLength; i ++) {
-      readWorksheet(spreadsheets.worksheets[i], worksheetLength - 1, i);
-    }
   }
+  async.each(spreadsheets.worksheets, readWorksheet, function(err) {
+    if (err) {
+      throw err;
+    }
+    console.log('getSchedule success');
+    process.exit();
+  });
 });

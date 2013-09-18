@@ -1,8 +1,10 @@
-name: firehug
+name: summit
 mem: 128M
 framework:
   type: node
 hooks:
   pre-staging:
-    - npm install
-ignores: ['node_modules', '.git']
+    - cp local.json-prod local.json
+ignores: ['node_modules', '.git', '_raw']
+services:
+  ${name}-redis: redis

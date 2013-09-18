@@ -12,14 +12,27 @@ var connect = require('connect');
 var cookie = require('connect').utils;
 var request = require('request');
 var redis = require('redis');
-var client = redis.createClient();
 var nconf = require('nconf');
 
-var session;
+// Job scheduler
+require('./bin');
 
 nconf.argv().env().file({
   file: 'local.json'
 });
+
+function getRedisClient() {
+  if (process.env.VCAP_SERVICES) {
+    var redisconf = JSON.parse(process.env.VCAP_SERVICES).redis[0].credentials;
+    var db = redis.createClient(redisconf.port,
+      redisconf.host);
+    db.auth(redisconf.password);
+  } else {
+    var db = redis.createClient();
+  }
+  return db;
+}
+var client = getRedisClient();
 
 var app = express();
 
@@ -42,10 +55,10 @@ app.use(cookieParser);
 app.use(stylus.middleware({
   src: __dirname + '/public',
   compile: function compile(str, path) {
-   return stylus(str)
-     .set('filename', path)
-     .use(nib());
- }
+    return stylus(str)
+      .set('filename', path)
+      .use(nib());
+  }
 }));
 app.use(express.static(__dirname + '/public'));
 
@@ -88,7 +101,7 @@ app.get('/hugs', function(request, response) {
 });
 
 app.post('/verify', function(request, response) {
-  console.log('/verify', !!request.body.assertion);
+  console.log('/verify', !! request.body.assertion);
 
   var assertion = request.body.assertion;
   if (!assertion) {
@@ -98,27 +111,30 @@ app.post('/verify', function(request, response) {
   }
   console.log('Verifying with %s', nconf.get('audience'));
   Users.emailFromAssertion(assertion, nconf.get('audience'), function(err, result) {
-    console.log(err, result);
     if (err) {
+      console.log('Users.emailFromAssertion failed', err);
       return response.status(400).send({
         error: 'Invalid assertion'
       });
-    } else {
-      request.session.email = result.email || false;
+    }
+    console.log('Users.login', result.email);
+    request.session.email = result.email || false;
 
-      Users.login(request.session, result.email, function(err, user) {
-        if (err || !user) {
-
-        } else {
-          response.send({
-            status: !!user,
-            user: {
-              email: request.session.email.email
-            }
-          });
+    Users.login(request.session, result.email, function(err, user) {
+      if (err || !user) {
+        console.log('Users.login failed', err);
+        return response.status(400).send({
+          error: 'User not found'
+        });
+      }
+      console.log('Users.login success', user);
+      response.send({
+        status: 1,
+        user: {
+          email: request.session.email
         }
       });
-    }
+    });
   });
 });
 
@@ -180,14 +196,14 @@ app.get('/realmozillians', isLoggedIn, function(req, res) {
   console.log('query %j', req.query);
   var users = [];
 
-  client.smembers('emails', function (err, emails) {
+  client.smembers('emails', function(err, emails) {
     if (err) {
       res.status = 400;
       res.send(err);
     } else {
 
       for (var email in emails) {
-        client.hgetall('user:' + emails[email], function (err, user) {
+        client.hgetall('user:' + emails[email], function(err, user) {
           if (err) {
             res.status = 400;
             res.json({
@@ -403,7 +419,7 @@ var Users = {
   },
 
   login: function(session, email, next) {
-    client.hgetall('user:' + email, function (err, u) {
+    client.hgetall('user:' + email, function(err, u) {
       if (err || !u) {
         next(new Error('User not found ', err));
       } else {
