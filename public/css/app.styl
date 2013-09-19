@@ -25,29 +25,25 @@ a
 
 article
 	position relative
+	.schedule-header
+		h3
+			float left
+			width 33.3%
 	> section
-		left 0
-		position absolute
+		clear both
+		float left
+		position relative
 		width 100%
 
-		h3
-			&.friday
-				text-align left
-			&.saturday
-				text-align center
-			&.sunday
-				text-align right
-
 		.events
+			display none
 			list-style-type none
 			margin 0
 			padding 0
 
-		.city
-			width 100%
-
-			&.hidden
-				display none
+		&.active
+			.events
+				display block
 
 		time
 			display block

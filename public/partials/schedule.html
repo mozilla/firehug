@@ -1,39 +1,14 @@
 <article class="col-sm-8 col-sm-offset-2">
   <h2>Schedule</h2>
-  <section>
-    <h3 class="friday">Friday</h3>
-    <ul class="events friday">
-      <li data-ng-repeat="(key, value) in friday">
+
+  <div class="schedule-header" ng-repeat="day in days" ng-class="{ active : isActive(day) }">
+    <h3 ng-click="setActive(day)" class="{{ day.name }}">{{ day.title }}</h3>
+  </div>
+  <section ng-repeat="day in days" ng-class="{ active : isActive(day) }">
+    <ul class="events {{ day.name }}">
+      <li data-ng-repeat="(key, value) in day.value">
         <div data-ng-repeat="(k, v) in value">
-          <div class="city {{ v.id }}" ng-class="(location==v.id) ? '' : 'hidden'">
-            <h3>{{ v.name }}</h3>
-            <time>{{ v.startTime }} - {{ v.endTime }}</time>
-            <p>{{ v.location }}</p>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section>
-    <h3 class="saturday">Saturday</h3>
-    <ul class="events saturday">
-      <li data-ng-repeat="(key, value) in saturday">
-        <div data-ng-repeat="(k, v) in value">
-          <div class="city {{ v.id }} hidden" ng-class="(location==v.id) ? '' : 'hidden'">
-            <h3>{{ v.name }}</h3>
-            <time>{{ v.startTime }} - {{ v.endTime }}</time>
-            <p>{{ v.location }}</p>
-          </div>
-        </div>
-      </li>
-    </ul>
-  </section>
-  <section>
-    <h3 class="sunday">Sunday</h3>
-    <ul class="events sunday">
-      <li data-ng-repeat="(key, value) in sunday">
-        <div data-ng-repeat="(k, v) in value">
-          <div class="city {{ v.id }} hidden" ng-class="(location==v.id) ? '' : 'hidden'">
+          <div class="city {{ v.id }}">
             <h3>{{ v.name }}</h3>
             <time>{{ v.startTime }} - {{ v.endTime }}</time>
             <p>{{ v.location }}</p>

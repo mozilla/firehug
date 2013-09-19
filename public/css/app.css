@@ -142,30 +142,24 @@ a.row {
 article {
   position: relative;
 }
+article .schedule-header h3 {
+  float: left;
+  width: 33.3%;
+}
 article > section {
-  left: 0;
-  position: absolute;
+  clear: both;
+  float: left;
+  position: relative;
   width: 100%;
 }
-article > section h3.friday {
-  text-align: left;
-}
-article > section h3.saturday {
-  text-align: center;
-}
-article > section h3.sunday {
-  text-align: right;
-}
 article > section .events {
+  display: none;
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-article > section .city {
-  width: 100%;
-}
-article > section .city.hidden {
-  display: none;
+article > section.active .events {
+  display: block;
 }
 article > section time {
   display: block;
