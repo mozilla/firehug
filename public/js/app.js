@@ -246,15 +246,57 @@ window.bootstrapApp = function(payload) {
     }
   ]);
 
-  app.controller('ScheduleCtrl', ['$scope', '$http',
-    function($scope, $http) {
-      console.log('Schedule');
+  app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http',
+    function($scope, $rootScope, $http) {
+      $scope.setActive = function(day) {
+        $scope.selected = day;
+      };
+
+      $scope.isActive = function(day) {
+        return $scope.selected === day;
+      };
 
       $http({
         url: '/schedule',
         method: 'GET'
       }).then(function(data) {
-        $scope.data = data.data.schedule;
+        $scope.days = [
+          {
+            name: 'friday',
+            title: 'Fri',
+            value: []
+          },
+          {
+            name: 'saturday',
+            title: 'Sat',
+            value: []
+          },
+          {
+            name: 'sunday',
+            title: 'Sun',
+            value: []
+          }
+        ];
+
+        $scope.location = $rootScope.user.location;
+
+        for (var s in data.data.schedule) {
+          var evt = data.data.schedule[s];
+
+          if (s.indexOf('4') > -1) {
+            $scope.days[0].value.push(evt);
+
+          } else if (s.indexOf('5') > -1) {
+            $scope.days[1].value.push(evt);
+
+          } else if (s.indexOf('6') > -1) {
+            $scope.days[2].value.push(evt);
+
+          }
+        }
+
+        $scope.selected = $scope.days[0]; // TODO: automate - default to friday for now
+
       }, function(data, status) {
         $scope.status = status;
       });

@@ -72,7 +72,8 @@ app.get('/', function(request, response) {
   if (request.session.email) {
     console.log('/', request.session.email);
     payload.user = {
-      email: request.session.email
+      email: request.session.email,
+      location: request.session.location
     };
   }
 
@@ -120,7 +121,8 @@ app.post('/verify', function(request, response) {
       response.send({
         status: 1,
         user: {
-          email: request.session.email
+          email: request.session.email,
+          location: request.session.location
         }
       });
     });
@@ -275,7 +277,8 @@ sio.on('connection', function(socket) {
     Users.login(session.email, function(err, userRecord) {
       user = userRecord;
       socket.emit('hello', {
-        email: session.email
+        email: session.email,
+        location: session.location
       });
     });
   } else {
@@ -297,7 +300,8 @@ sio.on('connection', function(socket) {
 
       Users.login(session, email, function(err, user) {
         socket.emit('login', {
-          email: user.email
+          email: user.email,
+          location: user.location
         });
       });
     });
@@ -438,7 +442,7 @@ var Users = {
           email: u.email,
           ircName: u.ircName,
           announceResults: [],
-          city: location
+          location: location
         };
 
         user.sessionId = session.sessionId;

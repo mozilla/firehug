@@ -139,12 +139,29 @@ a.row {
   display: block;
   padding: 12px 0;
 }
-.events {
+article {
+  position: relative;
+}
+article .schedule-header h3 {
+  float: left;
+  width: 33.3%;
+}
+article > section {
+  clear: both;
+  float: left;
+  position: relative;
+  width: 100%;
+}
+article > section .events {
+  display: none;
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-time {
+article > section.active .events {
+  display: block;
+}
+article > section time {
   display: block;
 }
 header {
