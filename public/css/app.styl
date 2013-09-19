@@ -23,13 +23,30 @@ a
 		display block
 		padding 12px 0
 
-.events
-	list-style-type none
-	margin 0
-	padding 0
+article
+	position relative
+	.schedule-header
+		h3
+			float left
+			width 33.3%
+	> section
+		clear both
+		float left
+		position relative
+		width 100%
 
-time
-	display block
+		.events
+			display none
+			list-style-type none
+			margin 0
+			padding 0
+
+		&.active
+			.events
+				display block
+
+		time
+			display block
 
 header
 	height 50px
