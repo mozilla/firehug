@@ -9,14 +9,40 @@ rule15min.minute = 15;
 var rule30min = new schedule.RecurrenceRule();
 rule30min.minute = 30;
 
+var getUsers;
+function getUsersFork() {
+  if (getUsers) {
+    getUsers.kill();
+    return;
+  }
+  console.log('getUsers forked.');
+  getUsers = fork(__dirname + '/getUsers');
+  getUsers.on('exit', function (code, signal) {
+    console.log('getUsers exited. code: %d - signal: %d', code, signal);
+    getUsers = null;
+  });
+}
+
+var getSchedule;
+function getScheduleFork() {
+  if (getSchedule) {
+    getSchedule.kill();
+    return;
+  }
+  console.log('getSchedule forked.');
+  getSchedule = fork(__dirname + '/getSchedule');
+  getSchedule.on('exit', function (code, signal) {
+    console.log('getSchedule exited. code: %d - signal: %d', code, signal);
+    getSchedule = null;
+  });
+}
+
 schedule.scheduleJob(rule15min, function() {
-	console.log('Starting getUsers');
-	fork(__dirname + '/getUsers');
+  getUsersFork();
 });
-fork(__dirname + '/getUsers');
+getUsersFork();
 
 schedule.scheduleJob(rule30min, function() {
-	console.log('Starting getSchedule');
-	fork(__dirname + '/getSchedule');
+  getScheduleFork();
 });
-fork(__dirname + '/getSchedule');
+getScheduleFork();
