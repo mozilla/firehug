@@ -1,26 +1,54 @@
-<div class="row">
-	<section class="col-sm-4 col-sm-offset-4">
-		<h2>Questions</h2>
-		<form role="form">
-		  <div class="form-group">
-		    <label for="exampleInputEmail1">Email address</label>
-		    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-		  </div>
-		  <div class="form-group">
-		    <label for="exampleInputPassword1">Password</label>
-		    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-		  </div>
-		  <div class="form-group">
-		    <label for="exampleInputFile">File input</label>
-		    <input type="file" id="exampleInputFile">
-		    <p class="help-block">Example block-level help text here.</p>
-		  </div>
-		  <div class="checkbox">
-		    <label>
-		      <input type="checkbox"> Check me out
-		    </label>
-		  </div>
-		  <button type="submit" class="btn btn-default">Submit</button>
-		</form>
-	</section>
+<div class="row" id="view-questions">
+  <section class="col-sm-8 col-sm-offset-2">
+    <h2>3 Questions</h2>
+    <form role="form" name="questions" ng-submit="submit()">
+      <div class="form-group">
+        <h5>What is your mood?</h5>
+        <div class="radio-inline">
+          <label>
+            <input type="radio" name="mood" ng-model="mood"> Happy
+          </label>
+        </div>
+        <div class="radio-inline">
+          <label>
+            <input type="radio" name="mood" ng-model="mood"> Nervous
+          </label>
+        </div>
+        <div class="radio-inline">
+          <label>
+            <input type="radio" name="mood" ng-model="mood"> Sleepy
+          </label>
+        </div>
+        <div class="radio-inline">
+          <label>
+            <input type="radio" name="mood" ng-model="mood"> Energized
+          </label>
+        </div>
+        <div class="radio-inline">
+          <label>
+            <input type="radio" name="mood" ng-model="mood"> Overwhelmed
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <h5>Can we quote you?</h5>
+        <textarea class="form-control" rows="2" placeholder="Share your thoughts …" ng-model="quote"></textarea>
+      </div>
+      <div class="form-group">
+        <h5>Who have you recently met that had a positive impact on you?</h5>
+        <input type="text" placeholder="Add a Mozillian …" class="form-control">
+        <ul ng-show="influencers.length">
+          <li ng:repeat="influencer in influencers">
+            <span>{{influencer}}</span>
+          </li>
+        </ul>
+        <p ng-hide="influencers.length" class="text-center text-muted">
+          <em>Enter Mozillian names above to add them here …</em>
+        </p>
+      </div>
+      <div class="form-group text-center">
+        <button type="submit" class="btn">Submit</button>
+      </div>
+    </form>
+  </section>
 </div>

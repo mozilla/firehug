@@ -242,6 +242,63 @@ header nav .menu-dropdown:hover,
 header nav .menu-dropdown:active {
   background-position: 50% -92px;
 }
+.btn,
+.btn:link,
+.btn:visited {
+  display: inline-block;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.2), 0px -1px 0px 0px rgba(0,0,0,0.3) inset;
+  box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.2), 0px -1px 0px 0px rgba(0,0,0,0.3) inset;
+  background: -webkit-linear-gradient(#277ac1, #236eae), #277ac1;
+  background: -moz-linear-gradient(#277ac1, #236eae), #277ac1;
+  background: -o-linear-gradient(#277ac1, #236eae), #277ac1;
+  background: -ms-linear-gradient(#277ac1, #236eae), #277ac1;
+  background: linear-gradient(#277ac1, #236eae), #277ac1;
+  color: #fff;
+  font-size: 16px;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px 10px;
+  line-height: 1.1;
+  text-decoration: none;
+  min-width: 80px;
+  border: 0;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+  font-family: 'Open Sans Light', sans-serif;
+  font-weight: bold;
+  -webkit-transition: all linear 0.1s;
+  -moz-transition: all linear 0.1s;
+  -o-transition: all linear 0.1s;
+  -ms-transition: all linear 0.1s;
+  transition: all linear 0.1s;
+}
+.btn:hover,
+.btn:link:hover,
+.btn:visited:hover,
+.btn:focus,
+.btn:link:focus,
+.btn:visited:focus {
+  -webkit-box-shadow: 0px 2px 0px 0px rgba(0,0,0,0.1), inset 0px -2px 0px 0px rgba(0,0,0,0.2), inset 0px 12px 24px 2px #1f7bc9;
+  box-shadow: 0px 2px 0px 0px rgba(0,0,0,0.1), inset 0px -2px 0px 0px rgba(0,0,0,0.2), inset 0px 12px 24px 2px #1f7bc9;
+  text-decoration: none;
+}
+.btn:focus,
+.btn:link:focus,
+.btn:visited:focus {
+  outline-color: #484848;
+}
+.btn:active,
+.btn:link:active,
+.btn:visited:active {
+  -webkit-box-shadow: inset 0px 2px 0px 0px rgba(0,0,0,0.2), inset 0px 12px 24px 6px rgba(0,0,0,0.2), inset 0px 0px 2px 2px rgba(0,0,0,0.2);
+  box-shadow: inset 0px 2px 0px 0px rgba(0,0,0,0.2), inset 0px 12px 24px 6px rgba(0,0,0,0.2), inset 0px 0px 2px 2px rgba(0,0,0,0.2);
+}
+main h2 {
+  margin-top: -30px;
+  text-align: center;
+  text-transform: uppercase;
+}
 #view-home img {
   margin-top: -30px;
 }
@@ -280,6 +337,9 @@ header nav .menu-dropdown:active {
   background-color: #d7d3c8;
   color: #0095dd;
 }
+#view-questions .form-group {
+  margin-bottom: 20px;
+}
 #splash-screen {
   position: absolute;
   top: 0;
@@ -292,7 +352,7 @@ header nav .menu-dropdown:active {
   display: none;
   background: url("/img/logo-home.png") no-repeat 50% 295px;
 }
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width 480px) {
   #splash-screen {
     display: block;
     cursor: progress;
