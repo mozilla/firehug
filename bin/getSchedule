@@ -109,7 +109,7 @@ GoogleSpreadsheet({
   key: nconf.get('googleKey')
 }, function (err, spreadsheets) {
   if (err) {
-    throw new Error('Error reading spreadsheets data ', err);
+    throw new Error('Error reading spreadsheets data: ' + err);
   }
   async.each(spreadsheets.worksheets, readWorksheet, function(err) {
     if (err) {

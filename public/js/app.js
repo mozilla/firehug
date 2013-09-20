@@ -37,12 +37,17 @@ window.bootstrapApp = function(payload) {
         .when('/questions', {
           controller: 'QuestionsCtrl',
           controllerAs: 'questions',
-          templateUrl: '/partials/todo.html'
+          templateUrl: '/partials/questions.html'
+        })
+        .when('/questions/thanks', {
+          controller: 'QuestionsThanksCtrl',
+          controllerAs: 'questionsThanks',
+          templateUrl: '/partials/questions-thanks.html'
         })
         .when('/dialog', {
           controller: 'DialogCtrl',
           controllerAs: 'dialog',
-          templateUrl: '/partials/todo.html'
+          templateUrl: '/partials/dialog.html'
         })
         .otherwise({
           redirectTo: '/'
@@ -315,9 +320,29 @@ window.bootstrapApp = function(payload) {
     }
   ]);
 
-  app.controller('QuestionsCtrl', ['$scope',
+  app.controller('QuestionsCtrl', ['$scope', '$location',
+    function($scope, $location) {
+      if ($scope.user.questionsDone) {
+        // TODO: Implement .questionsDone!
+        return $location.path('/questions/thanks');
+      }
+      $scope.submit = function() {
+        if (!$scope.questions.$valid) {
+          alert('Boom!');
+          return;
+        }
+
+        // TODO: Submit to server!
+
+        // TODO: Store this serverside as well!
+        $location.path('/questions/thanks');
+        $scope.user.questionsDone = true;
+      }
+    }
+  ]);
+
+  app.controller('QuestionsThanksCtrl', ['$scope',
     function($scope) {
-      console.log('Questions');
     }
   ]);
 

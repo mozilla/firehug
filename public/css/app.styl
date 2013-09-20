@@ -134,6 +134,42 @@ header
 			&:hover, &:active
 				background-position 50% -92px
 
+.btn, .btn:link, .btn:visited
+
+	display inline-block
+	border-radius 6px
+	box-shadow 0px 1px 0px 0px rgba(0, 0, 0, 0.2), 0px -1px 0px 0px rgba(0, 0, 0, 0.3) inset
+	background linear-gradient(color-button-blue, darken(color-button-blue, 10%)), color-button-blue
+	color #fff
+	font-size 16px
+	text-align center
+	font-weight bold
+	padding 5px 10px
+	line-height 1.1
+	text-decoration none
+	min-width 80px
+	border 0
+	text-shadow 0 1px 0 rgba(0, 0, 0, 0.25)
+	font-family 'Open Sans Light', sans-serif
+	font-weight bold
+	transition all linear 0.1s
+
+	&:hover, &:focus
+		box-shadow 0px 2px 0px 0px rgba(0, 0, 0, 0.1), inset 0px -2px 0px 0px rgba(0, 0, 0, 0.2), inset 0px 12px 24px 2px saturate(color-button-blue, 10%)
+		text-decoration none
+
+	&:focus
+		outline-color text-color-secondary
+
+	&:active
+		box-shadow inset 0px 2px 0px 0px rgba(0, 0, 0, 0.2), inset 0px 12px 24px 6px rgba(0, 0, 0, 0.2), inset 0px 0px 2px 2px rgba(0, 0, 0, 0.2)
+
+main
+	h2
+		margin-top -30px
+		text-align center
+		text-transform uppercase
+
 #view-home
 
 	img
@@ -149,31 +185,36 @@ header
 
 			a
 				display block
-				color #fefefe
-				background-color #11acdd
 				font-family 'Open Sans Light', sans-serif
 				font-size 28px
 				padding 7px 0 10px
 				margin-bottom 10px
 				box-shadow 0 1px 0 rgba(0, 0, 0, 0.1)
+				color #fefefe
+				background-color color-blue
 
 				&:hover, &:active
 					text-decoration none
 
 			&:nth-child(2)
 				a
-					background-color #4d4e53
-					color #ffcb41
+					background-color color-dark-grey
+					color color-yellow
 
 			&:nth-child(3)
 				a
-					background-color #ffcb41
-					color #4d4e53
+					background-color color-yellow
+					color color-dark-grey
 
 			&:nth-child(4)
 				a
-					background-color #e1ddd5
-					color #11acdd
+					background-color color-light-grey
+					color color-blue
+
+#view-questions
+
+	.form-group
+		margin-bottom 20px
 
 #splash-screen
 	position absolute
@@ -187,7 +228,7 @@ header
 	display none
 	background url('/img/logo-home.png') no-repeat 50% 295px
 
-@media only screen and (max-width: 480px)
+@media only screen and (max-width 480px)
 
 	// Splash screen only for mobile screens
 	#splash-screen
