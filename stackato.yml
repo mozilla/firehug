@@ -2,9 +2,12 @@ name: summit
 mem: 128M
 framework:
   type: node
+  runtime: node
 hooks:
   pre-staging:
     - cp local.json-prod local.json
+  pre-running:
+  - bash scripts/nodejs-0.10.sh
 ignores: ['node_modules', '.git', '_raw']
 services:
   ${name}-redis: redis
