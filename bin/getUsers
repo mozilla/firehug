@@ -5,7 +5,6 @@
 var http = require('http');
 var https = require('https');
 var redis = require('redis');
-var nconf = require('nconf');
 var gravatar = require('gravatar');
 var async = require('async');
 
@@ -54,7 +53,7 @@ var setUser = function (user, next) {
       return
     }
     client.sadd('emails', email);
-    // console.log('user: %s', email);
+    console.log('user: %s', email);
     next();
   });
 };
