@@ -37,12 +37,12 @@ window.bootstrapApp = function(payload) {
         .when('/questions', {
           controller: 'QuestionsCtrl',
           controllerAs: 'questions',
-          templateUrl: '/partials/todo.html'
+          templateUrl: '/partials/questions.html'
         })
         .when('/dialog', {
           controller: 'DialogCtrl',
           controllerAs: 'dialog',
-          templateUrl: '/partials/todo.html'
+          templateUrl: '/partials/dialog.html'
         })
         .otherwise({
           redirectTo: '/'

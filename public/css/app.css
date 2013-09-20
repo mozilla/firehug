@@ -255,14 +255,14 @@ header nav .menu-dropdown:active {
 }
 #view-home ul li a {
   display: block;
-  color: #fefefe;
-  background-color: #11acdd;
   font-family: 'Open Sans Light', sans-serif;
   font-size: 28px;
   padding: 7px 0 10px;
   margin-bottom: 10px;
   -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.1);
   box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+  color: #fefefe;
+  background-color: #0095dd;
 }
 #view-home ul li a:hover,
 #view-home ul li a:active {
@@ -270,15 +270,15 @@ header nav .menu-dropdown:active {
 }
 #view-home ul li:nth-child(2) a {
   background-color: #4d4e53;
-  color: #ffcb41;
+  color: #ffcb00;
 }
 #view-home ul li:nth-child(3) a {
-  background-color: #ffcb41;
+  background-color: #ffcb00;
   color: #4d4e53;
 }
 #view-home ul li:nth-child(4) a {
-  background-color: #e1ddd5;
-  color: #11acdd;
+  background-color: #d7d3c8;
+  color: #0095dd;
 }
 #splash-screen {
   position: absolute;
