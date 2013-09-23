@@ -29,6 +29,7 @@ var options = {
 var setUser = function (user, next) {
   var avatar = user.photo || '';
   var email = user.email.toLowerCase();
+  var country = '';
 
   if (!email) {
     next('No email');
@@ -41,11 +42,17 @@ var setUser = function (user, next) {
     });
   }
 
+  if (user.country) {
+    country = user.country.toString().toUpperCase();
+  }
+
   client.hmset('user:' + email, {
     fullName: user.full_name,
     username: user.username,
     email: user.email,
-    avatar: avatar
+    avatar: avatar,
+    region: user.region,
+    country: country
   }, function (err) {
     if (err) {
       console.log('Could not save user ', err);
