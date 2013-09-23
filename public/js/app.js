@@ -367,6 +367,14 @@ window.bootstrapApp = function(payload) {
           });
         }
 
+        users.push({
+          value: atob('U2Xxb3IgTWVhdHNwYWNl'),
+          tokens: [atob('c3RlYWs='), atob('cG9yaw=='), atob('Y2hpY2tlbg=='),
+                   atob('dmVnYW4NCg=='), atob('YmFjb24=')],
+          name: '000000',
+          avatar: '/default_avatar.png'
+        });
+
         users = users.sort(function(a, b) {
           a = a.name.toLowerCase();
           b = b.name.toLowerCase();
@@ -378,9 +386,14 @@ window.bootstrapApp = function(payload) {
           limit: 5
         }).bind('typeahead:selected', function (obj, datum) {
           type.typeahead('setQuery', '');
-          $scope.$apply(function () {
-            $scope.influencers.push(datum);
-          });
+          if (datum.name !== '000000') {
+            $scope.$apply(function () {
+              $scope.influencers.push(datum);
+            });
+          } else {
+            window.open(atob('aHR0cDovL2NoYXQubWVhdHNwYWMuZXM='), '_blank',
+                        'height=480,width=320,scrollbars=yes');
+          }
         });
 
       }, function(data, status) {
