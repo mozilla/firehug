@@ -40,13 +40,16 @@
         <p ng-hide="influencers.length" class="text-center text-muted">
           <em>Enter Mozillian names above to add them here …</em>
         </p>
-        <ul id="mozillians-list">
+        <ol id="mozillians-list">
           <li ng:repeat="influencer in influencers track by $index">
             <img src="{{ influencer.avatar }}">
-            <span>{{ influencer.value }}</span>
+            <p>
+              <span class="full-name">{{ influencer.value }}</span>
+              <span class="country">{{ influencer.region }}{{ influencer.region ? ', ' : '' }}{{ influencer.country }}</span>
+            </p>
             <a ng-click="removeUser($index)" class="delete">Remove</a>
           </li>
-        </ul>
+        </ol>
       </div>
       <div class="form-group text-center">
         <button type="submit" class="btn">Submit</button>
