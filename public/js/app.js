@@ -341,9 +341,51 @@ window.bootstrapApp = function(payload) {
     }
   ]);
 
-  app.controller('QuestionsThanksCtrl', ['$scope',
-    function($scope) {
+  app.controller('QuestionsCtrl', ['$scope', '$http',
+    function($scope, $http) {
+      var type = $('.typeahead');
+
+      $scope.influencers = [];
+
+      $scope.removeUser = function (idx) {
+        $scope.influencers.splice(idx, 1);
+      };
+
+      $http({
+        url: '/realmozillians',
+        method: 'GET'
+      }).then(function(data) {
+        var users = [];
+
+        for (var u in data.data) {
+          var nameArr = data.data[u].fullName.split(/\s/);
+          users.push({
+            value: data.data[u].fullName,
+            tokens: [data.data[u].email, nameArr[0], nameArr[1], data.data[u].username],
+            name: data.data[u].email,
+            avatar: data.data[u].avatar
+          });
+        }
+
+        users = users.sort(function(a, b) {
+          a = a.name.toLowerCase();
+          b = b.name.toLowerCase();
+          return a > b ? 1 : a < b ? -1 : 0;
+        });
+
+        type.typeahead({
+          local: users,
+          limit: 5
+        }).bind('typeahead:selected', function (obj, datum) {
+          type.typeahead('setQuery', '');
+          $scope.$apply(function () {
+            $scope.influencers.push(datum);
+          });
+        });
+
+      }, function(data, status) {
+        $scope.status = status;
+      });
     }
   ]);
-
 };

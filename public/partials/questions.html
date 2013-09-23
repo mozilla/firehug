@@ -36,15 +36,17 @@
       </div>
       <div class="form-group">
         <h5>Who have you recently met that had a positive impact on you?</h5>
-        <input type="text" placeholder="Add a Mozillian …" class="form-control">
-        <ul ng-show="influencers.length">
-          <li ng:repeat="influencer in influencers">
-            <span>{{influencer}}</span>
-          </li>
-        </ul>
+        <input type="text" placeholder="Add a Mozillian …" class="form-control typeahead">
         <p ng-hide="influencers.length" class="text-center text-muted">
           <em>Enter Mozillian names above to add them here …</em>
         </p>
+        <ul id="mozillians-list">
+          <li ng:repeat="influencer in influencers track by $index">
+            <img src="{{ influencer.avatar }}">
+            <span>{{ influencer.value }}</span>
+            <a ng-click="removeUser($index)" class="delete">Remove</a>
+          </li>
+        </ul>
       </div>
       <div class="form-group text-center">
         <button type="submit" class="btn">Submit</button>

@@ -3,7 +3,6 @@
 'use strict';
 
 var redis = require('redis');
-var nconf = require('nconf');
 var async = require('async');
 var GoogleSpreadsheet = require('google-spreadsheets');
 
