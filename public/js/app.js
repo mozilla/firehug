@@ -363,7 +363,9 @@ window.bootstrapApp = function(payload) {
             value: data.data[u].fullName,
             tokens: [data.data[u].email, nameArr[0], nameArr[1], data.data[u].username],
             name: data.data[u].email,
-            avatar: data.data[u].avatar
+            avatar: data.data[u].avatar,
+            region: data.data[u].region,
+            country: data.data[u].country
           });
         }
 
