@@ -126,6 +126,9 @@ body {
   background: #f5f1e8 url("/img/sandstone/bg-sand.png") repeat;
   background: url("/img/sandstone/bg-gradient-sand.png") repeat-x 0 0, url("/img/sandstone/bg-sand.png") repeat 0 0, #f5f1e8;
 }
+.tt-hint {
+  display: none;
+}
 a {
   color: #0095dd;
   text-decoration: none;
@@ -356,6 +359,18 @@ main h2 {
 }
 #view-questions .form-group {
   margin-bottom: 20px;
+}
+#view-questions #mozillians-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+#view-questions #mozillians-list img {
+  margin-right: 5px;
+  width: 100px;
+}
+#view-questions #mozillians-list .delete {
+  font-style: italic;
 }
 #splash-screen {
   position: absolute;

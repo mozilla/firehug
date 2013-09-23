@@ -91,8 +91,6 @@ app.get('/hugs', function(request, response) {
 });
 
 app.post('/verify', function(request, response) {
-  console.log('/verify', !! request.body.assertion);
-
   var assertion = request.body.assertion;
   if (!assertion) {
     response.status(400).send({
@@ -184,7 +182,6 @@ app.post('/logout', function(request, response) {
 });
 
 app.get('/realmozillians', isLoggedIn, function(req, res) {
-  console.log('query %j', req.query);
   var users = [];
 
   client.smembers('emails', function(err, emails) {
