@@ -253,8 +253,14 @@ window.bootstrapApp = function(payload) {
 
   app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http',
     function($scope, $rootScope, $http) {
-      $scope.setActive = function(day) {
-        $scope.selected = day;
+      $scope.setActive = function(idx) {
+        if (idx < 0) {
+          idx = 0;
+        } else if (idx > $scope.days.length - 1) {
+          idx = $scope.days.length - 1;
+        }
+
+        $scope.selected = $scope.days[idx];
       };
 
       $scope.isActive = function(day) {
@@ -266,6 +272,11 @@ window.bootstrapApp = function(payload) {
         method: 'GET'
       }).then(function(data) {
         $scope.days = [
+          {
+            name: 'thursday',
+            title: 'Thurs',
+            value: []
+          },
           {
             name: 'friday',
             title: 'Fri',
@@ -280,6 +291,11 @@ window.bootstrapApp = function(payload) {
             name: 'sunday',
             title: 'Sun',
             value: []
+          },
+          {
+            name: 'monday',
+            title: 'Mon',
+            value: []
           }
         ];
 
@@ -288,19 +304,24 @@ window.bootstrapApp = function(payload) {
         for (var s in data.data.schedule) {
           var evt = data.data.schedule[s];
 
-          if (s.indexOf('4') > -1) {
+          if (s.indexOf('3') > -1) {
             $scope.days[0].value.push(evt);
 
-          } else if (s.indexOf('5') > -1) {
+          } else if (s.indexOf('4') > -1) {
             $scope.days[1].value.push(evt);
 
-          } else if (s.indexOf('6') > -1) {
+          } else if (s.indexOf('5') > -1) {
             $scope.days[2].value.push(evt);
 
+          } else if (s.indexOf('6') > -1) {
+            $scope.days[3].value.push(evt);
+
+          } else if (s.indexOf('7') > -1) {
+            $scope.days[4].value.push(evt);
           }
         }
 
-        $scope.selected = $scope.days[0]; // TODO: automate - default to friday for now
+        $scope.selected = $scope.days[0]; // TODO: automate - default to thursday for now
 
       }, function(data, status) {
         $scope.status = status;

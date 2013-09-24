@@ -414,7 +414,6 @@ var Users = {
       if (err || !u) {
         next(new Error('User not found ', err));
       } else {
-        console.log('found email ', email);
         session.email = email;
 
         // TODO: Change to proper city name based on mozillians api. Currently hardcoded for testing.
