@@ -43,6 +43,7 @@
         <ol id="mozillians-list">
           <li ng:repeat="influencer in influencers track by $index">
             <img src="{{ influencer.avatar }}">
+            <div class="image-mask"></div>
             <p>
               <span class="full-name">{{ influencer.value }}</span>
               <span class="country">{{ influencer.region }}{{ influencer.region ? ', ' : '' }}{{ influencer.country }}</span>
