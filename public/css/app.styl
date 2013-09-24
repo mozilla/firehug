@@ -9,12 +9,59 @@ html, body
 	min-height 100%
 
 body
-	background #f5f1e8 url('/img/sandstone/bg-sand.png') repeat
-	background url('/img/sandstone/bg-gradient-sand.png') repeat-x 0 0, url('/img/sandstone/bg-sand.png') repeat 0 0, #f5f1e8
+	background url('/img/back-repeat.jpg') repeat-x 0 0, #f5f1e8
+
+.container
+	max-width 800px
 
 .tt-hint
 	display none
 
+.title, .subtitle h3
+	font-family Montserrat
+	text-align center
+	text-shadow none
+	text-transform uppercase
+
+.title
+	color color-title-blue
+	font-size 42px
+
+.subtitle
+	background-color color-subtitle-yellow
+	clear both
+	float left
+	height 50px
+	position relative
+	width 100%
+	h3
+		color color-subtitle-gray
+		font-size 28px
+		font-weight normal
+		margin 0 auto
+		position relative
+		width 400px
+		> span
+			display block
+			float left
+			line-height: 48px
+			width 180px
+
+.icon
+	cursor pointer
+	display inline-block
+	float left
+	font-size 0
+	height 50px
+	padding 0 40px
+	width 30px
+	i
+		color color-subtitle-gray
+		font-size 20px
+		line-height 45px
+		text-decoration none
+		text-indent 0
+		text-shadow none
 a
 	color text-color-link
 	text-decoration none
@@ -26,26 +73,42 @@ a
 		display block
 		padding 12px 0
 
+.curr-location
+	.city
+		display none
+	&.to
+		.to
+			display block
+	&.br
+		.br
+			display block
+	&.sc
+		.sc
+			display block
+
 article
+	overflow hidden
 	position relative
-	.schedule-header
-		h3
-			float left
-			width 33.3%
-	> section
-		clear both
-		float left
-		position relative
-		width 100%
+	.event-wrapper
+		overflow hidden
 
-		.events
+		section
 			display none
-			list-style-type none
-			margin 0
-			padding 0
+			float left
+			width 100%
 
-		&.active
 			.events
+				list-style-type none
+				margin 0
+				padding 0
+
+				.city
+					background-color #FFF
+					border-bottom 2px solid #CCC
+					clear both
+					padding 20px
+
+			&.active
 				display block
 
 		time
@@ -169,7 +232,6 @@ header
 
 main
 	h2
-		margin-top -30px
 		text-align center
 		text-transform uppercase
 
@@ -278,8 +340,11 @@ main
 	display none
 	background url('/img/logo-home.png') no-repeat 50% 295px
 
-@media only screen and (max-width 480px)
+@media only screen and (min-width 481px)
+	body
+		background url('/img/background.png') no-repeat !important
 
+@media only screen and (max-width 480px)
 	// Splash screen only for mobile screens
 	#splash-screen
 		display block
