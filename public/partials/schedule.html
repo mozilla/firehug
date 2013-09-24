@@ -1,20 +1,28 @@
-<article class="col-sm-8 col-sm-offset-2">
-  <h2>Schedule</h2>
+<article class="col-sm-8 col-sm-offset-2 curr-location {{ location }}">
+  <h2 class="title">Schedule</h2>
 
-  <div class="schedule-header" ng-repeat="day in days" ng-class="{ active : isActive(day) }">
-    <h3 ng-click="setActive(day)" class="{{ day.name }}">{{ day.title }}</h3>
-  </div>
-  <section ng-repeat="day in days" ng-class="{ active : isActive(day) }">
-    <ul class="events {{ day.name }}">
-      <li data-ng-repeat="(key, value) in day.value">
-        <div data-ng-repeat="(k, v) in value">
-          <div class="city {{ v.id }}">
-            <h3>{{ v.name }}</h3>
-            <time>{{ v.startTime }} - {{ v.endTime }}</time>
-            <p>{{ v.location }}</p>
+  <div class="event-wrapper" ng-switch="selected" ng-repeat="day in days" ng-animate="'animate'">
+    <section ng-class="{ active : isActive(day) }">
+      <div class="{{ day.name }} subtitle">
+        <h3>
+          <a ng-click="setActive($index - 1)" class="icon">
+            <i class="icon-arrow-left" ng-click="setActive($index - 1)"></i> Prev</a>
+          <span>{{ day.title }}</span>
+          <a ng-click="setActive($index + 1)" class="icon">
+            <i class="icon-arrow-right" ng-click="setActive($index - 1)"></i> Next</a>
+        </h3>
+      </div>
+      <ul class="events {{ day.name }}">
+        <li data-ng-repeat="(key, value) in day.value">
+          <div data-ng-repeat="(k, v) in value">
+            <div class="city {{ v.id }}">
+              <h3>{{ v.name }}</h3>
+              <time>{{ v.startTime }} - {{ v.endTime }}</time>
+              <p>{{ v.location }}</p>
+            </div>
           </div>
-        </div>
-      </li>
-    </ul>
-  </section>
+        </li>
+      </ul>
+    </section>
+  </div>
 </article>

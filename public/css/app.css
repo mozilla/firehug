@@ -47,6 +47,18 @@
   font-weight: normal;
   font-style: italic;
 }
+@font-face {
+  font-family: 'Montserrat';
+  src: url("/fonts/Montserrat-Regular.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url("/fonts/Montserrat-Bold.ttf") format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
 h1,
 h2,
 h3,
@@ -123,11 +135,63 @@ body {
   min-height: 100%;
 }
 body {
-  background: #f5f1e8 url("/img/sandstone/bg-sand.png") repeat;
-  background: url("/img/sandstone/bg-gradient-sand.png") repeat-x 0 0, url("/img/sandstone/bg-sand.png") repeat 0 0, #f5f1e8;
+  background: url("/img/back-repeat.jpg") repeat-x 0 0, #f5f1e8;
+}
+.container {
+  max-width: 800px;
 }
 .tt-hint {
   display: none;
+}
+.title,
+.subtitle h3 {
+  font-family: Montserrat;
+  text-align: center;
+  text-shadow: none;
+  text-transform: uppercase;
+}
+.title {
+  color: #12aae1;
+  font-size: 42px;
+}
+.subtitle {
+  background-color: #ffcd02;
+  clear: both;
+  float: left;
+  height: 50px;
+  position: relative;
+  width: 100%;
+}
+.subtitle h3 {
+  color: #555559;
+  font-size: 28px;
+  font-weight: normal;
+  margin: 0 auto;
+  position: relative;
+  width: 400px;
+}
+.subtitle h3 > span {
+  display: block;
+  float: left;
+  line-height: 48px;
+  width: 180px;
+}
+.icon {
+  cursor: pointer;
+  display: inline-block;
+  float: left;
+  font-size: 0;
+  height: 50px;
+  padding: 0 40px;
+  width: 30px;
+}
+.icon i {
+  color: #555559;
+  font-size: 20px;
+  line-height: 45px;
+  text-decoration: none;
+  text-indent: 0;
+  text-shadow: none;
 }
 a {
   color: #0095dd;
@@ -142,29 +206,45 @@ a.row {
   display: block;
   padding: 12px 0;
 }
+.curr-location .city {
+  display: none;
+}
+.curr-location.to .to {
+  display: block;
+}
+.curr-location.br .br {
+  display: block;
+}
+.curr-location.sc .sc {
+  display: block;
+}
 article {
+  overflow: hidden;
   position: relative;
 }
-article .schedule-header h3 {
-  float: left;
-  width: 33.3%;
+article .event-wrapper {
+  overflow: hidden;
 }
-article > section {
-  clear: both;
+article .event-wrapper section {
+  display: none;
   float: left;
-  position: relative;
   width: 100%;
 }
-article > section .events {
-  display: none;
+article .event-wrapper section .events {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-article > section.active .events {
+article .event-wrapper section .events .city {
+  background-color: #fff;
+  border-bottom: 2px solid #ccc;
+  clear: both;
+  padding: 20px;
+}
+article .event-wrapper section.active {
   display: block;
 }
-article > section time {
+article .event-wrapper time {
   display: block;
 }
 header {
@@ -315,7 +395,6 @@ header nav .menu-dropdown:active {
   box-shadow: inset 0px 2px 0px 0px rgba(0,0,0,0.2), inset 0px 12px 24px 6px rgba(0,0,0,0.2), inset 0px 0px 2px 2px rgba(0,0,0,0.2);
 }
 main h2 {
-  margin-top: -30px;
   text-align: center;
   text-transform: uppercase;
 }
@@ -429,6 +508,11 @@ main h2 {
   margin: 20px 0 0 0;
   display: none;
   background: url("/img/logo-home.png") no-repeat 50% 295px;
+}
+@media only screen and (min-width 481px) {
+  body {
+    background: url("/img/background.png") no-repeat !important;
+  }
 }
 @media only screen and (max-width 480px) {
   #splash-screen {
