@@ -106,7 +106,7 @@ window.bootstrapApp = function(payload) {
         navigator.id.watch({
           loggedInUser: email || undefined, // trigger logout
           onlogin: function onLogin(assertion) {
-            console.log('persona.onLogin', !!$rootScope.user, assertion);
+            console.log('persona.onLogin', !! $rootScope.user, assertion);
             if ($rootScope.user) {
               return starting.resolve();
             }
@@ -119,7 +119,7 @@ window.bootstrapApp = function(payload) {
             });
           },
           onlogout: function onLogout() {
-            console.log('persona.onLogout', !!$rootScope.user);
+            console.log('persona.onLogout', !! $rootScope.user);
             if (!$rootScope.user) {
               return starting.resolve();
             }
@@ -271,33 +271,27 @@ window.bootstrapApp = function(payload) {
         url: '/schedule',
         method: 'GET'
       }).then(function(data) {
-        $scope.days = [
-          {
-            name: 'thursday',
-            title: 'Thurs',
-            value: []
-          },
-          {
-            name: 'friday',
-            title: 'Fri',
-            value: []
-          },
-          {
-            name: 'saturday',
-            title: 'Sat',
-            value: []
-          },
-          {
-            name: 'sunday',
-            title: 'Sun',
-            value: []
-          },
-          {
-            name: 'monday',
-            title: 'Mon',
-            value: []
-          }
-        ];
+        $scope.days = [{
+          name: 'thursday',
+          title: 'Thurs',
+          value: []
+        }, {
+          name: 'friday',
+          title: 'Fri',
+          value: []
+        }, {
+          name: 'saturday',
+          title: 'Sat',
+          value: []
+        }, {
+          name: 'sunday',
+          title: 'Sun',
+          value: []
+        }, {
+          name: 'monday',
+          title: 'Mon',
+          value: []
+        }];
 
         $scope.location = $rootScope.user.location;
 
@@ -368,7 +362,7 @@ window.bootstrapApp = function(payload) {
 
       $scope.influencers = [];
 
-      $scope.removeUser = function (idx) {
+      $scope.removeUser = function(idx) {
         $scope.influencers.splice(idx, 1);
       };
 
@@ -393,7 +387,8 @@ window.bootstrapApp = function(payload) {
         users.push({
           value: atob('U2Xxb3IgTWVhdHNwYWNl'),
           tokens: [atob('c3RlYWs='), atob('cG9yaw=='), atob('Y2hpY2tlbg=='),
-                   atob('dmVnYW4NCg=='), atob('YmFjb24=')],
+            atob('dmVnYW4NCg=='), atob('YmFjb24=')
+          ],
           name: '000000',
           avatar: '/default_avatar.png'
         });
@@ -407,15 +402,15 @@ window.bootstrapApp = function(payload) {
         type.typeahead({
           local: users,
           limit: 5
-        }).bind('typeahead:selected', function (obj, datum) {
+        }).bind('typeahead:selected', function(obj, datum) {
           type.typeahead('setQuery', '');
           if (datum.name !== '000000') {
-            $scope.$apply(function () {
+            $scope.$apply(function() {
               $scope.influencers.push(datum);
             });
           } else {
             window.open(atob('aHR0cDovL2NoYXQubWVhdHNwYWMuZXM='), '_blank',
-                        'height=480,width=320,scrollbars=yes');
+              'height=480,width=320,scrollbars=yes');
           }
         });
 
@@ -424,4 +419,13 @@ window.bootstrapApp = function(payload) {
       });
     }
   ]);
+
+  app.controller('QuestionsThanksCtrl', ['$scope',
+    function($scope) {
+      if (!$scope.user.questionsDone) {
+        return $location.path('/questions');
+      }
+    }
+  ]);
+
 };
