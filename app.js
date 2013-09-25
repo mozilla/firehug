@@ -2,15 +2,12 @@
 
 var express = require('express');
 var http = require('http');
-var io = require('socket.io');
 var https = require('https');
 var querystring = require('querystring');
 var hbs = require('hbs');
 var stylus = require('stylus');
 var nib = require('nib');
-var connect = require('connect');
 var connectRedis = require('connect-redis');
-var cookie = require('connect').utils;
 var request = require('request');
 
 var shared = require('./shared');
@@ -213,149 +210,6 @@ server.listen(process.env.PORT || 5000, function() {
   console.log('Listening on http://%s:%d', address.address, address.port);
 });
 
-// Start socket.io server
-var sio = io.listen(server);
-
-sio.configure(function() {
-  sio.set('transports', ['xhr-polling']);
-  sio.set('polling duration', 20);
-});
-
-var sockets = {};
-
-var persistent = {
-  users: {},
-  announces: [],
-  ignitions: []
-};
-
-function broadcastStatus() {
-  sio.sockets.emit('status', {
-    online: Object.keys(sockets).length
-  });
-}
-
-// Via https://gist.github.com/bobbydavid/2640463
-sio.set('authorization', function(data, accept) {
-  cookieParser(data, {}, function(err) {
-    if (err) {
-      return accept(err, false);
-    }
-    var sid = data.sessionId = data.signedCookies[nconf.get('sessionName')];
-
-    sessionStore.get(sid, function(err, session) {
-      if (err || !session) {
-        return accept('unauthorized', false);
-      }
-      session.sessionId = sid;
-      data.session = session;
-
-      sessionStore.set(sid, session, function() {
-        accept(null, true);
-      });
-    });
-  });
-});
-
-sio.on('connection', function(socket) {
-  var sid = socket.handshake.sessionId;
-  session = socket.handshake.session;
-  var user;
-
-  console.log('Socket %s connected', sid);
-
-  sockets[sid] = socket;
-
-  if (session.email) {
-    Users.login(session.email, function(err, userRecord) {
-      user = userRecord;
-      socket.emit('hello', {
-        email: session.email,
-        location: session.location
-      });
-    });
-  } else {
-    socket.emit('hello', {});
-  }
-
-  broadcastStatus();
-
-  socket.on('assertLogin', function(data) {
-    Users.emailFromAssertion(data.assertion, nconf.get('audience'), function(err, result) {
-      console.log(err, result);
-      if (err) {
-        socket.emit('login', {
-          email: null
-        });
-        return;
-      }
-      var email = result.email;
-
-      Users.login(session, email, function(err, user) {
-        socket.emit('login', {
-          email: user.email,
-          location: user.location
-        });
-      });
-    });
-  });
-
-  socket.on('announce', function(announceEnd) {
-    var email = session.email;
-    var time = Date.now();
-
-    persistent.announces.push({
-      email: email,
-      time: time
-    });
-
-    var treshold = nconf.get('treshold');
-    // Initial set
-    var seeds = persistent.announces.filter(function(other) {
-      return other.email != email && (time - other.time) < treshold;
-    }).map(function(other) {
-      Users.findByEmail(other.email, function(err, result) {
-        if (err || !result || !result.socket) {
-          return;
-        }
-        if (result.user.announceResults) {
-          result.user.announceResults.push(email);
-        } else {
-          result.user.announceResults = [email];
-        }
-        console.log('*** Past', other.email, email);
-        var otherSocket = result.socket;
-        otherSocket.emit('findings', {
-          emails: [email]
-        });
-      });
-      return other.email;
-    });
-
-    user.announceResults = seeds;
-
-    console.log('*** Seeds', seeds);
-    socket.emit('findings', {
-      emails: seeds
-    });
-    if (announceEnd) {
-      setTimeout(function() {
-        announceEnd({
-          count: user.announceResults.length
-        });
-      }, treshold);
-    }
-  });
-
-  socket.on('disconnect', function() {
-    delete sockets[sid];
-    var user = persistent.users[session.email];
-    if (user) {
-      user.sessionId = null;
-    }
-    broadcastStatus();
-  });
-});
 
 var Users = {
 
@@ -393,16 +247,6 @@ var Users = {
     vreq.setHeader('Content-Length', data.length);
     vreq.write(data);
     vreq.end();
-  },
-
-  findByEmail: function(email, next) {
-    if (!user || !user.sessionId) {
-      next(new Error('Not found'));
-    }
-    next(null, {
-      user: user,
-      socket: sockets[user.sessionId]
-    });
   },
 
   login: function(session, email, next) {
