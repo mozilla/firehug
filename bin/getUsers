@@ -60,7 +60,7 @@ var setUser = function (user, next) {
       return
     }
     client.sadd('emails', email);
-    console.log('user: %s', email);
+    // console.log('user: %s', email);
     next();
   });
 };
@@ -96,6 +96,7 @@ var getUsers = function (callback) {
 (function getMoreUsers() {
   getUsers(function (finished) {
     if (!finished) {
+      console.log('getMoreUsers');
       getMoreUsers();
     } else {
       console.log('getUsers success');
