@@ -6,5 +6,7 @@
     "threshold": 5000,
     "apiKey": "",
     "apiApp": "",
-    "googleKey": ""
+    "googleKey": "",
+    "gravatarPath": "/default_avatar.png",
+    "audience": "localhost:5000"
 }

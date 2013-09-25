@@ -385,6 +385,20 @@ window.bootstrapApp = function(payload) {
         $scope.influencers.splice(idx, 1);
       };
 
+      $scope.setMood = function (mood) {
+        $('.mood').removeClass('on');
+        $('#mood-' + mood).click()
+        $('.mood.' + mood).addClass('on');
+      };
+
+      $scope.moods = {
+        'happy': 'Happy',
+        'nervous': 'Nervous',
+        'sleepy': 'Sleepy',
+        'energized': 'Energized',
+        'overwhelmed': 'Over- whelmed'
+      };
+
       $http({
         url: '/typeahead',
         method: 'GET'
