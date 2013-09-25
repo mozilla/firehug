@@ -120,52 +120,60 @@ app.post('/verify', function(request, response) {
   });
 });
 
+app.post('/questions', isLoggedIn, function(request, response) {
+  console.log(request.body);
+
+  response.send({
+    status: 1
+  });
+});
+
 app.get('/schedule', isLoggedIn, function (req, res, next) {
   client.smembers('schedules', function (err, schedules) {
     if (err) {
-      res.status(400).send();
-    } else {
-      var scheduleList = {};
-      var sortedSchedule = {};
-      var count = 0;
-      var title;
-
-      schedules.forEach(function (title, idx) {
-        client.get('schedule:' + title, function (err, s) {
-          count ++;
-
-          if (err) {
-            res.status(400).send({ error: err });
-          } else {
-            try {
-              scheduleList[title] = JSON.parse(s);
-            } catch(e) {
-              console.log('Could not parse schedule ', s);
-            }
-          }
-
-          if (count === schedules.length) {
-            var keys = [];
-
-            for (var key in scheduleList) {
-              if (scheduleList.hasOwnProperty(key)) {
-                keys.push(key);
-              }
-            }
-
-            keys.sort();
-
-            for (var i = 0; i < keys.length; i ++) {
-              sortedSchedule[keys[i]] = scheduleList[keys[i]];
-            }
-
-            res.send({
-              schedule: sortedSchedule
-            });
-          }
-        });
-      });
+      return res.status(400).send();
     }
+
+    var scheduleList = {};
+    var sortedSchedule = {};
+    var count = 0;
+    var title;
+
+    schedules.forEach(function (title, idx) {
+      client.get('schedule:' + title, function(err, s) {
+        count ++;
+
+        if (err) {
+          return res.status(400).send({ error: err });
+        }
+
+        try {
+          scheduleList[title] = JSON.parse(s);
+        } catch(e) {
+          console.log('Could not parse schedule ', s);
+        }
+
+        if (count === schedules.length) {
+          var keys = [];
+
+          for (var key in scheduleList) {
+            if (scheduleList.hasOwnProperty(key)) {
+              keys.push(key);
+            }
+          }
+
+          keys.sort();
+
+          for (var i = 0; i < keys.length; i ++) {
+            sortedSchedule[keys[i]] = scheduleList[keys[i]];
+          }
+
+          res.send({
+            schedule: sortedSchedule
+          });
+        }
+      });
+    });
   });
 });
 
