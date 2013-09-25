@@ -65,9 +65,6 @@ app.use(express.session({
 }));
 
 app.get('/', function(request, response) {
-  if (!nconf.get('audience')) {
-    nconf.set('audience', request.headers.host);
-  }
   var payload = {};
   if (request.session.email) {
     console.log('/', request.session.email);
@@ -84,9 +81,6 @@ app.get('/', function(request, response) {
 
 // DEPRECATED: Remove when hugs got merged/killed
 app.get('/hugs', function(request, response) {
-  if (!nconf.get('audience')) {
-    nconf.set('audience', request.headers.host);
-  }
   response.render('hugs/index');
 });
 
