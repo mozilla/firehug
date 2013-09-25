@@ -263,6 +263,18 @@ window.bootstrapApp = function(payload) {
         $scope.selected = $scope.days[idx];
       };
 
+      $scope.expandDescription = function (ev) {
+        if (!ev.enabled) {
+          ev.enabled = true;
+        } else {
+          ev.enabled = false;
+        }
+      };
+
+      $scope.getDescriptionState = function (ev) {
+        return ev.enabled ? 'more' : 'less';
+      }
+
       $scope.isActive = function(day) {
         return $scope.selected === day;
       };
@@ -362,7 +374,7 @@ window.bootstrapApp = function(payload) {
 
       $scope.influencers = [];
 
-      $scope.removeUser = function(idx) {
+      $scope.removeUser = function (idx) {
         $scope.influencers.splice(idx, 1);
       };
 
@@ -428,4 +440,16 @@ window.bootstrapApp = function(payload) {
     }
   ]);
 
+  app.directive('markdown', function () {
+    var converter = new Showdown.converter();
+    return {
+      restrict: 'AE',
+      link: function (scope, element, attrs) {
+        scope.$watch(attrs['ngMarkdown'], function (newVal) {
+          var html = converter.makeHtml(newVal);
+          element.html(html);
+        });
+      }
+    };
+  });
 };
