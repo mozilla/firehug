@@ -9,43 +9,36 @@ html, body
 	min-height 100%
 
 body
-	background url('/img/back-repeat.jpg') repeat-x 0 0, #f5f1e8
-
-.container
-	max-width 800px
+	background url('/img/background.png') no-repeat, url('/img/back-repeat.jpg') repeat-x 0 0, #f5f1e8
 
 .tt-hint
 	display none
 
-.title, .subtitle h3
+h2, .subtitle h3
 	font-family Montserrat
 	text-align center
 	text-shadow none
 	text-transform uppercase
 
-.title
+h2
 	color color-title-blue
 	font-size 42px
 
 .subtitle
 	background-color color-subtitle-yellow
-	clear both
-	float left
-	height 50px
-	position relative
-	width 100%
 	h3
 		color color-subtitle-gray
 		font-size 28px
+		height 50px
 		font-weight normal
-		margin 0 auto
-		position relative
-		width 400px
-		> span
+		text-align center
+		span
 			display block
+			line-height 50px
+		a:nth-child(2)
+			float right
+		a:nth-child(1)
 			float left
-			line-height: 48px
-			width 180px
 
 .icon
 	cursor pointer
@@ -53,12 +46,12 @@ body
 	float left
 	font-size 0
 	height 50px
-	padding 0 40px
-	width 30px
+	width 50px
+	user-select none
 	i
 		color color-subtitle-gray
 		font-size 20px
-		line-height 45px
+		line-height 50px
 		text-decoration none
 		text-indent 0
 		text-shadow none
@@ -87,15 +80,12 @@ a
 			display block
 
 article
-	overflow hidden
 	position relative
+
 	.event-wrapper
-		overflow hidden
 
 		section
 			display none
-			float left
-			width 100%
 
 			.events
 				list-style-type none
@@ -185,7 +175,7 @@ header
 					display block
 					width 28px
 					height 10px
-					background no-repeat url('/media/img/sandstone/menu-point.png')
+					background no-repeat url('/img/sandstone/menu-point.png')
 					position absolute
 					left 12px
 					top -10px
@@ -282,11 +272,21 @@ main
 		margin-bottom 20px
 	.twitter-typeahead
 		width 100%
-	.tt-suggestions p
+	.tt-dropdown-menu
+		width 100%
 		background-color #fff
 		border-radius 5px
-		margin 2px 0
+		box-shadow 0 1px 3px 0 rgba(0, 0, 0, .5)
+	.tt-suggestions p
+		margin 0
+		border-bottom 1px solid rgba(0, 0, 0, 0.1)
 		padding 5px 10px
+		&:first-child
+			border-radius 5px 5px 0 0
+		&:last-child
+			border-radius 0 0 5px 5px
+		&:first-child:last-child
+			border-radius 5px
 
 	#mozillians-list
 		list-style-type none
@@ -340,11 +340,11 @@ main
 	display none
 	background url('/img/logo-home.png') no-repeat 50% 295px
 
-@media only screen and (min-width 481px)
-	body
-		background url('/img/background.png') no-repeat !important
+@media (max-width: 480px)
 
-@media only screen and (max-width 480px)
+	body
+		background url('/img/back-repeat.jpg') repeat-x 0 0, #f5f1e8
+
 	// Splash screen only for mobile screens
 	#splash-screen
 		display block
