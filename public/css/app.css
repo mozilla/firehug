@@ -377,23 +377,22 @@ header nav .menu-dropdown:active {
   border-radius: 6px;
   -webkit-box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.2), 0px -1px 0px 0px rgba(0,0,0,0.3) inset;
   box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.2), 0px -1px 0px 0px rgba(0,0,0,0.3) inset;
-  background: -webkit-linear-gradient(#277ac1, #236eae), #277ac1;
-  background: -moz-linear-gradient(#277ac1, #236eae), #277ac1;
-  background: -o-linear-gradient(#277ac1, #236eae), #277ac1;
-  background: -ms-linear-gradient(#277ac1, #236eae), #277ac1;
-  background: linear-gradient(#277ac1, #236eae), #277ac1;
+  background: url("/img/button-arrow.png") no-repeat right center, -webkit-linear-gradient(#277ac1, #236eae), #277ac1;
+  background: url("/img/button-arrow.png") no-repeat right center, -moz-linear-gradient(#277ac1, #236eae), #277ac1;
+  background: url("/img/button-arrow.png") no-repeat right center, -o-linear-gradient(#277ac1, #236eae), #277ac1;
+  background: url("/img/button-arrow.png") no-repeat right center, -ms-linear-gradient(#277ac1, #236eae), #277ac1;
+  background: url("/img/button-arrow.png") no-repeat right center, linear-gradient(#277ac1, #236eae), #277ac1;
   color: #fff;
-  font-size: 16px;
+  font-size: 18px;
   text-align: center;
-  font-weight: bold;
-  padding: 5px 10px;
+  font-weight: normal;
+  padding: 15px 70px;
   line-height: 1.1;
   text-decoration: none;
   min-width: 80px;
   border: 0;
   text-shadow: 0 1px 0 rgba(0,0,0,0.25);
   font-family: 'Open Sans Light', sans-serif;
-  font-weight: bold;
   -webkit-transition: all linear 0.1s;
   -moz-transition: all linear 0.1s;
   -o-transition: all linear 0.1s;
@@ -464,7 +463,14 @@ main h2 {
   color: #0095dd;
 }
 #view-questions .form-group {
+  background-color: #fff;
+  -webkit-box-shadow: #eee 1px 1px 3px;
+  box-shadow: #eee 1px 1px 3px;
+  float: left;
   margin-bottom: 20px;
+  padding: 20px;
+  text-align: center;
+  width: 100%;
 }
 #view-questions .twitter-typeahead {
   width: 100%;
@@ -494,10 +500,76 @@ main h2 {
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
+#view-questions h5 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+#view-questions .question-icon {
+  display: block;
+  margin: 0 auto 10px auto;
+  width: 42px;
+}
+#view-questions .radio-inline {
+  display: none;
+}
+#view-questions .moods {
+  margin: 0 auto;
+  position: relative;
+  height: 330px;
+  width: 457px;
+}
+#view-questions .moods > a {
+  background: url("/img/mood.png") no-repeat;
+  -webkit-background-size: 100%;
+  -moz-background-size: 100%;
+  background-size: 100%;
+  color: #12aae1;
+  cursor: pointer;
+  display: block;
+  height: 173px;
+  position: absolute;
+  width: 151px;
+}
+#view-questions .moods > a:hover span,
+#view-questions .moods > a.on span {
+  color: #fff;
+}
+#view-questions .moods > a span {
+  display: inline-block;
+  font-family: Montserrat;
+  font-size: 20px;
+  line-height: 30px;
+  margin-top: 70px;
+  text-transform: uppercase;
+}
+#view-questions .moods > a.happy {
+  left: 0;
+}
+#view-questions .moods > a.nervous {
+  left: 155px;
+}
+#view-questions .moods > a.sleepy {
+  left: 309px;
+}
+#view-questions .moods > a.energized {
+  left: 78px;
+  top: 129px;
+}
+#view-questions .moods > a.overwhelmed {
+  left: 232px;
+  top: 129px;
+}
+#view-questions .moods > a.overwhelmed span {
+  margin-top: 50px;
+}
 #view-questions #mozillians-list {
+  display: block;
+  clear: both;
+  float: left;
   list-style-type: none;
   margin: 0;
   padding: 10px 0;
+  width: 100%;
 }
 #view-questions #mozillians-list li {
   clear: both;
@@ -537,6 +609,7 @@ main h2 {
   display: block;
 }
 #view-questions #mozillians-list .delete {
+  cursor: pointer;
   display: inline-block;
   float: right;
   font-style: italic;
@@ -557,6 +630,42 @@ main h2 {
 @media (max-width: 480px) {
   body {
     background: url("/img/back-repeat.jpg") repeat-x 0 0, #f5f1e8;
+  }
+  #mood-wrapper.moods {
+    height: 160px;
+    width: 257px;
+  }
+  #mood-wrapper.moods > a.mood {
+    height: 92px;
+    width: 82px;
+  }
+  #mood-wrapper.moods > a.mood span {
+    display: inline-block;
+    font-family: Montserrat;
+    font-size: 12px;
+    line-height: 22px;
+    margin-top: 36px;
+    text-transform: uppercase;
+  }
+  #mood-wrapper.moods > a.mood.happy {
+    left: 0;
+  }
+  #mood-wrapper.moods > a.mood.nervous {
+    left: 86px;
+  }
+  #mood-wrapper.moods > a.mood.sleepy {
+    left: 171px;
+  }
+  #mood-wrapper.moods > a.mood.energized {
+    left: 43px;
+    top: 69px;
+  }
+  #mood-wrapper.moods > a.mood.overwhelmed {
+    left: 128px;
+    top: 69px;
+  }
+  #mood-wrapper.moods > a.mood.overwhelmed span {
+    margin-top: 22px;
   }
   #splash-screen {
     display: block;

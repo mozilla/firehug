@@ -225,19 +225,18 @@ header
 	display inline-block
 	border-radius 6px
 	box-shadow 0px 1px 0px 0px rgba(0, 0, 0, 0.2), 0px -1px 0px 0px rgba(0, 0, 0, 0.3) inset
-	background linear-gradient(color-button-blue, darken(color-button-blue, 10%)), color-button-blue
+	background url('/img/button-arrow.png') no-repeat right center, linear-gradient(color-button-blue, darken(color-button-blue, 10%)), color-button-blue
 	color #fff
-	font-size 16px
+	font-size 18px
 	text-align center
-	font-weight bold
-	padding 5px 10px
+	font-weight normal
+	padding 15px 70px
 	line-height 1.1
 	text-decoration none
 	min-width 80px
 	border 0
 	text-shadow 0 1px 0 rgba(0, 0, 0, 0.25)
 	font-family 'Open Sans Light', sans-serif
-	font-weight bold
 	transition all linear 0.1s
 
 	&:hover, &:focus
@@ -299,7 +298,13 @@ main
 #view-questions
 
 	.form-group
+		background-color #FFF
+		box-shadow #eee 1px 1px 3px
+		float left
 		margin-bottom 20px
+		padding 20px
+		text-align center
+		width 100%
 	.twitter-typeahead
 		width 100%
 	.tt-dropdown-menu
@@ -318,10 +323,65 @@ main
 		&:first-child:last-child
 			border-radius 5px
 
+	h5
+		font-size 28px
+		margin-bottom 20px
+
+	.question-icon
+		display block
+		margin 0 auto 10px auto
+		width 42px
+
+	.radio-inline
+		display none
+
+	.moods
+		margin 0 auto
+		position relative
+		height 330px
+		width 457px
+		> a
+			background url('/img/mood.png') no-repeat
+			background-size 100%
+			color color-title-blue
+			cursor pointer
+			display block
+			height 173px
+			position absolute
+			width 151px
+			&:hover, &.on
+				span
+					color #fff
+			span
+				display inline-block
+				font-family Montserrat
+				font-size 20px
+				line-height 30px
+				margin-top 70px
+				text-transform uppercase
+			&.happy
+				left 0
+			&.nervous
+				left 155px
+			&.sleepy
+				left 309px
+			&.energized
+				left 78px
+				top 129px
+			&.overwhelmed
+				left 232px
+				top 129px
+				span
+					margin-top 50px
+
 	#mozillians-list
+		display block
+		clear both
+		float left
 		list-style-type none
 		margin 0
 		padding 10px 0
+		width 100%
 		li
 			clear both
 			float left
@@ -353,6 +413,7 @@ main
 			> span
 				display block
 		.delete
+			cursor pointer
 			display inline-block
 			float right
 			font-style italic
@@ -374,6 +435,31 @@ main
 
 	body
 		background url('/img/back-repeat.jpg') repeat-x 0 0, #f5f1e8
+
+	#mood-wrapper.moods
+		height 160px
+		width 257px
+		> a.mood
+			height 92px
+			width 82px
+			span
+				font-size 12px
+				line-height 22px
+				margin-top 36px
+			&.happy
+				left 0
+			&.nervous
+				left 86px
+			&.sleepy
+				left 171px
+			&.energized
+				left 43px
+				top 69px
+			&.overwhelmed
+				left 128px
+				top 69px
+				span
+					margin-top 22px
 
 	// Splash screen only for mobile screens
 	#splash-screen
