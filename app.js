@@ -3,9 +3,10 @@
 var express = require('express');
 var http = require('http');
 var https = require('https');
-var querystring = require('querystring');
 var hbs = require('hbs');
+var gravatar = require('gravatar');
 var stylus = require('stylus');
+var querystring = require('querystring');
 var nib = require('nib');
 var connectRedis = require('connect-redis');
 var request = require('request');
@@ -20,10 +21,12 @@ require('./bin');
 var app = express();
 
 var isLoggedIn = function(req, res, next) {
-  if (req.session.email) {
+  if (req.session.user) {
     next();
   } else {
-    return res.status(401).send({status: 0});
+    return res.status(401).send({
+      status: 0
+    });
   }
 };
 
@@ -63,22 +66,18 @@ app.use(express.session({
 
 app.get('/', function(request, response) {
   var payload = {};
-  if (request.session.email) {
-    console.log('/', request.session.email);
+  if (request.session.user) {
+    console.log('/', request.session.user.username);
     payload.user = {
-      email: request.session.email,
-      location: request.session.location
+      email: request.session.user.email,
+      location: request.session.user.location,
+      dialog: request.session.user.dialog
     };
   }
 
   response.render('index', {
     jsonPayload: JSON.stringify(payload)
   });
-});
-
-// DEPRECATED: Remove when hugs got merged/killed
-app.get('/hugs', function(request, response) {
-  response.render('hugs/index');
 });
 
 app.post('/verify', function(request, response) {
@@ -98,7 +97,7 @@ app.post('/verify', function(request, response) {
     }
     console.log('Users.login', result.email);
 
-    Users.login(request.session, result.email, function(err, user) {
+    Users.login(result.email, function(err, user) {
       if (err || !user) {
         console.log('Users.login failed', err);
         return response.status(400).send({
@@ -106,14 +105,15 @@ app.post('/verify', function(request, response) {
         });
       }
 
-      request.session.email = result.email;
+      request.session.user = user;
 
-      console.log('Users.login success', user);
+      console.log('Users.login success', user.username);
       response.send({
         status: 1,
         user: {
-          email: request.session.email,
-          location: request.session.location
+          email: request.session.user.email,
+          location: request.session.user.location,
+          dialog: request.session.user.dialog
         }
       });
     });
@@ -128,8 +128,8 @@ app.post('/questions', isLoggedIn, function(request, response) {
   });
 });
 
-app.get('/schedule', isLoggedIn, function (req, res, next) {
-  client.smembers('schedules', function (err, schedules) {
+app.get('/schedule', isLoggedIn, function(req, res, next) {
+  client.smembers('schedules', function(err, schedules) {
     if (err) {
       return res.status(400).send();
     }
@@ -139,17 +139,19 @@ app.get('/schedule', isLoggedIn, function (req, res, next) {
     var count = 0;
     var title;
 
-    schedules.forEach(function (title, idx) {
+    schedules.forEach(function(title, idx) {
       client.get('schedule:' + title, function(err, s) {
-        count ++;
+        count++;
 
         if (err) {
-          return res.status(400).send({ error: err });
+          return res.status(400).send({
+            error: err
+          });
         }
 
         try {
           scheduleList[title] = JSON.parse(s);
-        } catch(e) {
+        } catch (e) {
           console.log('Could not parse schedule ', s);
         }
 
@@ -164,7 +166,7 @@ app.get('/schedule', isLoggedIn, function (req, res, next) {
 
           keys.sort();
 
-          for (var i = 0; i < keys.length; i ++) {
+          for (var i = 0; i < keys.length; i++) {
             sortedSchedule[keys[i]] = scheduleList[keys[i]];
           }
 
@@ -182,32 +184,41 @@ app.post('/logout', function(request, response) {
   response.status(200).send();
 });
 
-app.get('/realmozillians', isLoggedIn, function(req, res) {
-  var users = [];
+app.get('/typeahead', isLoggedIn, function(req, res) {
+  var location = req.session.user.location;
+  var defaultGravatar = nconf.get('domain') + nconf.get('gravatarPath');
 
-  client.smembers('emails', function(err, emails) {
+  client.smembers('location:' + location, function(err, usernames) {
     if (err) {
-      res.status = 400;
-      res.send(err);
-    } else {
-
-      for (var email in emails) {
-        client.hgetall('user:' + emails[email], function(err, user) {
-          if (err) {
-            res.status = 400;
-            res.json({
-              error: err
-            });
-          } else {
-            users.push(user);
-          }
-
-          if (users.length === emails.length) {
-            res.send(users);
-          }
-        });
-      }
+      return res.status(400).send();
     }
+
+    var multi = client.multi();
+    for (var username in usernames) {
+      multi.hgetall('user:' + usernames[username]);
+    }
+    multi.exec(function(err, users) {
+      if (err || !users) {
+        return res.status(400).send();
+      }
+
+      var cleanUsers = users.map(function(user) {
+        var entry = {
+          fullName: user.fullName,
+          username: user.username
+        };
+        if (user.country) {
+          entry.country = user.country;
+        }
+        entry.avatar = user.avatar || gravatar.url(user.email, {
+          s: 50,
+          d: defaultGravatar
+        });
+        return entry;
+      });
+
+      res.send(cleanUsers);
+    });
   });
 });
 
@@ -257,46 +268,18 @@ var Users = {
     vreq.end();
   },
 
-  login: function(session, email, next) {
-    client.hgetall('user:' + email, function(err, u) {
-      if (err || !u) {
-        next(new Error('User not found ', err));
-      } else {
-        session.email = email;
-
-        // TODO: Change to proper city name based on mozillians api. Currently hardcoded for testing.
-        var location = 'summit2013-toronto';
-
-        switch (location) {
-          case 'summit2013-toronto':
-            session.location = 'to';
-            break;
-
-          case 'summit2013-santa-clara':
-            session.location = 'sc';
-            break;
-
-          default:
-            session.location = 'br';
-            break;
-        }
-
-        var user = {
-          fullName: u.fullName,
-          email: u.email,
-          ircName: u.ircName,
-          announceResults: [],
-          location: location
-        };
-
-        user.sessionId = session.sessionId;
-
-        sessionStore.set(session.sessionId, session, function() {
-          next(null, {
-            user: user
-          });
-        });
+  login: function(email, next) {
+    client.get('email:' + email, function(err, username) {
+      if (err || !username) {
+        return next(new Error('Email not found ', err));
       }
+      console.log('login with username: %s', username);
+      client.hgetall('user:' + username, function(err, user) {
+        if (err || !user) {
+          return next(new Error('Username not found ', err));
+        }
+        next(null, user);
+      });
     });
   }
 

@@ -5,7 +5,8 @@
 var http = require('http');
 var https = require('https');
 var redis = require('redis');
-var gravatar = require('gravatar');
+var querystring = require('querystring');
+var md5 = require('md5');
 var async = require('async');
 
 var shared = require('./../shared');
@@ -14,67 +15,100 @@ var client = shared.redisClient;
 
 var LIMIT = 100;
 var DOMAIN = nconf.get('mozilliansURL');
-var API_URL = DOMAIN + '/api/v1/users/?limit=' + LIMIT +
-              '&app_name=' + nconf.get('apiApp') + '&is_vouched=true&app_key=' +
-              nconf.get('apiKey');
+var API_URL = DOMAIN + '/api/v1/users/?' + querystring.stringify({
+  app_name: nconf.get('apiApp'),
+  app_key: nconf.get('apiKey'),
+  limit: LIMIT,
+  is_vouched: 'true',
+  groups: 'summit2013-santa-clara'
+});
+
+var LOCATIONS = {
+  'santa-clara': 'sc',
+  'toronto': 'to',
+  'brussels': 'br'
+}
 
 var options = {
   host: nconf.get('mozilliansURL').split('://')[1],
-  headers: {accept: 'application/json, text/plain, */*'},
+  headers: {
+    accept: 'application/json, text/plain, */*'
+  },
   path: API_URL,
   method: 'GET'
 };
 
 // Save user to redis
-var setUser = function (user, next) {
-  var avatar = user.photo || '';
+var setUser = function(user, next) {
   var email = user.email.toLowerCase();
-  var country = '';
 
-  if (!email) {
-    next('No email');
-    return;
+  if (!email || !user.username || !user.full_name) {
+    return next('Bad user');
   }
 
-  if (!avatar) {
-    avatar = gravatar.url(email, {
-      d: nconf.get('domain') + '/default_avatar.png'
-    });
+  var location = null;
+  var bits;
+  if (user.groups && (bits = user.groups.match(/summit2013-([a-z-]+)/m))) {
+    location = LOCATIONS[bits[1]];
+  }
+  if (!location) {
+    return next('Missing location');
   }
 
-  if (user.country) {
-    country = user.country.toString().toUpperCase();
+  var dialog = null;
+  if (user.dialog) {
+    dialog = user.dialog.split(/,/);
   }
 
-  client.hmset('user:' + email, {
+  var username = user.username;
+
+  var entry = {
     fullName: user.full_name,
     username: user.username,
-    email: user.email,
-    avatar: avatar,
-    region: user.region,
-    country: country
-  }, function (err) {
+    email: email,
+    avatar: user.photo,
+    location: location,
+    dialog: dialog,
+    country: user.country
+  };
+  // Reduce data that we store
+  for (var key in entry) {
+    if (!entry[key]) {
+      delete entry[key];
+    }
+  }
+
+  client.hmset('user:' + username, entry, function(err) {
     if (err) {
       console.log('Could not save user ', err);
-      next(err);
-      return
+      return next(err);
     }
-    client.sadd('emails', email);
-    // console.log('user: %s', email);
-    next();
+    client.set('email:' + email, username, function(err) {
+      if (err) {
+        console.log('Could not save email ', err);
+        return next(err);
+      }
+      client.sadd('emails', email);
+      client.sadd('usernames', username);
+      if (location) {
+        client.sadd('location:' + location, username);
+      }
+      // console.log('user: %s @ %s', username, location);
+      next();
+    });
   });
 };
 
-var getUsers = function (callback) {
+var getUsers = function(callback) {
   var finished = false;
-  https.get(options, function (backendResponse) {
+  https.get(options, function(backendResponse) {
     var data = [];
 
-    backendResponse.on('data', function (chunk) {
+    backendResponse.on('data', function(chunk) {
       data.push(chunk);
     });
 
-    backendResponse.on('end', function () {
+    backendResponse.on('end', function() {
       var result = JSON.parse(data.join(''));
 
       if (result.meta.next === null) {
@@ -94,7 +128,7 @@ var getUsers = function (callback) {
 };
 
 (function getMoreUsers() {
-  getUsers(function (finished) {
+  getUsers(function(finished) {
     if (!finished) {
       console.log('getMoreUsers');
       getMoreUsers();

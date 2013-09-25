@@ -367,7 +367,7 @@ window.bootstrapApp = function(payload) {
       };
 
       $http({
-        url: '/realmozillians',
+        url: '/typeahead',
         method: 'GET'
       }).then(function(data) {
         var users = [];
@@ -376,10 +376,9 @@ window.bootstrapApp = function(payload) {
           var nameArr = data.data[u].fullName.split(/\s/);
           users.push({
             value: data.data[u].fullName,
-            tokens: [data.data[u].email, nameArr[0], nameArr[1], data.data[u].username],
-            name: data.data[u].email,
+            tokens: [nameArr[0], nameArr[1], data.data[u].username],
+            name: data.data[u].username,
             avatar: data.data[u].avatar,
-            region: data.data[u].region,
             country: data.data[u].country
           });
         }
