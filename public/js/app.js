@@ -115,6 +115,8 @@ window.bootstrapApp = function(payload) {
               $rootScope.$broadcast('persona:login', user);
               starting.resolve();
             }, function() {
+              $rootScope.$broadcast('persona:loginFailed');
+              navigator.id.logout();
               starting.resolve();
             });
           },
@@ -213,6 +215,11 @@ window.bootstrapApp = function(payload) {
       if ($rootScope.user) {
         return $location.path('/');
       }
+
+      $scope.emailWarning = false;
+      $rootScope.$on('persona:loginFailed', function() {
+        $scope.emailWarning = true;
+      });
 
       // Load persona
       var email = localStorage.getItem('email');
