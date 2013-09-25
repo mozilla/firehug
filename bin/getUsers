@@ -6,7 +6,6 @@ var http = require('http');
 var https = require('https');
 var redis = require('redis');
 var querystring = require('querystring');
-var md5 = require('md5');
 var async = require('async');
 
 var shared = require('./../shared');
@@ -20,7 +19,7 @@ var API_URL = DOMAIN + '/api/v1/users/?' + querystring.stringify({
   app_key: nconf.get('apiKey'),
   limit: LIMIT,
   is_vouched: 'true',
-  groups: 'summit2013-santa-clara'
+  groups: 'summit2013-brussels,summit2013-toronto,summit2013-santa-clara'
 });
 
 var LOCATIONS = {
