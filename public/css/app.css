@@ -150,6 +150,7 @@ h2,
 h2 {
   color: #12aae1;
   font-size: 42px;
+  margin-bottom: 30px;
 }
 .subtitle {
   background-color: #ffcd02;
@@ -170,6 +171,11 @@ h2 {
 }
 .subtitle h3 a:nth-child(1) {
   float: left;
+}
+.title-icon {
+  display: block;
+  margin: 0 auto 20px auto;
+  width: 140px;
 }
 .icon {
   cursor: pointer;
@@ -204,8 +210,40 @@ a.row {
   display: block;
   padding: 12px 0;
 }
-.curr-location .city {
+.curr-location .details {
+  background-color: #fff;
+  border-bottom: 2px solid #ccc;
+  clear: both;
   display: none;
+  float: left;
+  padding: 20px;
+  position: relative;
+  width: 100%;
+}
+.curr-location .details .description {
+  display: none;
+}
+.curr-location .details .expander {
+  color: #555559;
+  cursor: pointer;
+  font-family: Montserrat;
+  font-size: 25px;
+  line-height: 32px;
+  position: absolute;
+  text-decoration: none;
+  z-index: 2;
+}
+.curr-location .details.less span.less {
+  display: none;
+}
+.curr-location .details.more {
+  background-color: #fafafa;
+}
+.curr-location .details.more span.more {
+  display: none;
+}
+.curr-location .details.more .description {
+  display: block;
 }
 .curr-location.to .to {
   display: block;
@@ -228,10 +266,7 @@ article .event-wrapper section .events {
   padding: 0;
 }
 article .event-wrapper section .events .city {
-  background-color: #fff;
-  border-bottom: 2px solid #ccc;
-  clear: both;
-  padding: 20px;
+  margin-left: 30px;
 }
 article .event-wrapper section.active {
   display: block;

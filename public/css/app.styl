@@ -23,6 +23,7 @@ h2, .subtitle h3
 h2
 	color color-title-blue
 	font-size 42px
+	margin-bottom 30px
 
 .subtitle
 	background-color color-subtitle-yellow
@@ -39,6 +40,11 @@ h2
 			float right
 		a:nth-child(1)
 			float left
+
+.title-icon
+	display block
+	margin 0 auto 20px auto
+	width 140px
 
 .icon
 	cursor pointer
@@ -67,8 +73,35 @@ a
 		padding 12px 0
 
 .curr-location
-	.city
+	.details
+		background-color #FFF
+		border-bottom 2px solid #CCC
+		clear both
 		display none
+		float left
+		padding 20px
+		position relative
+		width 100%
+		.description
+			display none
+		.expander
+			color color-subtitle-gray
+			cursor pointer
+			font-family Montserrat
+			font-size 25px
+			line-height 32px
+			position absolute
+			text-decoration none
+			z-index 2
+		&.less
+			span.less
+				display none
+		&.more
+			background-color #FAFAFA
+			span.more
+				display none
+			.description
+				display block
 	&.to
 		.to
 			display block
@@ -93,10 +126,7 @@ article
 				padding 0
 
 				.city
-					background-color #FFF
-					border-bottom 2px solid #CCC
-					clear both
-					padding 20px
+					margin-left 30px
 
 			&.active
 				display block
