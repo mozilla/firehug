@@ -106,7 +106,6 @@ app.post('/verify', function(request, response) {
       });
     }
     console.log('Users.login', result.email);
-    request.session.email = result.email || false;
 
     Users.login(request.session, result.email, function(err, user) {
       if (err || !user) {
@@ -115,6 +114,9 @@ app.post('/verify', function(request, response) {
           error: 'User not found'
         });
       }
+
+      request.session.email = result.email;
+
       console.log('Users.login success', user);
       response.send({
         status: 1,
