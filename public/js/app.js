@@ -419,7 +419,7 @@ window.bootstrapApp = function(payload) {
 
       $scope.setMood = function (mood) {
         $('.mood').removeClass('on');
-        $('#mood-' + mood).click()
+        $('#mood-' + mood).click();
         $('.mood.' + mood).addClass('on');
       };
 
@@ -443,8 +443,7 @@ window.bootstrapApp = function(payload) {
             value: data.data[u].fullName,
             tokens: [nameArr[0], nameArr[1], data.data[u].username],
             name: data.data[u].username,
-            avatar: data.data[u].avatar,
-            country: data.data[u].country
+            avatar: data.data[u].avatar
           });
         }
 
