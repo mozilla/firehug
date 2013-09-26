@@ -32,7 +32,7 @@ window.bootstrapApp = function(payload) {
         .when('/around', {
           controller: 'AroundCtrl',
           controllerAs: 'around',
-          templateUrl: '/partials/todo.html'
+          templateUrl: '/partials/getting-around.html'
         })
         .when('/questions', {
           controller: 'QuestionsCtrl',
