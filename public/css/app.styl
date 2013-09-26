@@ -23,7 +23,7 @@ h2, .subtitle h3
 h2
 	color color-title-blue
 	font-size 42px
-	margin-bottom 30px
+	margin-bottom 50px
 
 .content
 	background-color #fff
@@ -32,6 +32,7 @@ h2
 
 .subtitle
 	background-color color-subtitle-yellow
+	position relative
 	h3
 		color color-subtitle-gray
 		font-size 28px
@@ -45,6 +46,40 @@ h2
 			float right
 		a:nth-child(1)
 			float left
+
+#schedule-locations
+	background-color #fff
+	border-radius 5px
+	box-shadow 0 1px 3px 0 rgba(0, 0, 0, .5)
+	height 35px
+	position absolute
+	right 0
+	text-align center
+	top -40px
+	width 200px
+	z-index 3
+	&.active
+		height auto
+		.location-items
+			display block
+	a
+		border-bottom 1px solid rgba(0, 0, 0, 0.1)
+		cursor pointer
+		display block
+		font-family Montserrat
+		font-size 18px
+		line-height 25px
+		padding 5px 0
+		text-decoration none
+		text-transform uppercase
+		width 100%
+		i
+			font-size 20px
+		&.location-items
+			display none
+	&.active
+		a.location-items
+			display block
 
 .title-icon
 	display block
