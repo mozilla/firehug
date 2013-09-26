@@ -128,7 +128,8 @@ window.bootstrapApp = function(payload) {
             $http({
               url: '/logout',
               method: 'POST'
-            }).finally(function() {
+            }).
+            finally(function() {
               $rootScope.user = null;
               $rootScope.$broadcast('persona:logout');
               starting.resolve();
@@ -268,7 +269,7 @@ window.bootstrapApp = function(payload) {
     function($scope, $rootScope, $http) {
       $scope.listing = false;
 
-      $scope.showLocations = function () {
+      $scope.showLocations = function() {
         if ($scope.listing) {
           $scope.listing = false;
         } else {
@@ -276,20 +277,20 @@ window.bootstrapApp = function(payload) {
         }
       };
 
-      $scope.isShowingLocations = function () {
+      $scope.isShowingLocations = function() {
         return $scope.listing;
       };
 
-      $scope.setLocation = function (location) {
+      $scope.setLocation = function(location) {
         $('#schedule-listing').removeClass('br')
-                              .removeClass('to')
-                              .removeClass('sc')
-                              .addClass(location)
-                              .find('.current span').text($rootScope.locations[location]);
+          .removeClass('to')
+          .removeClass('sc')
+          .addClass(location)
+          .find('.current span').text($rootScope.locations[location]);
         $scope.showLocations();
       };
 
-      $scope.isActiveLocation = function (location) {
+      $scope.isActiveLocation = function(location) {
         return $('#schedule-listing').hasClass(location);
       };
 
@@ -303,7 +304,7 @@ window.bootstrapApp = function(payload) {
         $scope.selected = $scope.days[idx];
       };
 
-      $scope.expandDescription = function (ev) {
+      $scope.expandDescription = function(ev) {
         if (!ev.enabled) {
           ev.enabled = true;
         } else {
@@ -311,7 +312,7 @@ window.bootstrapApp = function(payload) {
         }
       };
 
-      $scope.getDescriptionState = function (ev) {
+      $scope.getDescriptionState = function(ev) {
         return ev.enabled ? 'more' : 'less';
       }
 
@@ -389,40 +390,27 @@ window.bootstrapApp = function(payload) {
     }
   ]);
 
-  app.controller('QuestionsCtrl', ['$scope', '$location',
-    function($scope, $location) {
+  app.controller('QuestionsCtrl', ['$scope', '$location', '$http',
+    function($scope, $location, $http) {
+      console.log('QuestionsCtrl');
       if ($scope.user.questionsDone) {
         // TODO: Implement .questionsDone!
         return $location.path('/questions/thanks');
       }
-      $scope.submit = function() {
-        if (!$scope.questions.$valid) {
-          alert('Boom!');
-          return;
-        }
 
-        // TODO: Submit to server!
-
-        // TODO: Store this serverside as well!
-        $location.path('/questions/thanks');
-        $scope.user.questionsDone = true;
-      }
-    }
-  ]);
-
-  app.controller('QuestionsCtrl', ['$scope', '$http',
-    function($scope, $http) {
-      var type = $('.typeahead');
-
+      $scope.mood = 'excited';
+      $scope.quote = '';
       $scope.influencers = [];
 
-      $scope.removeUser = function (idx) {
+      var type = $('.typeahead');
+
+      $scope.removeUser = function(idx) {
         $scope.influencers.splice(idx, 1);
       };
 
-      $scope.setMood = function (mood) {
+      $scope.setMood = function(mood) {
+        $scope.mood = mood;
         $('.mood').removeClass('on');
-        $('#mood-' + mood).click();
         $('.mood.' + mood).addClass('on');
       };
 
@@ -483,6 +471,36 @@ window.bootstrapApp = function(payload) {
       }, function(data, status) {
         $scope.status = status;
       });
+
+      $scope.submit = function() {
+        console.log($scope.mood);
+        console.log($scope.quote);
+        console.log($scope.influencers);
+        // console.log($scope.questionsForm);
+        if (!$scope.questionsForm.$valid) {
+          alert('Boom!');
+          return;
+        }
+
+        $http.post('/questions', {
+          mood: $scope.mood,
+          quote: $scope.quote,
+          influencers: $scope.influencers.map(function(influencer) {
+            return influencer.name;
+          })
+        })
+          .success(function() {
+            // TODO: Store this serverside as well!
+            $location.path('/questions/thanks');
+            $scope.user.questionsDone = true;
+          })
+          .error(function() {
+            // FIXME: Better error resport
+            alert('Submission failed. Please try again!');
+          });
+
+
+      }
     }
   ]);
 
@@ -494,12 +512,12 @@ window.bootstrapApp = function(payload) {
     }
   ]);
 
-  app.directive('markdown', function () {
+  app.directive('markdown', function() {
     var converter = new Showdown.converter();
     return {
       restrict: 'AE',
-      link: function (scope, element, attrs) {
-        scope.$watch(attrs['ngMarkdown'], function (newVal) {
+      link: function(scope, element, attrs) {
+        scope.$watch(attrs['ngMarkdown'], function(newVal) {
           if (newVal) {
             var html = converter.makeHtml(newVal);
             element.html(html);
