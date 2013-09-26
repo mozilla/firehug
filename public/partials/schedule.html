@@ -30,7 +30,7 @@
                 <time>{{ v.startTime }} - {{ v.endTime }}</time>
                 <p>{{ v.location }}</p>
                 <div class="description" ng-class="! getDescriptionState(v)">
-                  <p class="speaker">{{ v.speaker }}</p>
+                  <markdown class="speaker" ng-markdown="v.speaker">{{ v.speaker }}</markdown>
                   <markdown ng-markdown="v.description">{{ v.description }}</markdown>
                 </div>
               </div>
