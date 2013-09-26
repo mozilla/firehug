@@ -415,11 +415,11 @@ window.bootstrapApp = function(payload) {
       };
 
       $scope.moods = {
-        'happy': 'Happy',
-        'nervous': 'Nervous',
-        'sleepy': 'Sleepy',
-        'energized': 'Energized',
-        'overwhelmed': 'Over- whelmed'
+        'excited': 'Excited',
+        'worried': 'Worried',
+        'proud': 'Proud',
+        'confused': 'Confused',
+        'curious': 'Curious'
       };
 
       $http({
