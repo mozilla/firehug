@@ -227,9 +227,6 @@ app.get('/typeahead', isLoggedIn, function(req, res) {
           fullName: user.fullName,
           username: user.username
         };
-        if (user.country) {
-          entry.country = user.country;
-        }
         entry.avatar = user.avatar || gravatar.url(user.email, {
           s: 50,
           d: defaultGravatar
