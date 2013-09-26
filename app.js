@@ -10,6 +10,7 @@ var querystring = require('querystring');
 var nib = require('nib');
 var connectRedis = require('connect-redis');
 var request = require('request');
+var time = require('time');
 
 var shared = require('./shared');
 var nconf = shared.nconf;
@@ -64,14 +65,32 @@ app.use(express.session({
   key: nconf.get('sessionName')
 }));
 
+var now = new time.Date();
+
+var getDay = function (request) {
+  switch (request.session.user.location) {
+    case 'br':
+      now.setTimezone('Europe/Brussels');
+      break;
+    case 'sc':
+      now.setTimezone('America/Los_Angeles');
+      break;
+    default:
+      now.setTimezone('America/New_York');
+      break;
+  };
+
+  return now.getDate();
+};
+
 app.get('/', function(request, response) {
   var payload = {};
   if (request.session.user) {
-    console.log('/', request.session.user.username);
     payload.user = {
       email: request.session.user.email,
       location: request.session.user.location,
-      dialog: request.session.user.dialog
+      dialog: request.session.user.dialog,
+      day: getDay(request)
     };
   }
 
@@ -113,7 +132,8 @@ app.post('/verify', function(request, response) {
         user: {
           email: request.session.user.email,
           location: request.session.user.location,
-          dialog: request.session.user.dialog
+          dialog: request.session.user.dialog,
+          day: getDay(request)
         }
       });
     });
