@@ -386,17 +386,19 @@ main
 		margin 0 auto
 		position relative
 		height 330px
-		width 457px
+		width 427px
 		> a
 			background url('/img/mood.png') no-repeat
 			background-size 100%
 			color color-title-blue
 			cursor pointer
 			display block
-			height 173px
+			height 163px
 			position absolute
-			width 151px
+			width 141px
 			&:hover, &.on
+				background url('/img/mood-active.png') no-repeat
+				background-size 100%
 				span
 					color #fff
 			span
@@ -406,20 +408,18 @@ main
 				line-height 30px
 				margin-top 70px
 				text-transform uppercase
-			&.happy
+			&.excited
 				left 0
-			&.nervous
-				left 155px
-			&.sleepy
-				left 309px
-			&.energized
-				left 78px
-				top 129px
-			&.overwhelmed
-				left 232px
-				top 129px
-				span
-					margin-top 50px
+			&.worried
+				left 145px
+			&.proud
+				left 290px
+			&.confused
+				left 73px
+				top 122px
+			&.curious
+				left 218px
+				top 122px
 
 	#mozillians-list
 		display block
@@ -498,20 +498,18 @@ main
 				font-size 12px
 				line-height 22px
 				margin-top 36px
-			&.happy
+			&.excited
 				left 0
-			&.nervous
+			&.worried
 				left 86px
-			&.sleepy
+			&.proud
 				left 171px
-			&.energized
+			&.confused
 				left 43px
 				top 69px
-			&.overwhelmed
+			&.curious
 				left 128px
 				top 69px
-				span
-					margin-top 22px
 
 	#schedule-locations
 		left 100px
