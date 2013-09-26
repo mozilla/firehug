@@ -177,6 +177,11 @@ window.bootstrapApp = function(payload) {
         $rootScope.user = payload.user;
         $rootScope.ready = true;
         $rootScope.location = $rootScope.user.location;
+        $rootScope.locations = {
+          'br': 'Brussels',
+          'sc': 'Santa Clara',
+          'to': 'Toronto'
+        };
       } else {
         $scope.beforeLogin = $location.path();
         $location.path('/login');
@@ -262,11 +267,6 @@ window.bootstrapApp = function(payload) {
   app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http',
     function($scope, $rootScope, $http) {
       $scope.listing = false;
-      $scope.locations = {
-        'br': 'Brussels',
-        'sc': 'Santa Clara',
-        'to': 'Toronto'
-      };
 
       $scope.showLocations = function () {
         if ($scope.listing) {
@@ -285,7 +285,7 @@ window.bootstrapApp = function(payload) {
                               .removeClass('to')
                               .removeClass('sc')
                               .addClass(location)
-                              .find('.current span').text($scope.locations[location]);
+                              .find('.current span').text($rootScope.locations[location]);
         $scope.showLocations();
       };
 
