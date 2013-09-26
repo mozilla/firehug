@@ -215,6 +215,7 @@ app.post('/logout', function(request, response) {
 
 app.get('/typeahead', isLoggedIn, function(req, res) {
   var location = req.session.user.location;
+  var currentUser = req.session.user.username;
   var defaultGravatar = nconf.get('domain') + nconf.get('gravatarPath');
 
   client.smembers('location:' + location, function(err, usernames) {
@@ -224,7 +225,9 @@ app.get('/typeahead', isLoggedIn, function(req, res) {
 
     var multi = client.multi();
     for (var username in usernames) {
-      multi.hgetall('user:' + usernames[username]);
+      if (currentUser != usernames[username]) {
+        multi.hgetall('user:' + usernames[username]);
+      }
     }
     multi.exec(function(err, users) {
       if (err || !users) {
