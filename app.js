@@ -141,10 +141,19 @@ app.post('/verify', function(request, response) {
 });
 
 app.post('/questions', isLoggedIn, function(request, response) {
-  console.log(request.body);
-
-  response.send({
-    status: 1
+  Surveys.add({
+    user: request.session.user.username,
+    location: request.session.user.location,
+    mood: request.body.mood,
+    quote: request.body.quote,
+    influencers: request.body.influencers,
+  }, function(err) {
+    if (err) {
+      return response.status(400).send({status: 0});
+    }
+    response.send({
+      status: 1
+    });
   });
 });
 
@@ -301,3 +310,57 @@ var Users = {
   }
 
 };
+
+var Surveys = {
+
+  add: function(record, next) {
+
+    var Spreadsheet = require('edit-google-spreadsheet');
+
+    Spreadsheet.create({
+      debug: true,
+      username: nconf.get('surveyGoogleEmail'),
+      password: nconf.get('surveyGooglePass'),
+      spreadsheetId: nconf.get('surveyGoogleSpreadsheet'),
+      worksheetId: nconf.get('surveyGoogleWorksheet'),
+      callback: function sheetReady(err, spreadsheet) {
+        if (err) {
+          return next(err);
+        }
+
+        spreadsheet.receive(function(err, rows, info) {
+          if (err) {
+            return next(err);
+          }
+          var nextRow = info.nextRow;
+
+          var values = {};
+          values[nextRow] = [
+            [
+              (new Date()).toUTCString(),
+              record.user,
+              record.location,
+              record.mood || '-',
+              record.quote || '-',
+              (record.influencers || []).join(', ')
+            ]
+          ];
+          spreadsheet.add(values);
+
+          spreadsheet.send({
+            autoSize: true
+          }, function(err) {
+            if (err) {
+              return next(err);
+            }
+            console.log('Added row %d', nextRow);
+            next(null);
+          });
+
+        });
+      }
+    });
+  }
+
+};
+

@@ -3,7 +3,7 @@
     <img src="/img/questions-icon.png" class="title-icon">
     <h2>3 Questions</h2>
 
-    <form role="form" name="questions" ng-submit="submit()">
+    <form role="form" name="questionsForm" ng-submit="submit()">
       <div class="form-group">
         <img src="/img/question-1.png" class="question-icon">
         <h5>What is your mood?</h5>
@@ -11,9 +11,6 @@
           <a class="mood {{ key }}" ng-click="setMood(key)" ng-repeat="(key, value) in moods">
             <span>{{ value }}</span>
           </a>
-        </div>
-        <div class="radio-inline">
-          <input id="mood-{{ key }}" type="radio" name="mood" ng-model="mood" value="{{ key }}" ng-repeat="(key, value) in moods">
         </div>
       </div>
       <div class="form-group">
@@ -26,7 +23,7 @@
         <h5>Who have you recently met that had a positive impact on you?</h5>
         <input type="text" placeholder="Add a Mozillian at {{ locations[location] }}" class="form-control typeahead">
         <p ng-hide="influencers.length" class="text-center text-muted">
-          <em>Enter Mozillian names above to add them here …</em>
+          <em>Enter Mozillian above to add them …</em>
         </p>
         <ol id="mozillians-list">
           <li ng-repeat="influencer in influencers track by $index">
@@ -35,7 +32,6 @@
             <p>
               <span class="full-name">
                 {{ influencer.value }}
-                <span class="country" ng-show="influencer.country">({{ influencer.country }})</span>
               </span>
               <span class="username">{{ influencer.name }}</span>
             </p>
