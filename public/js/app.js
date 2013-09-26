@@ -176,6 +176,7 @@ window.bootstrapApp = function(payload) {
       if (payload.user) {
         $rootScope.user = payload.user;
         $rootScope.ready = true;
+        $rootScope.location = $rootScope.user.location;
       } else {
         $scope.beforeLogin = $location.path();
         $location.path('/login');
@@ -318,34 +319,39 @@ window.bootstrapApp = function(payload) {
         return $scope.selected === day;
       };
 
+      $scope.days = [{
+        name: 'thursday',
+        title: 'Thurs',
+        value: []
+      }, {
+        name: 'friday',
+        title: 'Fri',
+        value: []
+      }, {
+        name: 'saturday',
+        title: 'Sat',
+        value: []
+      }, {
+        name: 'sunday',
+        title: 'Sun',
+        value: []
+      }, {
+        name: 'monday',
+        title: 'Mon',
+        value: []
+      }];
+
+      if ($rootScope.user.day > 3 && $rootScope.user.day < 8) {
+        $scope.selected = $scope.days[$rootScope.user.day - 3];
+      } else {
+        // Otherwise default to Thursday
+        $scope.selected = $scope.days[0];
+      }
+
       $http({
         url: '/schedule',
         method: 'GET'
       }).then(function(data) {
-        $scope.days = [{
-          name: 'thursday',
-          title: 'Thurs',
-          value: []
-        }, {
-          name: 'friday',
-          title: 'Fri',
-          value: []
-        }, {
-          name: 'saturday',
-          title: 'Sat',
-          value: []
-        }, {
-          name: 'sunday',
-          title: 'Sun',
-          value: []
-        }, {
-          name: 'monday',
-          title: 'Mon',
-          value: []
-        }];
-
-        $scope.location = $rootScope.user.location;
-
         for (var s in data.data.schedule) {
           var evt = data.data.schedule[s];
 
@@ -365,9 +371,6 @@ window.bootstrapApp = function(payload) {
             $scope.days[4].value.push(evt);
           }
         }
-
-        $scope.selected = $scope.days[0]; // TODO: automate - default to thursday for now
-
       }, function(data, status) {
         $scope.status = status;
       });
