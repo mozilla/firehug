@@ -260,6 +260,38 @@ window.bootstrapApp = function(payload) {
 
   app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http',
     function($scope, $rootScope, $http) {
+      $scope.listing = false;
+      $scope.locations = {
+        'br': 'Brussels',
+        'sc': 'Santa Clara',
+        'to': 'Toronto'
+      };
+
+      $scope.showLocations = function () {
+        if ($scope.listing) {
+          $scope.listing = false;
+        } else {
+          $scope.listing = true;
+        }
+      };
+
+      $scope.isShowingLocations = function () {
+        return $scope.listing;
+      };
+
+      $scope.setLocation = function (location) {
+        $('#schedule-listing').removeClass('br')
+                              .removeClass('to')
+                              .removeClass('sc')
+                              .addClass(location)
+                              .find('.current span').text($scope.locations[location]);
+        $scope.showLocations();
+      };
+
+      $scope.isActiveLocation = function (location) {
+        return $('#schedule-listing').hasClass(location);
+      };
+
       $scope.setActive = function(idx) {
         if (idx < 0) {
           idx = 0;
@@ -466,8 +498,10 @@ window.bootstrapApp = function(payload) {
       restrict: 'AE',
       link: function (scope, element, attrs) {
         scope.$watch(attrs['ngMarkdown'], function (newVal) {
-          var html = converter.makeHtml(newVal);
-          element.html(html);
+          if (newVal) {
+            var html = converter.makeHtml(newVal);
+            element.html(html);
+          }
         });
       }
     };

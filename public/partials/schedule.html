@@ -1,8 +1,7 @@
 <div class="row">
-  <article class="col-md-8 col-md-offset-2 col-xs-12 curr-location {{ location }}">
+  <article id="schedule-listing" class="col-md-8 col-md-offset-2 col-xs-12 curr-location {{ location }}">
     <img src="/img/schedule-icon.png" class="title-icon">
     <h2>Schedule</h2>
-
     <div class="event-wrapper" ng-switch="selected" ng-repeat="day in days" ng-animate="'animate'">
       <section ng-class="{ active : isActive(day) }">
         <div class="{{ day.name }} subtitle">
@@ -13,6 +12,11 @@
               <i class="icon-arrow-right" ng-click="setActive($index - 1)"></i> Next</a>
             <span>{{ day.title }}</span>
           </h3>
+          <div id="schedule-locations" ng-class="{ active : isShowingLocations() }">
+            <a ng-click="showLocations()" class="current"><span>{{ locations[location] }}</span>
+              <i class="icon-sort-down"></i></a>
+            <a class="location-items" ng-click="setLocation(key)" ng-class="{ active : isActiveLocation(key) }" ng-repeat="(key, value) in locations">{{ value }}</a>
+          </div>
         </div>
         <ul class="events {{ day.name }}">
           <li data-ng-repeat="(key, value) in day.value">
