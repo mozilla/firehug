@@ -141,7 +141,7 @@ app.post('/verify', function(request, response) {
       console.log('Users.login success', user.username);
       response.send({
         status: 1,
-        user: getPayload(request.session)
+        user: user
       });
     });
   });
@@ -325,6 +325,7 @@ var Users = {
       }
       console.log('login with username: %s', username);
       client.hgetall('user:' + username, function(err, user) {
+        console.log()
         if (err || !user) {
           return next(new Error('Username not found ', err));
         }

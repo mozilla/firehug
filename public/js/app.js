@@ -88,7 +88,7 @@ window.bootstrapApp = function(payload) {
           assertion: assertion
         }
       }).then(function(data) {
-        verifying.resolve(data.profile);
+        verifying.resolve(data.data.user);
       }, function(data, status) {
         verifying.reject(data.error);
       });
@@ -112,6 +112,7 @@ window.bootstrapApp = function(payload) {
             }
             verify(assertion).then(function(user) {
               $rootScope.user = user;
+              $rootScope.location = user.location;
               $rootScope.$broadcast('persona:login', user);
               starting.resolve();
             }, function() {
@@ -208,7 +209,6 @@ window.bootstrapApp = function(payload) {
         var oldClass = oldValue.replace(/[^a-z-]/, '') || 'index';
         $(document.body).removeClass('view-' + oldClass).addClass('view-' + newClass);
 
-        console.log($rootScope.user);
         if (!$rootScope.user && newValue != '/login') {
           $location.path('/login');
         }
@@ -273,8 +273,6 @@ window.bootstrapApp = function(payload) {
   app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http',
     function($scope, $rootScope, $http) {
       $scope.listing = false;
-
-      $scope.location = $rootScope.user.location || 'sc';
 
       $scope.showLocations = function() {
         if ($scope.listing) {
