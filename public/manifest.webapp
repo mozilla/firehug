@@ -1,0 +1,13 @@
+{
+	"name": "Summit App",
+	"description": "The Summit is a human conference and this is the app to guide you through the experience.",
+	"launch_path": "/#!/",
+	"icons": {
+		"60": "/img/icon-60.png",
+		"128": "/img/icon-128.png"
+	},
+	"developer": {
+		"name": "Mozilla Summit App Team",
+		"url": "https://github.com/digitarald/firehug/graphs/contributors"
+	}
+}

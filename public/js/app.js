@@ -112,7 +112,6 @@ window.bootstrapApp = function(payload) {
             }
             verify(assertion).then(function(user) {
               $rootScope.user = user;
-              $rootScope.location = user.location;
               $rootScope.$broadcast('persona:login', user);
               starting.resolve();
             }, function() {
@@ -175,12 +174,6 @@ window.bootstrapApp = function(payload) {
 
   app.controller('AppCtrl', ['$scope', 'persona', '$rootScope', '$location',
     function AppCtrl($scope, persona, $rootScope, $location) {
-      $rootScope.locations = {
-        'br': 'Brussels',
-        'sc': 'Santa Clara',
-        'to': 'Toronto'
-      };
-
       if (payload.user) {
         $rootScope.user = payload.user;
         $rootScope.ready = true;
@@ -274,6 +267,13 @@ window.bootstrapApp = function(payload) {
     function($scope, $rootScope, $http) {
       $scope.listing = false;
 
+      $scope.locations = {
+        'br': 'Brussels',
+        'sc': 'Santa Clara',
+        'to': 'Toronto'
+      };
+      $scope.location = $rootScope.user.location;
+
       $scope.showLocations = function() {
         if ($scope.listing) {
           $scope.listing = false;
@@ -291,7 +291,7 @@ window.bootstrapApp = function(payload) {
           .removeClass('to')
           .removeClass('sc')
           .addClass(location)
-          .find('.current span').text($rootScope.locations[location]);
+          .find('.current span').text($scope.locations[location]);
         $scope.showLocations();
       };
 

@@ -5,7 +5,7 @@
     "apiKey": "",
     "apiApp": "",
     "domain": "http://localhost:5000",
-    "gravatarPath": "/default_avatar.png",
+    "gravatarPath": "/img/default_avatar.png",
     "audience": "localhost:5000",
     "mozilliansURL": "https://mozillians.org",
     "googleKey": "",

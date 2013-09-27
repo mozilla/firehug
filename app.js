@@ -234,6 +234,12 @@ app.post('/logout', function(request, response) {
   response.status(200).send();
 });
 
+
+app.get('/manifest.webapp', function(req, res) {
+  res.contentType('application/x-web-app-manifest+json');
+  res.sendfile(__dirname + '/public/manifest.webapp');
+});
+
 app.get('/typeahead', isLoggedIn, function(req, res) {
   var location = req.session.user.location;
   var currentUser = req.session.user.username;
