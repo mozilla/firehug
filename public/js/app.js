@@ -203,7 +203,11 @@ window.bootstrapApp = function(payload) {
       // Watch login and redirect as needed
       $rootScope.$watch(function() {
         return $location.path();
-      }, function(newValue) {
+      }, function(newValue, oldValue) {
+        var newClass = newValue.replace(/[^a-z-]/, '') || 'index';
+        var oldClass = oldValue.replace(/[^a-z-]/, '') || 'index';
+        $(document.body).removeClass('view-' + oldClass).addClass('view-' + newClass);
+
         if (!$rootScope.user && newValue != '/login') {
           $location.path('/login');
         }

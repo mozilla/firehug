@@ -23,7 +23,7 @@ h2, .subtitle h3
 h2
 	color color-title-blue
 	font-size 42px
-	margin-bottom 50px
+	margin-bottom 18px
 
 .content
 	background-color #fff
@@ -304,6 +304,11 @@ main
 		text-align center
 		text-transform uppercase
 
+#view-login
+
+	.hexicon
+		margin-top -30px
+
 #view-home
 
 	img
@@ -490,6 +495,7 @@ main
 	text-align center
 	margin-bottom 20px
 	user-select none
+	color color-light-grey
 	span
 		display inline-block
 		// width 140px
@@ -501,7 +507,6 @@ main
 		font-size 130px
 		padding-top 10px
 		line-height 222px
-		color color-light-grey
 
 	&.hexicon-small
 		margin-bottom -100px
@@ -524,6 +529,8 @@ main
 	&.hexicon-gray
 		span
 			background-position -600px 0
+	&.hexicon-text-yellow
+		color color-yellow
 	&.hexicon-dark-blue
 		span
 			background-position -1000px 0
@@ -532,6 +539,9 @@ main
 	.content
 		background-color #fff
 		padding 40px
+
+.view-dialog
+	background color-yellow
 
 @media (max-width: 480px)
 
@@ -548,7 +558,7 @@ main
 
 	h2
 		font-size 30px
-		margin-bottom 30px
+		margin-bottom 15px
 
 	#schedule-listing
 		h2
@@ -603,3 +613,10 @@ main
 			display none
 		#main, nav
 			display block
+
+
+	.hexicon.hexicon-medium
+		margin-bottom -100px
+		span
+			transform scale(0.5)
+			transform-origin 50% 0;
