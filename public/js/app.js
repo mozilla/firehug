@@ -174,15 +174,15 @@ window.bootstrapApp = function(payload) {
 
   app.controller('AppCtrl', ['$scope', 'persona', '$rootScope', '$location',
     function AppCtrl($scope, persona, $rootScope, $location) {
+      $rootScope.locations = {
+        'br': 'Brussels',
+        'sc': 'Santa Clara',
+        'to': 'Toronto'
+      };
+
       if (payload.user) {
         $rootScope.user = payload.user;
         $rootScope.ready = true;
-        $rootScope.location = $rootScope.user.location;
-        $rootScope.locations = {
-          'br': 'Brussels',
-          'sc': 'Santa Clara',
-          'to': 'Toronto'
-        };
       } else {
         $scope.beforeLogin = $location.path();
         $location.path('/login');
@@ -208,6 +208,7 @@ window.bootstrapApp = function(payload) {
         var oldClass = oldValue.replace(/[^a-z-]/, '') || 'index';
         $(document.body).removeClass('view-' + oldClass).addClass('view-' + newClass);
 
+        console.log($rootScope.user);
         if (!$rootScope.user && newValue != '/login') {
           $location.path('/login');
         }
@@ -272,6 +273,8 @@ window.bootstrapApp = function(payload) {
   app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http',
     function($scope, $rootScope, $http) {
       $scope.listing = false;
+
+      $scope.location = $rootScope.user.location || 'sc';
 
       $scope.showLocations = function() {
         if ($scope.listing) {
