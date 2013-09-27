@@ -486,6 +486,48 @@ main
 	display none
 	background url('/img/logo-home.png') no-repeat 50% 295px
 
+.hexicon
+	text-align center
+	margin-bottom 20px
+	user-select none
+	span
+		display inline-block
+		// width 140px
+		// height 163px
+		width 200px
+		height 232px
+		background-size cover
+		background-image url('/img/hexagons.png')
+		font-size 130px
+		padding-top 10px
+		line-height 222px
+		color color-light-grey
+
+	&.hexicon-small
+		margin-bottom -100px
+		span
+			transform scale(0.5)
+			transform-origin 50% 0;
+
+	&.hexicon-medium
+		margin-bottom -40px
+		span
+			transform scale(0.75)
+			transform-origin 50% 0;
+
+	&.hexicon-yellow
+		span
+			background-position -200px 0
+	&.hexicon-white
+		span
+			background-position -400px 0
+	&.hexicon-gray
+		span
+			background-position -600px 0
+	&.hexicon-dark-blue
+		span
+			background-position -1000px 0
+
 #view-getting-around
 	.content
 		background-color #fff
