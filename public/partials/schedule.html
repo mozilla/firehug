@@ -21,7 +21,7 @@
         <ul class="events {{ day.name }}">
           <li data-ng-repeat="(key, value) in day.value">
             <div ng-click="expandDescription(v)" class="details {{ v.id }}" data-ng-repeat="(k, v) in value" ng-class="getDescriptionState(v)">
-              <a class="expander">
+              <a class="expander" ng-class="{ active : hasDescriptionOrSpeaker(v) }">
                 <span class="more">+</span>
                 <span class="less">-</span>
               </a>

@@ -304,16 +304,22 @@ window.bootstrapApp = function(payload) {
         $scope.selected = $scope.days[idx];
       };
 
+      $scope.hasDescriptionOrSpeaker = function (ev) {
+        return (ev.description || ev.speaker);
+      };
+
       $scope.expandDescription = function(ev) {
-        if (!ev.enabled) {
-          ev.enabled = true;
-        } else {
-          ev.enabled = false;
+        if ($('.expander').hasClass('active')) {
+          if (!ev.enabled) {
+            ev.enabled = true;
+          } else {
+            ev.enabled = false;
+          }
         }
       };
 
       $scope.getDescriptionState = function(ev) {
-        return ev.enabled ? 'more' : 'less';
+        return (ev.enabled && $scope.hasDescriptionOrSpeaker(ev)) ? 'more' : 'less';
       }
 
       $scope.isActive = function(day) {
