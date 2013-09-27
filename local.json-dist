@@ -12,5 +12,6 @@
     "surveyGoogleEmail": "",
     "surveyGooglePass": "",
     "surveyGoogleSpreadsheet": "",
-    "surveyGoogleWorksheet": ""
+    "surveyGoogleWorksheet": "",
+    "surveyIdle": 7200000
 }

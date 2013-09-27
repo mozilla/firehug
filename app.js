@@ -66,9 +66,8 @@ app.use(express.session({
 }));
 
 var now = new time.Date();
-
-var getDay = function (request) {
-  switch (request.session.user.location) {
+function getDay(user) {
+  switch (user.location) {
     case 'br':
       now.setTimezone('Europe/Brussels');
       break;
@@ -83,15 +82,28 @@ var getDay = function (request) {
   return now.getDate();
 };
 
+function getPayload(session) {
+  var nextQuestions = null;
+  if (session.submitted) {
+    var future = new Date(session.submitted + nconf.get('surveyIdle'));
+    if (future > Date.now()) {
+      nextQuestions = future.toUTCString();
+    }
+  }
+
+  return {
+    email: session.user.email,
+    location: session.user.location,
+    dialog: session.user.dialog,
+    day: getDay(session.user),
+    nextQuestions: nextQuestions
+  };
+};
+
 app.get('/', function(request, response) {
   var payload = {};
   if (request.session.user) {
-    payload.user = {
-      email: request.session.user.email,
-      location: request.session.user.location,
-      dialog: request.session.user.dialog,
-      day: getDay(request)
-    };
+    payload.user = getPayload(request.session);
   }
 
   response.render('index', {
@@ -129,18 +141,24 @@ app.post('/verify', function(request, response) {
       console.log('Users.login success', user.username);
       response.send({
         status: 1,
-        user: {
-          email: request.session.user.email,
-          location: request.session.user.location,
-          dialog: request.session.user.dialog,
-          day: getDay(request)
-        }
+        user: getPayload(request.session)
       });
     });
   });
 });
 
 app.post('/questions', isLoggedIn, function(request, response) {
+  if (request.session.submitted) {
+    // 2 hours = nconf.get('surveyIdle') ms
+    var nextQuestions = (new Date(session.submitted + nconf.get('surveyIdle'))).getTime();
+    if (nextQuestions > Date.now()) {
+      return response.status(400).send({
+        status: 0,
+        error: 'idle'
+      });
+    }
+  }
+
   Surveys.add({
     user: request.session.user.username,
     location: request.session.user.location,
@@ -151,8 +169,11 @@ app.post('/questions', isLoggedIn, function(request, response) {
     if (err) {
       return response.status(400).send({status: 0});
     }
+    // TODO: Store in redis
+    request.session.submitted = Date.now();
     response.send({
-      status: 1
+      status: 1,
+      error: 'storage'
     });
   });
 });

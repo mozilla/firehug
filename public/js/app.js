@@ -386,7 +386,10 @@ window.bootstrapApp = function(payload) {
 
   app.controller('DialogCtrl', ['$scope',
     function($scope) {
-      console.log('Dialog');
+      if ($scope.user.dialog) {
+        $scope.dialog = $scope.user.dialog[$rootScope.user.day - 4];
+      }
+      $scope.dialog = $scope.dialog || 0;
     }
   ]);
 
