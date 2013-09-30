@@ -46,9 +46,14 @@ var setUser = function(user, next) {
   }
 
   var location = null;
-  var bits;
-  if (user.groups && (bits = user.groups.match(/summit2013-([a-z-]+)/m))) {
-    location = LOCATIONS[bits[1]];
+  if (user.groups) {
+    if (Array.isArray(user.groups)) {
+      user.groups = user.groups.join(', ');
+    }
+    var bits = user.groups.match(/summit2013-([a-z-]+)/m)
+    if (bits) {
+      location = LOCATIONS[bits[1]];
+    }
   }
   if (!location) {
     return next('Missing location');
