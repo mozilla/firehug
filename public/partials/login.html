@@ -1,12 +1,12 @@
 <div class="row" id="view-login">
-	<section class="col-md-4 col-md-offset-4">
+	<article class="col-sm-8 col-sm-offset-2">
 
 		<figure class="hexicon hexicon-medium">
 			<span class="icon-smile"></span>
 		</figure>
 
 		<h2>Welcome</h2>
-		<div class="text-center content col-sm-10 col-sm-offset-1">
+		<div class="text-center content">
 			<p class="lead">The Summit is a human conference.</p>
 			<p>A meetup of grand proportions.</p>
 			<p>A full 72 hours/4,320 minutes/259,200 seconds of magic,</p>
@@ -14,12 +14,12 @@
 			<p ng-show="emailWarning" class="text-warning">
 				You didn't use the same email address that you registered on mozillians.org. Please try again!
 			</p>
-			<a id="action-login" ng-click="authenticate()" class="row text-center" href="#">
-				<img src="/img/persona.png" alt="Sign in with Persona" class="col-sm-offset-1 col-sm-10" />
+			<a id="action-login" ng-click="authenticate()" class="row text-center">
+				<img src="/img/persona.png" alt="Sign in with Persona" />
 			</a>
 			<p class="text-muted text-center small">
 				Please log in using the same email you are using for <a href="https://mozillians.org/" target="_blank">mozillians.org</a> when logging in with Persona.
 			</p>
 		</div>
-	</section>
+	</article>
 </div>

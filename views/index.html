@@ -22,20 +22,22 @@
 <body data-payload='{{{jsonPayload}}}'>
 	<header class="container" role="banner">
 		<nav class="row" ng-show="user">
-			<a href="#!/" class="menu-icn menu-back" ng-show="path != '/'"></a>
-			<ul>
-				<li>
-					<a href="#" class="menu-icn menu-dropdown"></a>
-					<ul>
-						<li>
-							<a href="#/!/" ng-show="canInstall" ng-click="install()">Install App</a>
-						</li>
-						<li>
-							<a href="/#!/logout">Logout</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
+			<div class="col-sm-8 col-sm-offset-2">
+				<a href="#!/" class="menu-icn menu-back" ng-show="path != '/'"></a>
+				<ul>
+					<li>
+						<a href="#" class="menu-icn menu-dropdown"></a>
+						<ul>
+							<li>
+								<a href="#/!/" ng-show="canInstall" ng-click="install()">Install App</a>
+							</li>
+							<li>
+								<a href="/#!/logout">Logout</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
 		</nav>
 	</header>
 

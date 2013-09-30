@@ -14,6 +14,9 @@ body
 .tt-hint
 	display none
 
+a:not([href])
+	cursor pointer
+
 h2, .subtitle h3
 	font-family Montserrat
 	text-align center
@@ -123,9 +126,11 @@ a
 		padding 12px 0
 
 .curr-location
+
 	.details
 		background-color #FFF
 		border-bottom 2px solid #CCC
+		box-shadow 0px 1px 3px rgba(0, 0, 0, 0.1)
 		clear both
 		display none
 		float left
@@ -193,86 +198,88 @@ header
 
 	nav
 
-		a
-			display block
-			cursor pointer
-			&, &:link, &:visited
-				color text-color-secondary
+		div
 
-			&.menu-icn
-				height 50px
-				width 50px
-
-		.menu-back
-			float left
-			background url('/img/icn-back.png') 50% 50% no-repeat
-
-		ul
-			margin 0
-			padding 0
-
-		> ul
-			float right
-			list-style none
-
-			> li
+			a
 				display block
-				position relative
+				cursor pointer
+				&, &:link, &:visited
+					color text-color-secondary
 
-				ul
-					position absolute
-					width 200px
-					right 0px
-					top 45px
-					z-index 99
-					background-color #fff
-					border-radius 10px
-					box-shadow 0 1px 3px 0 rgba(0, 0, 0, .5)
-					display none
+				&.menu-icn
+					height 50px
+					width 50px
 
-					li
-						display block
+			.menu-back
+				float left
+				background url('/img/icn-back.png') 50% 50% no-repeat
 
-						a
-							padding 12px 35px 12px 10px
-							background 94% 50% no-repeat url('/img/sandstone/arrow-go.png')
+			ul
+				margin 0
+				padding 0
 
-							&:hover
-								text-decoration none
-								color #fff
-								background-image url('/img/sandstone/arrow-go.png'), linear-gradient(#43a6e2, #247ac1)
+			> ul
+				float right
+				list-style none
 
-						&:first-child
-							a
-								border-radius 10px 10px 0 0
-
-						&:last-child
-							a
-								border-radius 0 0 10px 10px
-
-						&:first-child:last-child
-							a
-								border-radius 10px 10px 10px 10px
-
-				&:before
-					content ""
+				> li
 					display block
-					width 28px
-					height 10px
-					background no-repeat url('/img/sandstone/menu-point.png')
-					position absolute
-					left 12px
-					top -10px
+					position relative
 
-				&:hover, &:active, &.hover
 					ul
+						position absolute
+						width 200px
+						right 0px
+						top 45px
+						z-index 99
+						background-color #fff
+						border-radius 10px
+						box-shadow 0 1px 3px 0 rgba(0, 0, 0, .5)
+						display none
+
+						li
+							display block
+
+							a
+								padding 12px 35px 12px 10px
+								background 94% 50% no-repeat url('/img/sandstone/arrow-go.png')
+
+								&:hover
+									text-decoration none
+									color #fff
+									background-image url('/img/sandstone/arrow-go.png'), linear-gradient(#43a6e2, #247ac1)
+
+							&:first-child
+								a
+									border-radius 10px 10px 0 0
+
+							&:last-child
+								a
+									border-radius 0 0 10px 10px
+
+							&:first-child:last-child
+								a
+									border-radius 10px 10px 10px 10px
+
+					&:before
+						content ""
 						display block
+						width 28px
+						height 10px
+						background no-repeat url('/img/sandstone/menu-point.png')
+						position absolute
+						left 12px
+						top -10px
 
-		.menu-dropdown
-			background url('/img/sandstone/icn-menu.png') 50% 8px no-repeat
+					&:hover, &:active, &.hover
+						ul
+							display block
 
-			&:hover, &:active
-				background-position 50% -92px
+			.menu-dropdown
+				background url('/img/sandstone/icn-menu.png') 50% 8px no-repeat
+
+				&:hover, &:active
+					background-position 50% -92px
 
 .btn, .btn:link, .btn:visited
 
@@ -358,7 +365,7 @@ main
 
 	.form-group
 		background-color #FFF
-		box-shadow #eee 1px 1px 3px
+		box-shadow 0px 1px 3px rgba(0, 0, 0, 0.1)
 		float left
 		margin-bottom 20px
 		padding 20px
@@ -542,7 +549,8 @@ main
 #view-getting-around
 	.content
 		background-color #fff
-		padding 40px
+		padding 20px
+		box-shadow 0px 1px 3px rgba(0, 0, 0, 0.1)
 
 .view-dialog
 	background color-yellow
