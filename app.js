@@ -11,6 +11,7 @@ var nib = require('nib');
 var connectRedis = require('connect-redis');
 var request = require('request');
 var time = require('time');
+// var helmet = require('helmet');
 
 var shared = require('./shared');
 var nconf = shared.nconf;
@@ -35,7 +36,21 @@ var isLoggedIn = function(req, res, next) {
 if (!process.NODE_ENV) {
   app.use(express.logger());
 }
+
+var policy = {
+  defaultPolicy: {
+    'default-src': ["'self'", "'unsafe-inline'"],
+    'frame-src': ["'self'", 'https://login.persona.org'],
+    'script-src': ["'self'", 'https://login.persona.org', "'unsafe-inline'", "'unsafe-eval'"]
+  }
+};
+
 app.use(express.bodyParser());
+/*
+app.use(helmet.csp.policy(policy));
+app.use(helmet.xframe());
+app.use(helmet.contentTypeOptions());
+*/
 var cookieParser = express.cookieParser(nconf.get('sessionSecret'));
 app.use(cookieParser);
 
