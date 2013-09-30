@@ -88,7 +88,6 @@ window.bootstrapApp = function(payload) {
           assertion: assertion
         }
       }).then(function(data) {
-        $rootScope.location = data.data.user.location;
         verifying.resolve(data.data.user);
       }, function(data, status) {
         verifying.reject(data.error);
@@ -183,7 +182,7 @@ window.bootstrapApp = function(payload) {
         $location.path('/login');
       }
 
-      $rootScope.$on('persona:login', function(user) {
+      $rootScope.$on('persona:login', function(event, user) {
         // TODO: Validate assertion
         $rootScope.user = user;
         localStorage.setItem('email', user.email);
@@ -216,8 +215,6 @@ window.bootstrapApp = function(payload) {
 
   app.controller('LoginCtrl', ['$scope', '$rootScope', 'persona', '$location',
     function LoginCtrl($scope, $rootScope, persona, $location) {
-      console.log('LoginCtrl');
-
       if ($rootScope.user) {
         return $location.path('/');
       }
@@ -253,7 +250,7 @@ window.bootstrapApp = function(payload) {
       if (!$rootScope.user) {
         return $location.path('/');
       }
-      console.log('Logout', $rootScope.user.email);
+      console.log('Logout');
       persona.logout();
     }
   ]);
@@ -273,7 +270,7 @@ window.bootstrapApp = function(payload) {
         'sc': 'Santa Clara',
         'to': 'Toronto'
       };
-      //$scope.location = $rootScope.user.location;
+      $scope.location = $rootScope.user.location;
 
       $scope.showLocations = function() {
         if ($scope.listing) {
@@ -488,12 +485,8 @@ window.bootstrapApp = function(payload) {
       });
 
       $scope.submit = function() {
-        console.log($scope.mood);
-        console.log($scope.quote);
-        console.log($scope.influencers);
-        // console.log($scope.questionsForm);
         if (!$scope.questionsForm.$valid) {
-          alert('Boom!');
+          alert('TODO for you: Please fill out the form.');
           return;
         }
 
@@ -511,7 +504,7 @@ window.bootstrapApp = function(payload) {
           })
           .error(function() {
             // FIXME: Better error resport
-            alert('Submission failed. Please try again!');
+            alert('Submission failed. Please try again later!');
           });
 
 
