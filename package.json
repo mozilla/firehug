@@ -25,5 +25,8 @@
   },
   "scripts": {
     "start": "node app.js"
+  },
+  "engines": {
+    "node": ">= 0.10"
   }
 }
