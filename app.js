@@ -117,7 +117,7 @@ function getPayload(session) {
 
 app.get('/', function(request, response) {
   var payload = {};
-  if (request.session.user) {
+  if (request.session && request.session.user) {
     payload.user = getPayload(request.session);
   }
 
