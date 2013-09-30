@@ -88,6 +88,7 @@ window.bootstrapApp = function(payload) {
           assertion: assertion
         }
       }).then(function(data) {
+        $rootScope.location = data.data.user.location;
         verifying.resolve(data.data.user);
       }, function(data, status) {
         verifying.reject(data.error);
@@ -272,7 +273,7 @@ window.bootstrapApp = function(payload) {
         'sc': 'Santa Clara',
         'to': 'Toronto'
       };
-      $scope.location = $rootScope.user.location;
+      //$scope.location = $rootScope.user.location;
 
       $scope.showLocations = function() {
         if ($scope.listing) {
