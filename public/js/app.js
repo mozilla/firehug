@@ -1,8 +1,7 @@
-window.bootstrapApp = function(payload) {
+(function() {
   'use strict';
 
-  // Call only once
-  window.bootstrapApp = function() {};
+  FastClick.attach(document.body);
 
   var app = angular.module('summit', ['ngRoute']);
 
@@ -174,6 +173,8 @@ window.bootstrapApp = function(payload) {
 
   app.controller('AppCtrl', ['$scope', 'persona', '$rootScope', '$location',
     function AppCtrl($scope, persona, $rootScope, $location) {
+      var payload = $(document.body).data('payload') || {};
+
       if (payload.user) {
         $rootScope.user = payload.user;
         $rootScope.ready = true;
@@ -208,8 +209,24 @@ window.bootstrapApp = function(payload) {
         $rootScope.path = newValue;
       });
 
-      // Remove splash screen
-      $scope.message = 'Welcome';
+      if (navigator.mozApps) {
+        var selfReq = navigator.mozApps.getSelf();
+        selfReq.onsuccess = function() {
+          if (!selfReq.result) {
+            $scope.canInstall = true;
+            $scope.install = function() {
+              var manifest = location.protocol + '//' + location.host + '/manifest.webapp';
+              var req = navigator.mozApps.install(manifest);
+              req.onsuccess = function() {
+                req.result.launch();
+              };
+              req.onerror = function() {
+                alert('Error: ' + this.error.name);
+              };
+            }
+          }
+        };
+      }
     }
   ]);
 
@@ -307,7 +324,7 @@ window.bootstrapApp = function(payload) {
         $scope.selected = $scope.days[idx];
       };
 
-      $scope.hasDescriptionOrSpeaker = function (ev) {
+      $scope.hasDescriptionOrSpeaker = function(ev) {
         return (ev.description || ev.speaker);
       };
 
@@ -534,4 +551,5 @@ window.bootstrapApp = function(payload) {
       }
     };
   });
-};
+
+})();

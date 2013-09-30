@@ -19,7 +19,7 @@
 	<link rel="stylesheet" href="/css/vendor/font-awesome.css">
 	<link rel="stylesheet" href="/css/app.css">
 </head>
-<body>
+<body data-payload='{{{jsonPayload}}}'>
 	<header class="container" role="banner">
 		<nav class="row" ng-show="user">
 			<a href="#!/" class="menu-icn menu-back" ng-show="path != '/'"></a>
@@ -27,6 +27,9 @@
 				<li>
 					<a href="#" class="menu-icn menu-dropdown"></a>
 					<ul>
+						<li>
+							<a href="#/!/" ng-show="canInstall" ng-click="install()">Install App</a>
+						</li>
 						<li>
 							<a href="/#!/logout">Logout</a>
 						</li>
@@ -48,11 +51,9 @@
 	<script src="js/vendor/jquery.js"></script>
 	<script src="js/vendor/typeahead.min.js"></script>
 	<script src="js/vendor/showdown.min.js"></script>
+	<script src="js/vendor/fastclick.js"></script>
 	<script src="js/vendor/angular.min.js"></script>
 	<script src="js/vendor/angular-route.min.js"></script>
 	<script src="js/app.js"></script>
-	<script>
-		bootstrapApp({{{jsonPayload}}});
-	</script>
 </body>
 </html>
