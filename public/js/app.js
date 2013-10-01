@@ -413,9 +413,19 @@
   app.controller('DialogCtrl', ['$scope',
     function($scope) {
       if ($scope.user.dialog) {
-        $scope.dialog = $scope.user.dialog[$rootScope.user.day - 4];
+        var group = $scope.user.dialog[$rootScope.user.day - 4];
       }
-      $scope.dialog = $scope.dialog || 0;
+      group = group || (Math.random() * 40 | 0); // For testing
+
+      var glyphKey = Math.round(((group / 6) - (group / 6 | 0)) * 6);
+      var paletteKey = Math.round(((group / 8) - (group / 8 | 0)) * 8);
+
+      $(document.body).addClass('palette-' + paletteKey);
+
+      console.log(paletteKey, glyphKey);
+
+      var glyphs = ['heart', 'cloud', 'rss', 'rocket', 'link', 'star'];
+      $scope.glyph = glyphs[glyphKey];
     }
   ]);
 

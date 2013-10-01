@@ -22,6 +22,7 @@ h2, .subtitle h3
 	text-align center
 	text-shadow none
 	text-transform uppercase
+	letter-spacing 0px
 
 h2
 	color color-title-blue
@@ -41,7 +42,7 @@ h2
 	background-color color-subtitle-yellow
 	position relative
 	h3
-		color color-subtitle-gray
+		color color-subtitle-grey
 		font-size 28px
 		height 50px
 		font-weight normal
@@ -108,7 +109,7 @@ h2
 	width 50px
 	user-select none
 	i
-		color color-subtitle-gray
+		color color-subtitle-grey
 		font-size 20px
 		line-height 50px
 		text-decoration none
@@ -140,7 +141,7 @@ a
 		.description
 			display none
 		.expander
-			color color-subtitle-gray
+			color color-subtitle-grey
 			cursor pointer
 			font-family Montserrat
 			font-size 25px
@@ -506,7 +507,6 @@ main
 	text-align center
 	margin-bottom 20px
 	user-select none
-	color color-light-grey
 	span
 		display inline-block
 		// width 140px
@@ -516,7 +516,7 @@ main
 		background-size cover
 		background-image url('/img/hexagons.png')
 		font-size 130px
-		padding-top 10px
+		padding-top 6px
 		line-height 222px
 
 	&.hexicon-small
@@ -527,24 +527,10 @@ main
 
 	&.hexicon-medium
 		margin-bottom -40px
+	color color-light-grey
 		span
 			transform scale(0.75)
 			transform-origin 50% 0;
-
-	&.hexicon-yellow
-		span
-			background-position -200px 0
-	&.hexicon-white
-		span
-			background-position -400px 0
-	&.hexicon-gray
-		span
-			background-position -600px 0
-	&.hexicon-text-yellow
-		color color-yellow
-	&.hexicon-dark-blue
-		span
-			background-position -1000px 0
 
 #view-getting-around
 	.content
@@ -552,8 +538,118 @@ main
 		padding 20px
 		box-shadow 0px 1px 3px rgba(0, 0, 0, 0.1)
 
+$foreground-blue
+	color color-blue
+	.hexicon span
+		background-position 0 0
+$foreground-yellow
+	color color-yellow
+	.hexicon span
+		background-position -200px 0
+$foreground-white
+	color #fff
+	.hexicon span
+		background-position -400px 0
+$foreground-dark-grey
+	color color-dark-grey
+	.hexicon span
+		background-position -600px 0
+$foreground-dark-blue
+	color color-dark-blue
+	.hexicon span
+		background-position -800px 0
+
+$background-yellow
+	background-color color-yellow
+	.hexicon span
+		color color-yellow
+
+$background-dark-grey
+	background-color color-dark-grey
+	.hexicon span
+		color color-dark-grey
+
+$background-blue
+	background-color color-blue
+	.hexicon span
+		color color-blue
+
+$background-light-grey
+	background-color color-light-grey
+	.hexicon span
+		color color-light-grey
+
+$background-purple
+	background-color color-purple
+	.hexicon span
+		color color-purple
+
+$background-red
+	background-color color-red
+	.hexicon span
+		color color-red
+
+$background-orange
+	background-color color-orange
+	.hexicon span
+		color color-orange
+
 .view-dialog
-	background color-yellow
+
+	h2
+		color inherit
+		font-size 24px
+		margin 16px 0 40px
+	h3
+		@extends h2
+		color inherit
+		font-size 24px
+		margin 40px 0 0
+
+
+
+	background-image none
+
+	&.palette-0
+		@extend $background-yellow
+		main
+			@extend $foreground-dark-grey
+
+	&.palette-1
+		@extend $background-dark-grey
+		main
+			@extend $foreground-yellow
+
+	&.palette-2
+		@extend $background-blue
+		main
+			@extend $foreground-white
+
+	&.palette-3
+		@extend $background-light-grey
+		main
+			@extend $foreground-blue
+
+	&.palette-4
+		@extend $background-purple
+		main
+			@extend $foreground-blue
+
+	&.palette-5
+		@extend $background-light-grey
+		main
+			@extend $foreground-dark-blue
+
+	&.palette-6
+		@extend $background-red
+		main
+			@extend $foreground-yellow
+
+	&.palette-7
+		@extend $background-orange
+		main
+			@extend $foreground-white
+
 
 @media (max-width: 480px)
 
