@@ -5,3 +5,4 @@ node_modules
 local.json
 local.json-prod
 app.css
+public/assets

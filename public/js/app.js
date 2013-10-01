@@ -57,119 +57,121 @@
   ]);
 
 
-  app.factory('persona', function($q, $rootScope, $http) {
+  app.factory('persona', ['$q', '$rootScope', '$http',
+    function($q, $rootScope, $http) {
 
-    function load() {
-      if (loading) {
+      function load() {
+        if (loading) {
+          return loading.promise;
+        }
+        loading = $q.defer();
+
+        // Include Persona if needed
+        if (navigator.mozId) {
+          navigator.id = navigator.mozId;
+          loading.resolve();
+        } else {
+          $.getScript('https://login.persona.org/include.js', function() {
+            loading.resolve();
+          });
+        }
         return loading.promise;
       }
-      loading = $q.defer();
+      var loading = null;
 
-      // Include Persona if needed
-      if (navigator.mozId) {
-        navigator.id = navigator.mozId;
-        loading.resolve();
-      } else {
-        $.getScript('https://login.persona.org/include.js', function() {
-          loading.resolve();
+      function verify(assertion) {
+        var verifying = $q.defer();
+        $http({
+          url: '/verify',
+          method: 'POST',
+          data: {
+            assertion: assertion
+          }
+        }).then(function(data) {
+          verifying.resolve(data.data.user);
+        }, function(data, status) {
+          verifying.reject(data.error);
         });
+        return verifying.promise;
       }
-      return loading.promise;
-    }
-    var loading = null;
 
-    function verify(assertion) {
-      var verifying = $q.defer();
-      $http({
-        url: '/verify',
-        method: 'POST',
-        data: {
-          assertion: assertion
+      function start(email) {
+        if (starting) {
+          return starting.promise;
         }
-      }).then(function(data) {
-        verifying.resolve(data.data.user);
-      }, function(data, status) {
-        verifying.reject(data.error);
-      });
-      return verifying.promise;
-    }
+        starting = $q.defer();
 
-    function start(email) {
-      if (starting) {
-        return starting.promise;
-      }
-      starting = $q.defer();
-
-      load().then(function() {
-        // Persona watch
-        navigator.id.watch({
-          loggedInUser: email || undefined, // trigger logout
-          onlogin: function onLogin(assertion) {
-            console.log('persona.onLogin', !! $rootScope.user, assertion);
-            if ($rootScope.user) {
-              return starting.resolve();
+        load().then(function() {
+          // Persona watch
+          navigator.id.watch({
+            loggedInUser: email || undefined, // trigger logout
+            onlogin: function onLogin(assertion) {
+              console.log('persona.onLogin', !! $rootScope.user, assertion);
+              if ($rootScope.user) {
+                return starting.resolve();
+              }
+              verify(assertion).then(function(user) {
+                $rootScope.user = user;
+                $rootScope.$broadcast('persona:login', user);
+                starting.resolve();
+              }, function() {
+                $rootScope.$broadcast('persona:loginFailed');
+                navigator.id.logout();
+                starting.resolve();
+              });
+            },
+            onlogout: function onLogout() {
+              console.log('persona.onLogout', !! $rootScope.user);
+              if (!$rootScope.user) {
+                return starting.resolve();
+              }
+              $http({
+                url: '/logout',
+                method: 'POST'
+              }).
+              finally(function() {
+                $rootScope.user = null;
+                $rootScope.$broadcast('persona:logout');
+                starting.resolve();
+              });
             }
-            verify(assertion).then(function(user) {
-              $rootScope.user = user;
-              $rootScope.$broadcast('persona:login', user);
-              starting.resolve();
-            }, function() {
-              $rootScope.$broadcast('persona:loginFailed');
-              navigator.id.logout();
-              starting.resolve();
-            });
-          },
-          onlogout: function onLogout() {
-            console.log('persona.onLogout', !! $rootScope.user);
-            if (!$rootScope.user) {
-              return starting.resolve();
-            }
-            $http({
-              url: '/logout',
-              method: 'POST'
-            }).
-            finally(function() {
-              $rootScope.user = null;
-              $rootScope.$broadcast('persona:logout');
-              starting.resolve();
-            });
+          });
+          if (!email) {
+            starting.resolve();
           }
         });
-        if (!email) {
-          starting.resolve();
-        }
-      });
-      return starting.promise;
-    }
-    var starting = null;
+        return starting.promise;
+      }
+      var starting = null;
 
-    function request() {
-      load().then(function() {
-        navigator.id.request({
-          siteName: 'Mozilla Summit',
-          backgroundColor: '#D7D3C8',
-          termsOfService: 'https://www.mozilla.org/en-US/persona/terms-of-service/',
-          privacyPolicy: 'https://www.mozilla.org/en-US/privacy/policies/websites/'
+      function request() {
+        load().then(function() {
+          navigator.id.request({
+            siteName: 'Mozilla Summit',
+            backgroundColor: '#D7D3C8',
+            termsOfService: 'https://www.mozilla.org/en-US/persona/terms-of-service/',
+            privacyPolicy: 'https://www.mozilla.org/en-US/privacy/policies/websites/'
+          });
         });
-      });
+      }
+
+      function logout() {
+        console.log('persona.logout');
+        start().then(function() {
+          console.log('navigator.id.logout');
+          navigator.id.logout();
+        });
+      }
+
+      return {
+        load: load,
+        start: start,
+        request: request,
+        logout: logout
+      };
+
     }
-
-    function logout() {
-      console.log('persona.logout');
-      start().then(function() {
-        console.log('navigator.id.logout');
-        navigator.id.logout();
-      });
-    }
-
-    return {
-      load: load,
-      start: start,
-      request: request,
-      logout: logout
-    };
-
-  });
+  ]);
 
   app.controller('AppCtrl', ['$scope', 'persona', '$rootScope', '$location',
     function AppCtrl($scope, persona, $rootScope, $location) {
@@ -408,15 +410,15 @@
     function($scope) {
       $scope.tip = {};
 
-      for (var i = 0; i < 7; i ++) {
+      for (var i = 0; i < 7; i++) {
         $scope.tip[i] = false;
       }
 
-      $scope.showingTip = function (id) {
+      $scope.showingTip = function(id) {
         return (id === $scope.tip[id]);
       };
 
-      $scope.showTip = function (id) {
+      $scope.showTip = function(id) {
         if ($scope.tip[id] === id) {
           $scope.tip[id] = false;
         } else {

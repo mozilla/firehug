@@ -64,7 +64,39 @@ app.use(stylus.middleware({
       .use(nib());
   }
 }));
-app.use(express.static(__dirname + '/public'));
+var maxAge = process.NODE_ENV ? 86400000 : 0;
+app.use(express.static(__dirname + '/public', {
+  maxAge: maxAge
+}));
+
+var nap = require('nap');
+
+nap({
+  mode: 'production',
+  assets: {
+    js: {
+      all: [
+        '/public/js/vendor/jquery.js',
+        '/public/js/vendor/fastclick.js',
+        '/public/js/vendor/showdown.min.js',
+        '/public/js/vendor/typeahead.min.js',
+        '/public/js/vendor/angular.min.js',
+        '/public/js/vendor/angular-route.min.js',
+        '/public/js/app.js'
+      ]
+    },
+    css: {
+      all: [
+        '/public/css/vendor/bootstrap.css',
+        '/public/css/vendor/font-awesome.css',
+        '/public/css/app.styl'
+      ]
+    }
+  }
+});
+if (process.NODE_ENV) {
+  nap.package();
+}
 
 // Template engine
 app.set('view engine', 'html');
@@ -83,6 +115,7 @@ app.use(express.session({
 }));
 
 var now = new time.Date();
+
 function getDay(user) {
   switch (user.location) {
     case 'br':
@@ -124,7 +157,9 @@ app.get('/', function(request, response) {
   }
 
   response.render('index', {
-    jsonPayload: JSON.stringify(payload)
+    jsonPayload: JSON.stringify(payload),
+    js: nap.js('all'),
+    css: nap.css('all')
   });
 });
 
@@ -184,7 +219,9 @@ app.post('/questions', isLoggedIn, function(request, response) {
     influencers: request.body.influencers,
   }, function(err) {
     if (err) {
-      return response.status(400).send({status: 0});
+      return response.status(400).send({
+        status: 0
+      });
     }
     // TODO: Store in redis
     request.session.submitted = Date.now();
@@ -389,8 +426,7 @@ var Surveys = {
               record.user,
               record.location,
               record.mood || '-',
-              record.quote || '-',
-              (record.influencers || []).join(', ')
+              record.quote || '-', (record.influencers || []).join(', ')
             ]
           ];
           spreadsheet.add(values);
@@ -411,4 +447,3 @@ var Surveys = {
   }
 
 };
-
