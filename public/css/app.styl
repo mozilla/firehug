@@ -126,7 +126,7 @@ a
 		display block
 		padding 12px 0
 
-.curr-location
+.curr-location, .tips-wrapper
 
 	.details
 		background-color #FFF
@@ -172,10 +172,40 @@ a
 		.sc
 			display block
 
+.tips-wrapper
+	margin-left -40px
+	.details
+		display block
+
+		h4
+			margin 20px 0
+
+		h5
+			font-size 20px
+
+		.expander
+			visibility visible
+			.less
+				display none
+			.more
+				display block
+			&.active
+				.less
+					display block
+				.more
+					display none
+
+		&.active
+			background-color #FAFAFA
+			.description
+				display block
+	.inner
+		margin-left: 30px
+
 article
 	position relative
 
-	.event-wrapper
+	.event-wrapper, .tips-wrapper
 
 		section
 			display none

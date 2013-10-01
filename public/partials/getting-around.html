@@ -1,44 +1,379 @@
 <div class="row" id="view-getting-around">
   <article class="col-sm-8 col-sm-offset-2">
     <img src="/img/schedule-icon.png" class="title-icon">
-    <h2>Getting Around</h2>
-    <div class="content">
-      <h3>How to have a great Summit in five easy steps</h3>
-      <ul>
-        <li>Participate</li>
-        <li>Make room</li>
-        <li>Practice respect</li>
-        <li>Be helpful</li>
-        <li>Have fun</li>
-      </ul>
-      <h3>At the Summit</h3>
-      <ul>
-        <li>Meet the speakers</li>
-        <li>Get social</li>
-      </ul>
-      <h3>Travel Logistics</h3>
-      <ul>
-        <li>To/from hotel</li>
-        <li>Hotel</li>
-        <li>Venue</li>
-        <li>Lounge hours</li>
-      </ul>
-      <h3>Travel Tips</h3>
-      <ul>
-        <li>Where to exchange money</li>
-        <li>Weather</li>
-        <li>Facts about the city</li>
-        <li>How close is the nearest Mozilla space?</li>
-        <li>Currency</li>
-        <li>Parking</li>
-        <li>Tipping</li>
-        <li>Where to go for help</li>
-      </ul>
-      <h3>In case you missed it</h3>
-      <ul>
-        <li>Help</li>
-        <li>Smoking</li>
-        <li>Photos</li>
+    <h2>Tips and Random Bits</h2>
+    <div class="tips-wrapper">
+      <ul class="events">
+        <li class="details" ng-click="showTip(0)" ng-class="{ active : showingTip(0) }">
+          <a class="expander" ng-class="{ active : showingTip(0) }">
+            <span class="more">+</span>
+            <span class="less">-</span>
+          </a>
+          <div class="inner">
+            <h3>How to have a great Summit in five easy steps</h3>
+            <section class="description" ng-class="{ active : showingTip(0) }">
+              <h4>Participate</h4>
+              <p>The work of changing the world — the big, juicy Mozilla work — can
+                happen only through active participation. Commit to pushing hard to go
+                beyond what’s easy: embrace a new idea, ask a dumb question, lead a
+                session, close your laptop. If a session does not move you, find
+                another that does (it’s okay to shift). You alone get to decide what
+                interests you, stretches you and ultimately helps you grow.</p>
+              <h4>Make Room</h4>
+              <p>Summit participants speak more than 114 languages. We don't all
+                understand English fluently. Some of us are hard of hearing and
+                visually impaired. When speaking, do it slowly and clearly. Check in
+                with others as you go to make sure they understand.</p>
+              <p>Some of us have physical limitations that make getting around
+                difficult. Offer open structures with the idea of universal access,
+                rather than waiting for special requests.  Provide clear information
+                on access.</p>
+              <p>Make room (literally and metaphorically) for all before anyone has to
+                ask. Seek to understand, then to be understood. Practice empathy. Assume
+                positive intent.</p>
+              <h4>Practice Respect</h4>
+              <p>The Summit is a space where you can safely be your true self (why would
+                you be anything else?) and a time to respect others’ true selves as well
+                (even if it bothers you from time to time). Respect their space and
+                freedom and uniqueness, as much as our own.</p>
+              <p>Take care of yourself, body and mind. We only have three days together
+                and they will be long. Mozilla needs you at your best. Rest, eat, drink
+                water, laugh a lot.</p>
+              <p>Take care of the space and each other. Pick up trash. Share your power cord.</p>
+              <h4>Be Helpful</h4>
+              <p>If you see a problem, try to help. If you can’t help, help find someone who
+                can. Don’t quietly tolerate unacceptable behavior. Stand up for your fellow
+                Mozillians.  If someone’s words make you feel unsafe or uncomfortable — a
+                comment, a joke, a slide — and can’t address it with them directly, consider
+                involving an intermediary (like the <a href="https://wiki.mozilla.org/Conductors">Conductors</a>,
+                for example).</p>
+              <p>If you’ve made someone feel unsafe or uncomfortable, be open to adjusting
+                your presentation or public speech and apologize directly when needed.</p>
+              <h4>Have Fun</h4>
+              <p>The Summit is our opportunity to pause and celebrate who we are and all that
+                we have accomplished. It’s a chance to meet other amazing humans, to connect,
+                to dance, to build things, to break them too.   It’s your moment to dig in
+                and have fun.</p>
+              <p>Let’s do it.</p>
+            </section>
+          </div>
+        </li>
+        <li class="details" ng-click="showTip(1)" ng-class="{ active : showingTip(1) }">
+          <a class="expander" ng-class="{ active : showingTip(1) }">
+            <span class="more">+</span>
+            <span class="less">-</span>
+          </a>
+          <div class="inner">
+            <h3>Feeling Social</h3>
+            <section ng-class="{ active : showingTip(1) }">
+              <p>The official Summit Hashtag is #MozSummit. Check out <a href="http://mozsummit.postano.com">mozsummit.postano.com</a>
+                for an aggregated stream.</p>
+            </section>
+          </div>
+        </li>
+        <li class="details" ng-click="showTip(2)" ng-class="{ active : showingTip(2) }">
+          <a class="expander" ng-class="{ active : showingTip(2) }">
+            <span class="more">+</span>
+            <span class="less">-</span>
+          </a>
+          <div class="inner">
+            <h3>Five things to do when you arrive (not necessarily in this order)</h3>
+            <section ng-class="{ active : showingTip(2) }">
+              <p>
+                <ol>
+                  <li>Check into your room</li>
+                  <li>Pick up your Welcome Kit</li>
+                  <li>Grab food in the "Lounge"</li>
+                  <li>Relax and look around</li>
+                  <li>Join us for dinner at 18:00 (6pm)</li>
+                </ol>
+              </p>
+            </section>
+          </div>
+        </li>
+        <li class="details" ng-click="showTip(3)" ng-class="{ active : showingTip(3) }">
+          <a class="expander" ng-class="{ active : showingTip(3) }">
+            <span class="more">+</span>
+            <span class="less">-</span>
+          </a>
+          <div class="inner">
+            <h3>Other things you may want to know</h3>
+            <section ng-class="{ active : showingTip(3) }">
+              <h4>Where to exchange money:</h4>
+              <p>The best exchange rate will be at a bank by withdrawing cash from using your
+                ATM / debit card. There are also money exchange kiosks at the airports.</p>
+              <p>The logos of the cards accepted are shown beside the machine. Most credit
+                cards, including American Express and Diners Club, are accepted in numerous
+                stores, boutiques, restaurants, car hire firms, etc.</p>
+              <h4>Currency:</h4>
+              <p>
+                <ul>
+                  <li>Brussels - Euro</li>
+                  <li>Toronto - Canadian Dollar (they may take US Dollar, but change will be in CAD)</li>
+                  <li>Santa Clara - US Dollar</li>
+                </ul>
+              </p>
+              <h4>Need Help:</h4>
+              <p>If you get lost, scared, confused, have a question, get hurt, need help
+                finding someone, or need a power cord or adapter, we have an amazing group of
+                Summit Site Hosts here to help. You can spot them because they are wearing
+                blue hoodies that say "Summit Site Host".</p>
+              <p>Alternatively, you can email: <a href="mailto:mozillabrussels@shworldwide.com">mozillabrussels@shworldwide.com</a> OR
+                <a href="mailto:mozillatoronto@shworldwide.com">mozillatoronto@shworldwide.com</a> OR <a href="mailto:mozillasantaclara@shworldwide.com">mozillasantaclara@shworldwide.com</a>.
+                There are lots of people here to help, know that.</p>
+              <h4>Accessibility Questions or Concerns:</h4>
+              <p>Head to the "Ask Us" desk or email <a href="mailto:mozillabrussels@shworldwide.com">mozillabrussels@shworldwide.com</a> OR <a href="mailto:mozillatoronto@shworldwide.com">mozillatoronto@shworldwide.com</a> OR <a href="mailto:mozillasantaclara@shworldwide.com">mozillasantaclara@shworldwide.com</a>.</p>
+              <h4>Wifi Connection Issues:</h4>
+              <p>Head to the "Ask Us" desk, we’ll try to help.</p>
+              <h4>Wifi Logins:</h4>
+              <p>
+                <ul>
+                  <li>SC: SSID: Summit2013 PW: Mozilla#1</li>
+                  <li>TO: SSID: Summit2013 PW: Mozilla</li>
+                  <li>BR: SSID: Summit2013 PW: Mozilla (Square only)</li>
+                </ul>
+              </p>
+              <h4>Electrical Outlets</h4>
+              <p>
+                <ul>
+                  <li>Brussels - The standard voltage is 220V 50Hz. If you have equipment that runs on a
+                    lower voltage, you should not connect it to the Belgian power net unless you have the
+                    correct transformer (voltage adaptor). The Belgian power plug is the Western-European
+                    type, with two round pin-holes.  Plugs from the UK, North and South America, and Asia
+                    will not fit into a Belgian electrical socket.</li>
+                  <li>Toronto/Santa Clara - Voltages = 120V, 60 Hz and power plugs = Type A (NEMA 1–15
+                    U.S. 2 pin) and Type B (NEMA 5–15 U.S. 3 pin)</li>
+                </ul>
+              </p>
+              <h4>Official Languages</h4>
+              <p>
+                <ul>
+                  <li>Brussels - Main language is French - also speak Dutch, German and English</li>
+                  <li>Toronto - English and French</li>
+                  <li>Santa Clara - English</li>
+                </ul>
+              </p>
+              <h4>Parking</h4>
+              <p>
+                <ul>
+                  <li>Brussels - hotels have self park - submit for reimbursement</li>
+                  <li>Toronto - valet parking ($35/day) - validation at "Ask Us" desk, or parking
+                    across the street at City Hall ($26/day) and submit for reimbursement.</li>
+                  <li>Santa Clara - Discounted self parking for $5 (validation available at the
+                    Ask Us desk)</li>
+                </ul>
+              </p>
+              <h4>Taxis</h4>
+              <p>Ask the bell man at each hotel, they will flag one down for you. Do NOT accept
+                a town car. If you only have a credit card, let the bellman know before they flag
+                one for you.</p>
+              <h4>Tipping</h4>
+              <p>
+                <ul>
+                  <li>All tips are taken care of within the venues.</li>
+                  <li>Brussels - No tipping in restaurants, it is included already</li>
+                  <li>Toronto/Santa Clara - customary to tip 15-20% on meals and services</li>
+                </ul>
+              </p>
+              <h4>Nearest Mozilla space:</h4>
+              <p>
+                <ul>
+                  <li>BRU: The nearest MozSpace is is Paris, France and also almost the same
+                    distance is to the office in London, UK</li>
+                  <li>SC: The nearest MozSpace is in Mountain View, CA</li>
+                  <li>TO: The nearest MozSpace is the one in town, Toronto</li>
+                </ul>
+              </p>
+              <h4>Links to City Info:</h4>
+              <p>
+                <ul>
+                  <li>Brussels: <a href="http://mzl.la/1fw21y1">http://mzl.la/1fw21y1</a></li>
+                  <li>Toronto: <a href="http://mzl.la/1awEJlo">http://mzl.la/1awEJlo</a></li>
+                  <li>Santa Clara: <a href="http://mzl.la/1fw1YlT">http://mzl.la/1fw1YlT</a></li>
+                </ul>
+              </p>
+              <h4>Photos:</h4>
+              <p>Mozillian photographers will be capturing the weekend for history’s sake. As a
+                Summit participant, you have agreed that Mozilla can use the photos we take of
+                you here.  If you don’t want to be photographed, just let people know.</p>
+            </section>
+          </div>
+        </li>
+        <li class="details" ng-click="showTip(4)" ng-class="{ active : showingTip(4) }">
+          <a class="expander" ng-class="{ active : showingTip(4) }">
+            <span class="more">+</span>
+            <span class="less">-</span>
+          </a>
+          <div class="inner">
+            <h3>Meet These Mozillians</h3>
+            <section ng-class="{ active : showingTip(4) }">
+              <p>
+                <ul>
+                  <li>
+                    <h5>Debbie Cohen</h5>
+                    <p>Chief of People: Coach, captain and cheerleader — changing the world of
+                      work one Mozillian at a time.</p>
+                  </li>
+                  <li>
+                    <h5>Mitchell Baker</h5>
+                    <p>Chief Lizard Wrangler: Founder, soul of the project and Mozilla
+                      Executive Chair.</p>
+                  </li>
+                  <li>
+                    <h5>Brendan Eich</h5>
+                    <p>Chief Technologist: Invented a little something called JavaScript.
+                      Maybe you’ve heard of it.</p>
+                  </li>
+                  <li>
+                    <h5>Harvey Anderson</h5>
+                    <p>SVP, Business and Legal Affairs: Partnerships, public policy and even
+                      some things that don’t start with P.</p>
+                  </li>
+                  <li>
+                    <h5>Jim Cook</h5>
+                    <p>Money Man (CFO): Keeps the lights on, the project running and the party going.</p>
+                  </li>
+                  <li>
+                    <h5>Jay Sullivan</h5>
+                    <p>Chief Operating Officer: Drives strategy, leads development, runs day-to-day
+                      operations, doesn’t sleep.</p>
+                  </li>
+                  <li>
+                    <h5>Li Gong</h5>
+                    <p>SVP of Mobile Devices, President of Asia Operations &amp; CEO of Mozilla Online
+                      &amp; Mozilla Taiwan: Longest title ever. With Mozilla for almost as long.</li>
+                  </li>
+                  <li>
+                    <h5>Pete Scanlon</h5>
+                    <p>Chief Marketing Officer: Matchmaker between people and our products.</p>
+                  </li>
+                  <li>
+                    <h5>Mark Surman</h5>
+                    <p>Executive Director, Mozilla Foundation: Will hack, remix and change anything
+                      and everything — even you (especially you).</p>
+                  </li>
+                  <li>
+                    <h5>John Jensen</h5>
+                    <p>Director, Metrics: Talks to data and numbers; they tell him fascinating tales.</p>
+                  </li>
+                  <li>
+                    <h5>Andreas Gal</h5>
+                    <p>Vice President, Firefox OS: Works on advancing the Web stack, oversees our R&amp;D,
+                      holds a Ph.D. in Computer Science. What a slacker.</p>
+                  </li>
+                  <li>
+                    <h5>Bob Moss</h5>
+                    <p>Vice President, Platform, and Chief of Engineering Operations: Bob wears two hats:
+                      developing Gecko and making things "go". Occasionally also a fedora.</p>
+                  </li>
+                  <li>
+                    <h5>Rick Fant</h5>
+                    <p>Vice President, Marketplace: In charge of making the Marketplace the next great
+                      app ecosystem. (Oh, is that all?)</p>
+                  </li>
+                  <li>
+                    <h5>Johnathan Nightingale</h5>
+                    <p>Vice President, Firefox: Has a passion for the Open Web that grows tiresome at
+                      dinner parties (but not Summits).</p>
+                  </li>
+                  <li>
+                    <h5>Mary Colvig</h5>
+                    <p>Director of Community Engagement: The only things bigger than her collection of
+                      glasses are her spirit and heart.</p>
+                  </li>
+                  <li>
+                    <h5>Dino Anderson</h5>
+                    <p>Organizational Development: He’ll get you up out of your seat and dancing in the
+                      streets to the new Mozilla beat.</p>
+                  </li>
+                  <li>
+                    <h5>Tristan Nitot</h5>
+                    <p>Evangelist and Firestarter: Haven’t heard of Mozilla? Don’t know what we’re all
+                      about? Not a fan? Tristan will fix that.</p>
+                  </li>
+                  <li>
+                    <h5>Arturo Martinez</h5>
+                    <p>Mozilla Rep, Venezuelan Community Lead: Phoenix fan (the bird, not the city) who
+                      loves to talk.</p>
+                  </li>
+                  <li>
+                    <h5>Jeremine Patonnier</h5>
+                    <p>Mozilla Rep: Paris developer dynamo. Speaks French, English, CSS, HTML and JavaScript.</p>
+                  </li>
+                  <li>
+                    <h5>Gloria Meneses</h5>
+                    <p>Mozilla Rep, Colombian Community Lead: Feisty, passionate, multi-talented and a force
+                      to be reckoned with.</p>
+                  </li>
+                  <li>
+                    <h5>Joanna Mazgaj</h5>
+                    <p>Mozilla Rep: Pasadena via Poland and Prague. Make sure to wish her a happy birthday
+                      this weekend.</p>
+                  </li>
+                </ul>
+              </p>
+            </section>
+          </div>
+        </li>
+        <li class="details" ng-click="showTip(5)" ng-class="{ active : showingTip(5) }">
+          <a class="expander" ng-class="{ active : showingTip(5) }">
+            <span class="more">+</span>
+            <span class="less">-</span>
+          </a>
+          <div class="inner">
+            <h3>Lounge Hours (eat + play + chill):</h3>
+            <section ng-class="{ active : showingTip(5) }">
+              <h4>Brussels (Hall 100):</h4>
+              <p>
+                <ul>
+                  <li>Friday – 10 am – 10 pm</li>
+                  <li>Saturday – 8 am – 12 am</li>
+                  <li>Sunday – 8 am – 12 am</li>
+                </ul>
+              </p>
+              <h4>Toronto (Grand Foyer):</h4>
+              <p>Open 24 hours a day, beginning at 7 am on Thursday, until 8 pm on Sunday</p>
+              <h4>Santa Clara (Sedona Room):</h4>
+              <p>Open 24 hours a day, beginning at 7 am on Thursday, until midnight on Sunday</p>
+            </section>
+          </div>
+        </li>
+        <li class="details" ng-click="showTip(6)" ng-class="{ active : showingTip(6) }">
+          <a class="expander" ng-class="{ active : showingTip(6) }">
+            <span class="more">+</span>
+            <span class="less">-</span>
+          </a>
+          <div class="inner">
+            <h3>Getting Home:</h3>
+            <section ng-class="{ active : showingTip(6) }">
+              <h4>Brussels:</h4>
+              <p>If you are departing on the October 7th, shuttle transportation will be provided from
+                your hotel to the Brussels Airport or to the Midi Train Station.  To accommodate enough
+                time for travel, check-in, security, etc., we suggest you depart the hotel three hours
+                before your flight and two hours before your train departure.</p>
+              <p>
+                <ul>
+                  <li>Brussels Airport Shuttle Hours: 6:30am - 8:00pm</li>
+                  <li>Midi Train Station Shuttle Hours: 8:00am - 12:00pm</li>
+                </ul>
+              </p>
+              <p>There will be transportation experts in the lobby of your hotel to point you to the
+                correct vehicle.</p>
+              <h4>Toronto:</h4>
+              <p>If your flight is departing on October 7th, return transportation service to the
+                airport will be provided. <strong>Make sure to stop by the "Ask Us" desk to get your
+                scheduled hotel departure time</strong>. They are specific to your flight so we have a
+                personalized one just for you.</p>
+              <h4>Santa Clara:</h4>
+              <p>If your flight is departing on October 7th, return transportation service to the
+                airport will be provided. <strong>Make sure to stop by the “Ask Us” desk to get your
+                scheduled hotel departure time</strong>. They are specific to your flight so we have a
+                personalized one just for you.</p>
+              <p>NOTE: If you are not leaving on October 7th, you will be responsible for your own
+                transportation to the airport.  More information on this can be found on the Summit wiki.</p>
+            </section>
+          </div>
+        </li>
       </ul>
     </div>
   </article>
