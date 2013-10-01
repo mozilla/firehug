@@ -163,6 +163,10 @@ app.get('/', function(request, response) {
   });
 });
 
+app.get('/privacy', function(request, response) {
+  response.render('privacy');
+});
+
 app.post('/verify', function(request, response) {
   var assertion = request.body.assertion;
   if (!assertion) {
