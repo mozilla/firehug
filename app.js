@@ -41,7 +41,8 @@ var policy = {
   defaultPolicy: {
     'default-src': ["'self'"],
     'frame-src': ["'self'", 'https://login.persona.org'],
-    'script-src': ["'self'", 'https://login.persona.org']
+    'script-src': ["'self'", 'https://login.persona.org'],
+    'style-src': ["'self'", "'unsafe-inline'"]
   }
 };
 
