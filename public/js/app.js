@@ -253,9 +253,9 @@
       var email = localStorage.getItem('email');
 
       persona.load().then(function() {
+        $rootScope.ready = true;
         return persona.start(email);
       }).then(function() {
-        $rootScope.ready = true;
         // Persona loaded, check if it fired login before
         if ($rootScope.user) {
           // Persona provided a user
