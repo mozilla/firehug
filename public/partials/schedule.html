@@ -18,7 +18,7 @@
             <a class="location-items" ng-click="setLocation(key)" ng-class="{ active : isActiveLocation(key) }" ng-repeat="(key, value) in locations">{{ value }}</a>
           </div>
         </div>
-        <ul class="events {{ day.name }}">
+        <ul class="events {{ day.name }}" ng-show="loaded">
           <li data-ng-repeat="(key, value) in day.value track by $index">
             <div ng-click="expandDescription(v)" class="details {{ v.id }}" id="idx-{{ v.idx }}" data-ng-repeat="(k, v) in value track by $index" ng-class="getDescriptionState(v)">
               <a class="expander" ng-class="{ active : hasDescriptionOrSpeaker(v) }">
@@ -37,6 +37,9 @@
             </div>
           </li>
         </ul>
+        <div ng-hide="loaded">
+          <p class="text-center text-muted">Loading events, please wait …</p>
+        </div>
       </section>
     </div>
   </article>
