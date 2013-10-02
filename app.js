@@ -396,7 +396,7 @@ var Users = {
   },
 
   login: function(email, next) {
-    client.get('email:' + email, function(err, username) {
+    client.get('email:' + email.toLowerCase(), function(err, username) {
       if (err || !username) {
         return next(new Error('Email not found ', err));
       }
