@@ -174,10 +174,6 @@ app.get('/privacy', function(request, response) {
   response.render('privacy');
 });
 
-app.get('/tos', function(request, response) {
-  res.redirect(303, 'https://www.mozilla.org/en-US/about/legal.html');
-});
-
 app.post('/verify', function(request, response) {
   var assertion = request.body.assertion;
   if (!assertion) {
