@@ -455,27 +455,44 @@
     }
   ]);
 
-  app.controller('DialogCtrl', ['$scope',
-    function($scope) {
+  var dialogKeys = {};
+  var glyphKey = 0;
+  var paletteKey = 0;
+  var glyphs = ['heart', 'cloud', 'rss', 'rocket', 'link', 'star'];
+
+  for (var i = 0; i < 48; i++) {
+    glyphKey++;
+    if (glyphKey == 6) {
+      glyphKey = 0;
+      paletteKey++;
+    }
+    dialogKeys[i] = {
+      palette: paletteKey,
+      glyph: glyphs[glyphKey]
+    };
+  }
+
+  app.controller('DialogCtrl', ['$scope', '$rootScope', '$location',
+    function($scope, $rootScope, $location) {
       if (!$rootScope.user.dialog || !$rootScope.user.activeDay) {
         alert('Only enabled Friday to Sunday');
         return $location.path('/');
       }
-      var group = $rootScope.user.dialog[$rootScope.user.day - 4];
+      if ($rootScope.user.dialog) {
+        var group = $rootScope.user.dialog[$rootScope.user.day - 4];
+      }
       group = group || (Math.random() * 40 | 0); // For testing
 
-      var glyphKey = Math.round(((group / 6) - (group / 6 | 0)) * 6);
-      var paletteKey = Math.round(((group / 8) - (group / 8 | 0)) * 8);
+      var glyph = dialogKeys[group].glyph;
+      var palette = dialogKeys[group].palette;
 
-      $(document.body).addClass('palette-' + paletteKey);
-
-      var glyphs = ['heart', 'cloud', 'rss', 'rocket', 'link', 'star'];
-      $scope.glyph = glyphs[glyphKey];
+      $(document.body).addClass('palette-' + palette);
+      $scope.glyph = glyph;
     }
   ]);
 
-  app.controller('QuestionsCtrl', ['$scope', '$location', '$http',
-    function($scope, $location, $http) {
+  app.controller('QuestionsCtrl', ['$scope', '$location', '$http', '$rootScope',
+    function($scope, $location, $http, $rootScope) {
       if (!$rootScope.user.activeDay) {
         alert('Only enabled Friday to Sunday');
         return $location.path('/');
