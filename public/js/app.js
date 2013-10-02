@@ -153,7 +153,7 @@
             backgroundColor: '#D7D3C8'
           };
           if (location.protocol == 'https:') {
-            options.termsOfService = origin + '/tos';
+            options.termsOfService = 'https://www.mozilla.org/about/legal.html';
             options.privacyPolicy = origin + '/privacy';
             options.siteLogo = origin + '/img/logo-home.png';
           }
