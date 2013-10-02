@@ -88,7 +88,12 @@ var readWorksheet = function (worksheet, next) {
         }
 
         if (getObjSize(opts)) {
-          events[rowCount] = opts;
+          var countVal = rowCount;
+
+          if (parseInt(rowCount, 10) < 10) {
+            countVal = '0' + countVal;
+          }
+          events[countVal] = opts;
           rowCount ++;
         }
 

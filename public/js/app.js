@@ -415,6 +415,7 @@
             }
           }
         }
+
       }, function(data, status) {
         $scope.status = status;
       });
@@ -464,7 +465,6 @@
 
   app.controller('QuestionsCtrl', ['$scope', '$location', '$http',
     function($scope, $location, $http) {
-      console.log('QuestionsCtrl');
       if (!$rootScope.user.activeDay) {
         alert('Only enabled Friday to Sunday');
         return $location.path('/');
