@@ -249,7 +249,7 @@ app.post('/questions', isLoggedIn, function(request, response) {
   });
 });
 
-app.get('/schedule', isLoggedIn, function(req, res, next) {
+app.get('/schedule', function(req, res, next) {
   client.smembers('schedules', function(err, schedules) {
     if (err) {
       return res.status(400).send();

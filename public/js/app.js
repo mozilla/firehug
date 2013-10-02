@@ -211,7 +211,7 @@
         var oldClass = oldValue.replace(/[^a-z-]/, '') || 'index';
         $(document.body).removeClass('view-' + oldClass).addClass('view-' + newClass);
 
-        if (!$rootScope.user && newValue != '/login') {
+        if (!$rootScope.user && (newValue !== '/login' && newValue !== '/schedule')) {
           $location.path('/login');
         }
         $rootScope.path = newValue;
@@ -243,6 +243,10 @@
       if ($rootScope.user) {
         return $location.path('/');
       }
+
+      $scope.redirectToSchedule = function() {
+        $location.path('/schedule');
+      };
 
       $scope.emailWarning = false;
       $rootScope.$on('persona:loginFailed', function() {
@@ -295,7 +299,14 @@
         'sc': 'Santa Clara',
         'to': 'Toronto'
       };
-      $scope.location = $rootScope.user.location;
+
+      var defaultLocation = 'sc';
+
+      if ($rootScope.user) {
+        defaultLocation = $rootScope.user.location;
+      }
+
+      $scope.location = defaultLocation;
 
       $scope.showLocations = function() {
         if ($scope.listing) {
@@ -376,7 +387,7 @@
         value: []
       }];
 
-      if ($rootScope.user.day > 3 && $rootScope.user.day < 8) {
+      if ($rootScope.user && ($rootScope.user.day > 3 && $rootScope.user.day < 8)) {
         $scope.selected = $scope.days[$rootScope.user.day - 3];
       } else {
         // Otherwise default to Thursday
