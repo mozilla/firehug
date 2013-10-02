@@ -1,5 +1,8 @@
 'use strict';
 
+// for ITs monitoring tool
+require('newrelic');
+
 var express = require('express');
 var http = require('http');
 var https = require('https');
