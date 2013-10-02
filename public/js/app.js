@@ -214,6 +214,9 @@
         if (!$rootScope.user && (newValue !== '/login' && newValue !== '/schedule')) {
           $location.path('/login');
         }
+
+        $rootScope.canGoBack = $rootScope.user ? (newValue != '/') : (newValue != '/login');
+
         $rootScope.path = newValue;
       });
 

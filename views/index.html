@@ -31,9 +31,9 @@
 </head>
 <body data-payload='{{{jsonPayload}}}'>
 	<header class="container" role="banner">
-		<nav class="row" ng-show="user">
+		<nav class="row">
 			<div class="col-sm-8 col-sm-offset-2">
-				<a href="#!/" class="menu-icn menu-back" ng-show="path != '/'"></a>
+				<a href="#!/" class="menu-icn menu-back" ng-show="canGoBack"></a>
 				<ul>
 					<li>
 						<a href="#" class="menu-icn menu-dropdown"></a>
@@ -47,7 +47,7 @@
 							<li>
 								<a href="https://www.mozilla.org/about/legal.html" target="_blank">Terms of Service</a>
 							</li>
-							<li>
+							<li ng-show="user">
 								<a href="/#!/logout">Logout</a>
 							</li>
 						</ul>
