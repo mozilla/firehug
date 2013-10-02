@@ -2,8 +2,8 @@
 <html ng-csp ng-app="summit" ng-controller="AppCtrl as app" ng-class="{'state-ready': ready}">
 <head>
 	<meta charset="utf-8">
-	<meta content="width=device-width" height="device-height" user-scalable="no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" name="viewport">
-	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<link rel="icon" type="image/png" href="/img/icon-32.png">
 	<link rel="apple-touch-icon" sizes="152x152" href="/img/icon-152.png">
@@ -44,6 +44,7 @@
 	</main>
 	<div id="splash-screen">
 		<img src="/img/splash.png" alt="Splash">
+		<progress></progress>
 	</div>
 	{{{js}}}
 </body>

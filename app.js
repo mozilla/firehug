@@ -11,7 +11,6 @@ var nib = require('nib');
 var connectRedis = require('connect-redis');
 var request = require('request');
 var time = require('time');
-var helmet = require('helmet');
 
 var shared = require('./shared');
 var nconf = shared.nconf;
@@ -48,6 +47,8 @@ app.use(stylus.middleware({
       .use(nib());
   }
 }));
+
+// Static sources
 var maxAge = process.NODE_ENV ? 86400000 : 0;
 app.use(express.static(__dirname + '/public', {
   maxAge: maxAge
@@ -77,23 +78,22 @@ nap({
     }
   }
 });
+
 nap.package();
 
-var policy = {
-  defaultPolicy: {
-    'default-src': ["'self'"],
-    'frame-src': ['https://login.persona.org'],
-    'script-src': ["'self'", 'https://login.persona.org'],
-    'style-src': ["'self'", "'unsafe-inline'"]
-  }
-};
+// CSP
+var headers = require('express-standard');
 
-helmet.csp.policy(policy);
+headers.add_csp_self('default-src');
+headers.add_csp('frame-src', 'https://login.persona.org');
+headers.add_csp_self('script-src');
+headers.add_csp('script-src', 'https://login.persona.org');
+headers.add_csp_self('style-src');
+headers.add_csp('style-src', "'unsafe-inline'");
+
+app.use(headers.handle);
 
 app.use(express.bodyParser());
-app.use(helmet.csp());
-app.use(helmet.xframe());
-app.use(helmet.contentTypeOptions());
 
 // Template engine
 app.set('view engine', 'html');
@@ -162,6 +162,10 @@ app.get('/', function(request, response) {
 
 app.get('/privacy', function(request, response) {
   response.render('privacy');
+});
+
+app.get('/tos', function(request, response) {
+  res.redirect(303, 'https://www.mozilla.org/en-US/about/legal.html');
 });
 
 app.post('/verify', function(request, response) {

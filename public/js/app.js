@@ -1,6 +1,8 @@
 (function() {
   'use strict';
 
+  var origin = location.protocol + '//' + location.host;
+
   FastClick.attach(document.body);
 
   var app = angular.module('summit', ['ngRoute']);
@@ -146,12 +148,16 @@
 
       function request() {
         load().then(function() {
-          navigator.id.request({
+          var options = {
             siteName: 'Mozilla Summit',
-            backgroundColor: '#D7D3C8',
-            termsOfService: 'https://www.mozilla.org/en-US/persona/terms-of-service/',
-            privacyPolicy: 'https://www.mozilla.org/en-US/privacy/policies/websites/'
-          });
+            backgroundColor: '#D7D3C8'
+          };
+          if (location.protocol == 'https:') {
+            options.termsOfService = origin + '/tos';
+            options.privacyPolicy = origin + '/privacy';
+            options.siteLogo = origin + '/img/logo-home.png';
+          }
+          navigator.id.request(options);
         });
       }
 
@@ -217,7 +223,7 @@
           if (!selfReq.result) {
             $scope.canInstall = true;
             $scope.install = function() {
-              var manifest = location.protocol + '//' + location.host + '/manifest.webapp';
+              var manifest = origin + '/manifest.webapp';
               var req = navigator.mozApps.install(manifest);
               req.onsuccess = function() {
                 req.result.launch();
