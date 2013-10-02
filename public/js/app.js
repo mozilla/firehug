@@ -203,6 +203,10 @@
         location.href = '/#!/login';
       });
 
+      $scope.$on('$viewContentLoaded', function(event) {
+        $window._gaq.push(['_trackPageview', $location.path()]);
+      });
+
       // Watch login and redirect as needed
       $rootScope.$watch(function() {
         return $location.path();
