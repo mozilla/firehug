@@ -90,6 +90,10 @@ headers.add_csp_self('script-src');
 headers.add_csp('script-src', 'https://login.persona.org');
 headers.add_csp_self('style-src');
 headers.add_csp('style-src', "'unsafe-inline'");
+headers.add_csp_self('img-src');
+headers.add_csp('img-src', 'data:');
+headers.add_csp('img-src', 'https://mozillians.org');
+headers.add_csp('img-src', 'https://secure.gravatar.com');
 
 app.use(headers.handle);
 
@@ -328,7 +332,7 @@ app.get('/typeahead', isLoggedIn, function(req, res) {
         entry.avatar = user.avatar || gravatar.url(user.email, {
           s: 50,
           d: defaultGravatar
-        });
+        }, true);
         return entry;
       });
 
