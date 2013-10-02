@@ -37,22 +37,6 @@ if (!process.NODE_ENV) {
   app.use(express.logger());
 }
 
-var policy = {
-  defaultPolicy: {
-    'default-src': ["'self'"],
-    'frame-src': ['https://login.persona.org'],
-    'script-src': ["'self'", 'https://login.persona.org'],
-    'style-src': ["'self'", "'unsafe-inline'"]
-  }
-};
-
-helmet.csp.policy(policy);
-
-app.use(express.bodyParser());
-app.use(helmet.csp());
-app.use(helmet.xframe());
-app.use(helmet.contentTypeOptions());
-
 var cookieParser = express.cookieParser(nconf.get('sessionSecret'));
 app.use(cookieParser);
 
@@ -77,11 +61,11 @@ nap({
     js: {
       all: [
         '/public/js/vendor/jquery.js',
+        '/public/js/vendor/angular.js',
+        '/public/js/vendor/angular-route.js',
         '/public/js/vendor/fastclick.js',
-        '/public/js/vendor/showdown.min.js',
-        '/public/js/vendor/typeahead.min.js',
-        '/public/js/vendor/angular.min.js',
-        '/public/js/vendor/angular-route.min.js',
+        '/public/js/vendor/showdown.js',
+        '/public/js/vendor/typeahead.js',
         '/public/js/app.js'
       ]
     },
@@ -94,9 +78,23 @@ nap({
     }
   }
 });
-if (process.NODE_ENV) {
-  nap.package();
-}
+nap.package();
+
+var policy = {
+  defaultPolicy: {
+    'default-src': ["'self'"],
+    'frame-src': ['https://login.persona.org'],
+    'script-src': ["'self'", 'https://login.persona.org'],
+    'style-src': ["'self'", "'unsafe-inline'"]
+  }
+};
+
+helmet.csp.policy(policy);
+
+app.use(express.bodyParser());
+app.use(helmet.csp());
+app.use(helmet.xframe());
+app.use(helmet.contentTypeOptions());
 
 // Template engine
 app.set('view engine', 'html');
