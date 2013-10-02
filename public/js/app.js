@@ -3,7 +3,7 @@
 
   var origin = location.protocol + '//' + location.host;
 
-  FastClick.attach(document.body);
+  // FastClick.attach(document.body);
 
   var app = angular.module('summit', ['ngRoute']);
 
@@ -445,17 +445,17 @@
 
   app.controller('DialogCtrl', ['$scope',
     function($scope) {
-      if ($scope.user.dialog) {
-        var group = $scope.user.dialog[$rootScope.user.day - 4];
+      if (!$rootScope.user.dialog || !$rootScope.user.activeDay) {
+        alert('Only enabled Friday to Sunday');
+        return $location.path('/');
       }
+      var group = $rootScope.user.dialog[$rootScope.user.day - 4];
       group = group || (Math.random() * 40 | 0); // For testing
 
       var glyphKey = Math.round(((group / 6) - (group / 6 | 0)) * 6);
       var paletteKey = Math.round(((group / 8) - (group / 8 | 0)) * 8);
 
       $(document.body).addClass('palette-' + paletteKey);
-
-      console.log(paletteKey, glyphKey);
 
       var glyphs = ['heart', 'cloud', 'rss', 'rocket', 'link', 'star'];
       $scope.glyph = glyphs[glyphKey];
@@ -465,12 +465,17 @@
   app.controller('QuestionsCtrl', ['$scope', '$location', '$http',
     function($scope, $location, $http) {
       console.log('QuestionsCtrl');
-      if ($scope.user.questionsDone) {
-        // TODO: Implement .questionsDone!
+      if (!$rootScope.user.activeDay) {
+        alert('Only enabled Friday to Sunday');
+        return $location.path('/');
+      }
+
+      // TODO: Crude check, needs refresh to see questions
+      if ($scope.user.questionsDone || $scope.user.nextQuestions) {
         return $location.path('/questions/thanks');
       }
 
-      $scope.mood = 'excited';
+      $scope.mood = '';
       $scope.quote = '';
       $scope.influencers = [];
 
@@ -557,16 +562,22 @@
           influencers: $scope.influencers.map(function(influencer) {
             return influencer.name;
           })
-        })
-          .success(function() {
-            // TODO: Store this serverside as well!
-            $location.path('/questions/thanks');
-            $scope.user.questionsDone = true;
-          })
-          .error(function() {
-            // FIXME: Better error resport
+        }).
+        success(function() {
+          // TODO: Store this serverside as well!
+          $location.path('/questions/thanks');
+          $scope.user.questionsDone = true;
+        }).
+        error(function(data) {
+          if (!data || !(data = JSON.parse(data))) {
             alert('Submission failed. Please try again later!');
-          });
+            return;
+          }
+          if (data.error == 'idle') {
+            alert('You can answer the 3 Questions again after two hours have elapsed.');
+            return $location.path('/questions/thanks');
+          }
+        });
 
 
       }

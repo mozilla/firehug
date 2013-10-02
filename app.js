@@ -64,7 +64,7 @@ nap({
         '/public/js/vendor/jquery.js',
         '/public/js/vendor/angular.js',
         '/public/js/vendor/angular-route.js',
-        '/public/js/vendor/fastclick.js',
+        // '/public/js/vendor/fastclick.js',
         '/public/js/vendor/typeahead.js',
         '/public/js/app.js'
       ]
@@ -133,6 +133,11 @@ function getDay(user) {
   return now.getDate();
 };
 
+function isActiveDay(user) {
+  var day = getDay(user);
+  return day >= 4 && day <= 6;
+}
+
 function getPayload(session) {
   var nextQuestions = null;
   if (session.submitted) {
@@ -147,6 +152,7 @@ function getPayload(session) {
     location: session.user.location,
     dialog: session.user.dialog,
     day: getDay(session.user),
+    activeDay: isActiveDay(session.user),
     nextQuestions: nextQuestions
   };
 };
@@ -209,7 +215,10 @@ app.post('/verify', function(request, response) {
 });
 
 app.post('/questions', isLoggedIn, function(request, response) {
-  if (request.session.submitted) {
+  var session = request.session;
+  var user = request.session.user;
+
+  if (session.submitted || !isActiveDay(user)) {
     // 2 hours = nconf.get('surveyIdle') ms
     var nextQuestions = (new Date(session.submitted + nconf.get('surveyIdle'))).getTime();
     if (nextQuestions > Date.now()) {
@@ -221,8 +230,8 @@ app.post('/questions', isLoggedIn, function(request, response) {
   }
 
   Surveys.add({
-    user: request.session.user.username,
-    location: request.session.user.location,
+    user: user.username,
+    location: user.location,
     mood: request.body.mood,
     quote: request.body.quote,
     influencers: request.body.influencers,
@@ -233,7 +242,7 @@ app.post('/questions', isLoggedIn, function(request, response) {
       });
     }
     // TODO: Store in redis
-    request.session.submitted = Date.now();
+    session.submitted = Date.now();
     response.send({
       status: 1,
       error: 'storage'

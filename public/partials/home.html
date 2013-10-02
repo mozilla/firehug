@@ -11,14 +11,18 @@
         <a href="#!/around">Tips and Random Bits</a>
       </li>
 
-      <li>
+      <li ng-show="user.activeDay">
         <a href="#!/dialog">Healthy Dialog</a>
       </li>
 
-      <li>
+      <li ng-show="user.activeDay">
         <a href="#!/questions">3 Questions</a>
       </li>
     </ul>
+
+    <p class="text-center text-muted" ng-hide="user.activeDay">
+      More interactive content will be available from Friday to Sunday ("Healthy Dialog" and "3 Questions"), we hope to see you back then!  Now go have fun at the Summit.
+    </p>
 
   </article>
 </div>
