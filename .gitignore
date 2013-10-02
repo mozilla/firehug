@@ -6,3 +6,5 @@ local.json
 local.json-prod
 app.css
 public/assets
+newrelic.js
+newrelic_agent.log
