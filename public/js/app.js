@@ -545,8 +545,9 @@
       });
 
       $scope.submit = function() {
-        if (!$scope.questionsForm.$valid) {
-          alert('TODO for you: Please fill out the form.');
+        if (!$scope.mood) {
+          alert('Please select your mood.');
+          $('#mood-wrapper')[0].scrollIntoView();
           return;
         }
 
