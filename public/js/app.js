@@ -280,8 +280,8 @@
     }
   ]);
 
-  app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http',
-    function($scope, $rootScope, $http) {
+  app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce',
+    function($scope, $rootScope, $http, $sce) {
       $scope.listing = false;
 
       $scope.locations = {
@@ -398,6 +398,15 @@
 
           } else if (s.indexOf('7') > -1) {
             $scope.days[4].value.push(evt);
+          }
+
+          for (var entry in evt) {
+            if (evt[entry].description) {
+              evt[entry].description = $sce.trustAsHtml(evt[entry].description);
+            }
+            if (evt[entry].speaker) {
+              evt[entry].speaker = $sce.trustAsHtml(evt[entry].speaker);
+            }
           }
         }
       }, function(data, status) {
@@ -564,20 +573,5 @@
       }
     }
   ]);
-
-  app.directive('markdown', function() {
-    var converter = new Showdown.converter();
-    return {
-      restrict: 'AE',
-      link: function(scope, element, attrs) {
-        scope.$watch(attrs['ngMarkdown'], function(newVal) {
-          if (newVal) {
-            var html = converter.makeHtml(newVal);
-            element.html(html);
-          }
-        });
-      }
-    };
-  });
 
 })();

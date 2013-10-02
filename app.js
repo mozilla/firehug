@@ -64,7 +64,6 @@ nap({
         '/public/js/vendor/angular.js',
         '/public/js/vendor/angular-route.js',
         '/public/js/vendor/fastclick.js',
-        '/public/js/vendor/showdown.js',
         '/public/js/vendor/typeahead.js',
         '/public/js/app.js'
       ]

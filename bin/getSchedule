@@ -5,10 +5,13 @@
 var redis = require('redis');
 var async = require('async');
 var GoogleSpreadsheet = require('google-spreadsheets');
+var Showdown = require('showdown');
 
 var shared = require('./../shared');
 var nconf = shared.nconf;
 var client = shared.redisClient;
+
+var converter = new Showdown.converter();
 
 var getObjSize = function (obj) {
   return Object.keys(obj).length;
@@ -35,7 +38,9 @@ var setType = function (opts, cell) {
       break;
 
     case '5':
-      opts.description = value;
+      var html = converter.makeHtml(value);
+      html = html.replace('<a ', '<a target="_blank" ');
+      opts.description = html;
       break;
 
     case '6':
@@ -43,7 +48,9 @@ var setType = function (opts, cell) {
       break;
 
     case '7':
-      opts.speaker = value;
+      var html = converter.makeHtml(value);
+      html = html.replace('<a ', '<a target="_blank" ');
+      opts.speaker = html;
       break;
   }
 
