@@ -23,7 +23,7 @@
         <h5>Who have you recently met that had a positive impact on you?</h5>
         <input type="text" placeholder="Add a Mozillian at {{ locations[location] }}" class="form-control typeahead">
         <p ng-hide="influencers.length" class="text-center text-muted">
-          <em>Enter Mozillian above to add them …</em>
+          <em>No Mozillians added yet …</em>
         </p>
         <ol id="mozillians-list">
           <li ng-repeat="influencer in influencers track by $index">
