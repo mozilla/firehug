@@ -498,7 +498,7 @@
         return $location.path('/');
       }
 
-      var group = 0;
+      var group = 47;
       if ($rootScope.user.dialog) {
         group = $rootScope.user.dialog[$rootScope.user.day - 4];
       }
