@@ -98,6 +98,7 @@ headers.add_csp_self('img-src');
 headers.add_csp('img-src', 'data:');
 headers.add_csp('img-src', 'https://mozillians.org');
 headers.add_csp('img-src', 'https://secure.gravatar.com');
+headers.add_csp('img-src', 'https://ssl.google-analytics.com');
 
 app.use(headers.handle);
 
