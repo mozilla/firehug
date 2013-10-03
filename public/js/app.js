@@ -120,15 +120,16 @@
           navigator.id.watch({
             loggedInUser: email || undefined, // trigger logout
             onlogin: function onLogin(assertion) {
-              console.log('persona.onLogin', !! $rootScope.user, assertion);
               if ($rootScope.user) {
                 return starting.resolve();
               }
               verify(assertion).then(function(user) {
+                _gaq.push(['_trackEvent', 'Login', 'VerifySuccess']);
                 $rootScope.user = user;
                 $rootScope.$broadcast('persona:login', user);
                 starting.resolve();
               }, function() {
+                _gaq.push(['_trackEvent', 'Login', 'VerifyFail']);
                 $rootScope.$broadcast('persona:loginFailed');
                 navigator.id.logout();
                 starting.resolve();
@@ -159,6 +160,7 @@
       var starting = null;
 
       function request() {
+        _gaq.push(['_trackEvent', 'Login', 'Request']);
         load().then(function() {
           var options = {
             siteName: 'Mozilla Summit',
@@ -174,7 +176,7 @@
       }
 
       function logout() {
-        console.log('persona.logout');
+        _gaq.push(['_trackEvent', 'Login', 'Logout']);
         start().then(function() {
           console.log('navigator.id.logout');
           navigator.id.logout();
@@ -204,7 +206,7 @@
       }
 
       $rootScope.$on('persona:login', function(event, user) {
-        // TODO: Validate assertion
+        _gaq.push(['_setCustomVar', 1, 'LoggedIn', 'Yes', 2]);
         $rootScope.user = user;
         localStorage.setItem('email', user.email);
         $location.path('/');
@@ -327,6 +329,8 @@
 
       $scope.location = defaultLocation;
 
+      _gaq.push(['_trackEvent', 'Schedule', 'View', defaultLocation]);
+
       $scope.showLocations = function() {
         if ($scope.listing) {
           $scope.listing = false;
@@ -340,6 +344,7 @@
       };
 
       $scope.setLocation = function(location) {
+        _gaq.push(['_trackEvent', 'Schedule', 'SetLocation', location]);
         $('#schedule-listing').removeClass('br')
           .removeClass('to')
           .removeClass('sc')
@@ -601,6 +606,7 @@
         if (!$scope.mood) {
           alert('Please select your mood.');
           $('#mood-wrapper')[0].scrollIntoView();
+          _gaq.push(['_trackEvent', 'Questions', 'Invalid']);
           return;
         }
 
