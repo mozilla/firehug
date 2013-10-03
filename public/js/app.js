@@ -339,6 +339,11 @@
         return $scope.listing;
       };
 
+      $scope.refresh = function () {
+        document.location.href = '/#!/schedule?schedule';
+        document.location.reload();
+      };
+
       $scope.setLocation = function(location) {
         _gaq.push(['_trackEvent', 'Schedule', 'SetLocation', location]);
         $('#schedule-listing').removeClass('br')

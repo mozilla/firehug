@@ -2,6 +2,7 @@
   <article id="schedule-listing" class="col-sm-8 col-sm-offset-2 curr-location {{ location }}">
     <img src="/img/schedule-icon.png" class="title-icon">
     <h2>Schedule</h2>
+    <h4 class="refresh"><a ng-click="refresh()">Refresh schedule</a></h4>
     <div class="event-wrapper" ng-switch="selected" ng-repeat="day in days" ng-animate="'animate'">
       <section ng-class="{ active : isActive(day) }">
         <div class="{{ day.name }} subtitle">
