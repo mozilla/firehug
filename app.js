@@ -163,9 +163,14 @@ function getPayload(session) {
 };
 
 app.get('/', function(request, response) {
+  var six = (request.query.hexagon == 6);
   var payload = {};
   if (request.session && request.session.user) {
     payload.user = getPayload(request.session);
+    if (six && !payload.user.activeDay) {
+      payload.user.day = 5;
+      payload.user.activeDay = true;
+    }
   }
 
   response.render('index', {
