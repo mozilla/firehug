@@ -307,8 +307,8 @@
     }
   ]);
 
-  app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce',
-    function($scope, $rootScope, $http, $sce) {
+  app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
+    function($scope, $rootScope, $http, $sce, $routeParams) {
       $scope.listing = false;
 
       $scope.locations = {
@@ -448,7 +448,7 @@
       };
 
       asyncStorage.getItem('schedule', function (schedule) {
-        if (!schedule) {
+        if (!schedule || $routeParams.schedule) {
           console.log('getting new schedule from server');
           $http({
             url: '/schedule',
