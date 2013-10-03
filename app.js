@@ -64,6 +64,8 @@ nap({
   assets: {
     js: {
       all: [
+        '/public/js/vendor/indexeddb-shim.js',
+        '/public/js/vendor/async-storage.js',
         '/public/js/vendor/jquery.js',
         '/public/js/vendor/angular.js',
         '/public/js/vendor/angular-route.js',
