@@ -7,23 +7,15 @@
 
 		<h2>Welcome</h2>
 		<div class="text-center content">
-			<p class="lead">
-				The Summit is a human conference. A meetup of grand proportions. A full 72 hours/4,320 minutes/259,200 seconds of magic, wholly dedicated to our awesome community and you.
+			<p ng-hide="emailWarning">
+				Please log in using the same email you are using for <a href="https://mozillians.org/" target="_blank">mozillians.org</a>.
 			</p>
 			<p ng-show="emailWarning" class="text-warning">
-				You didn't use the same email address that you registered on mozillians.org. Please try again!
+				You didn't use the same email address that you registered on mozillians.org. Please try again or <a href="mailto:summit2013-app@mozilla.com">contact support</a>!
 			</p>
 			<a id="action-login" ng-click="authenticate()" class="text-center">
 				<img src="/img/persona.png" alt="Sign in with Persona" ng-click="authenticate()">
 			</a>
-			<p class="text-muted text-center small">
-				Please log in using the same email you are using for <a href="https://mozillians.org/" target="_blank">mozillians.org</a> when logging in with Persona.
-			</p>
-			<p>
-				<hr>
-				<a ng-click="redirectToSchedule()" class="schedule-link">View the Schedule</a>
-				<div class="text-muted text-center small">We recommend logging in to access more features like "Healthy Dialog" and "3 Questions".</div>
-			</p>
 		</div>
 	</article>
 </div>

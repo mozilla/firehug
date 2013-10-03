@@ -33,6 +33,9 @@
 							<li>
 								<a href="https://www.mozilla.org/about/legal.html" target="_blank">Terms of Service</a>
 							</li>
+							<li ng-hide="user">
+								<a href="/#!/login">Login</a>
+							</li>
 							<li ng-show="user">
 								<a href="/#!/logout">Logout</a>
 							</li>

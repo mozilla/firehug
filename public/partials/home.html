@@ -11,17 +11,21 @@
         <a href="#!/around">Tips &amp; Random Bits</a>
       </li>
 
-      <li ng-show="user.activeDay">
-        <a href="#!/dialog">Healthy Dialog</a>
+      <li ng-show="showMore()">
+        <a href="#!/dialog">Healthy Dialog <i class="icon-lock" ng-hide="user.activeDay"></i></a>
       </li>
 
-      <li ng-show="user.activeDay">
-        <a href="#!/questions">3 Questions</a>
+      <li ng-show="showMore()">
+        <a href="#!/questions">3 Questions <i class="icon-lock" ng-hide="user.activeDay"></i></a>
       </li>
     </ul>
 
-    <p class="text-center text-muted" ng-hide="user.activeDay">
-      More interactive content will be available from Friday to Sunday ("Healthy Dialog" and "3 Questions"), we hope to see you back then!  Now go have fun at the Summit.
+    <p class="text-center text-muted" ng-hide="user">
+      <i class="icon-lock"></i> requires login with your Mozillian email and are only available Friday to Sunday.
+    </p>
+
+    <p class="text-center text-muted" ng-hide="!user || user.activeDay">
+      "Healthy Dialog" and "3 Questions" are only available Friday to Sunday.
     </p>
 
   </article>

@@ -118,14 +118,13 @@
         load().then(function() {
           // Persona watch
           navigator.id.watch({
-            loggedInUser: email || undefined, // trigger logout
             onlogin: function onLogin(assertion) {
               if ($rootScope.user) {
                 return starting.resolve();
               }
               verify(assertion).then(function(user) {
+                console.log('Persona.onLogin', !!$rootScope.user);
                 _gaq.push(['_trackEvent', 'Login', 'VerifySuccess']);
-                $rootScope.user = user;
                 $rootScope.$broadcast('persona:login', user);
                 starting.resolve();
               }, function() {
@@ -136,7 +135,7 @@
               });
             },
             onlogout: function onLogout() {
-              console.log('persona.onLogout', !! $rootScope.user);
+              console.log('Persona.onLogout', !!$rootScope.user);
               if (!$rootScope.user) {
                 return starting.resolve();
               }
@@ -177,7 +176,7 @@
 
       function logout() {
         _gaq.push(['_trackEvent', 'Login', 'Logout']);
-        start().then(function() {
+        load().then(function() {
           console.log('navigator.id.logout');
           navigator.id.logout();
         });
@@ -200,26 +199,29 @@
       if (payload.user) {
         $rootScope.user = payload.user;
         $rootScope.ready = true;
-      } else {
-        $scope.beforeLogin = $location.path();
-        $location.path('/login');
       }
 
       $rootScope.$on('persona:login', function(event, user) {
         _gaq.push(['_setCustomVar', 1, 'LoggedIn', 'Yes', 2]);
         $rootScope.user = user;
         localStorage.setItem('email', user.email);
-        $location.path('/');
+
+        if (!$rootScope.user.activeDay) {
+          $scope.beforeLogin = null;
+        }
+        $location.path($scope.beforeLogin || '/');
       });
       $rootScope.$on('persona:logout', function() {
         localStorage.removeItem('email');
         // Refresh page to reset all data
-        location.href = '/#!/login';
+        location.href = '/#!/';
       });
 
       $scope.$on('$viewContentLoaded', function(event) {
         _gaq.push(['_trackPageview', $location.path()]);
       });
+
+      var authenticated = ['/dialog', '/questions'];
 
       // Watch login and redirect as needed
       $rootScope.$watch(function() {
@@ -229,13 +231,22 @@
         var oldClass = oldValue.replace(/[^a-z-]/, '') || 'index';
         $(document.body).removeClass('view-' + oldClass).addClass('view-' + newClass);
 
-        if (!$rootScope.user && (newValue !== '/login' && newValue !== '/schedule')) {
+        if (!$rootScope.user && newValue != '/login' && authenticated.indexOf(newValue) != -1) {
+          $rootScope.beforeLogin = newValue;
           $location.path('/login');
         }
 
-        $rootScope.canGoBack = $rootScope.user ? (newValue != '/') : (newValue != '/login');
-
+        $rootScope.canGoBack = (newValue != '/');
         $rootScope.path = newValue;
+      });
+
+      // Load persona
+      var email = localStorage.getItem('email');
+
+      persona.load().then(function() {
+        return persona.start(email);
+      }).then(function() {
+        $rootScope.ready = true;
       });
 
       if (navigator.mozApps) {
@@ -265,28 +276,9 @@
         return $location.path('/');
       }
 
-      $scope.redirectToSchedule = function() {
-        $location.path('/schedule');
-      };
-
       $scope.emailWarning = false;
       $rootScope.$on('persona:loginFailed', function() {
         $scope.emailWarning = true;
-      });
-
-      // Load persona
-      var email = localStorage.getItem('email');
-
-      persona.load().then(function() {
-        $rootScope.ready = true;
-        return persona.start(email);
-      }).then(function() {
-        // Persona loaded, check if it fired login before
-        if ($rootScope.user) {
-          // Persona provided a user
-          console.log('LoginCtrl: Auto-login via persona');
-          $location.path($scope.beforeLogin || '/');
-        }
       });
 
       $scope.authenticate = function() {
@@ -295,19 +287,22 @@
     }
   ]);
 
-  app.controller('LogoutCtrl', ['$scope', '$rootScope', 'persona',
-    function LogoutCtrl($scope, $rootScope, persona) {
+  app.controller('LogoutCtrl', ['$scope', '$rootScope', 'persona', '$location',
+    function LogoutCtrl($scope, $rootScope, persona, $location) {
       if (!$rootScope.user) {
         return $location.path('/');
       }
       console.log('Logout');
       persona.logout();
+      $location.path('/');
     }
   ]);
 
-  app.controller('HomeCtrl', ['$scope',
-    function($scope) {
-      console.log('Home');
+  app.controller('HomeCtrl', ['$scope', '$rootScope',
+    function($scope, $rootScope) {
+      $scope.showMore = function() {
+        return $rootScope.user ? $rootScope.activeDay : true;
+      }
     }
   ]);
 
@@ -499,14 +494,14 @@
 
   app.controller('DialogCtrl', ['$scope', '$rootScope', '$location',
     function($scope, $rootScope, $location) {
-      if (!$rootScope.user.dialog || !$rootScope.user.activeDay) {
-        alert('Only enabled Friday to Sunday');
+      if (!$rootScope.user.activeDay) {
         return $location.path('/');
       }
+
+      var group = 0;
       if ($rootScope.user.dialog) {
-        var group = $rootScope.user.dialog[$rootScope.user.day - 4];
+        group = $rootScope.user.dialog[$rootScope.user.day - 4];
       }
-      group = group || (Math.random() * 40 | 0); // For testing
 
       var glyph = dialogKeys[group].glyph;
       var palette = dialogKeys[group].palette;
