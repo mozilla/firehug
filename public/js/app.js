@@ -414,13 +414,11 @@
         $scope.selected = $scope.days[0];
       }
 
-      $http({
-        url: '/schedule',
-        method: 'GET'
-      }).then(function(data) {
+      var loadSchedule = function (data) {
         $scope.loaded = true;
-        for (var s in data.data.schedule) {
-          var evt = data.data.schedule[s];
+
+        for (var s in data) {
+          var evt = data[s];
 
           if (s.indexOf('3') > -1) {
             $scope.days[0].value.push(evt);
@@ -446,6 +444,24 @@
               evt[entry].speaker = $sce.trustAsHtml(evt[entry].speaker);
             }
           }
+        }
+      };
+
+      asyncStorage.getItem('schedule', function (schedule) {
+        if (!schedule) {
+          console.log('getting new schedule from server');
+          $http({
+            url: '/schedule',
+            method: 'GET'
+          }).then(function(data) {
+            asyncStorage.setItem('schedule', JSON.stringify(data.data.schedule));
+            loadSchedule(data.data.schedule);
+          });
+        } else {
+          console.log('hitting cached');
+          $scope.$apply(function() {
+            loadSchedule(JSON.parse(schedule));
+          });
         }
 
       }, function(data, status) {
