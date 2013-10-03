@@ -301,7 +301,7 @@
   app.controller('HomeCtrl', ['$scope', '$rootScope',
     function($scope, $rootScope) {
       $scope.showMore = function() {
-        return $rootScope.user ? $rootScope.activeDay : true;
+        return $rootScope.user ? $rootScope.user.activeDay : true;
       }
     }
   ]);
