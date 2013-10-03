@@ -91,6 +91,7 @@ headers.add_csp_self('default-src');
 headers.add_csp('frame-src', 'https://login.persona.org');
 headers.add_csp_self('script-src');
 headers.add_csp('script-src', 'https://login.persona.org');
+headers.add_csp('script-src', 'https://ssl.google-analytics.com');
 headers.add_csp_self('style-src');
 headers.add_csp('style-src', "'unsafe-inline'");
 headers.add_csp_self('img-src');
