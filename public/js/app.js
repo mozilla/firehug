@@ -282,6 +282,7 @@
       });
 
       $scope.authenticate = function() {
+        console.log('authenticate');
         persona.request();
       };
     }
