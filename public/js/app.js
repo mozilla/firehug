@@ -452,25 +452,11 @@
         }
       };
 
-      asyncStorage.getItem('schedule', function (schedule) {
-        if (!schedule || $routeParams.schedule) {
-          console.log('getting new schedule from server');
-          $http({
-            url: '/schedule',
-            method: 'GET'
-          }).then(function(data) {
-            asyncStorage.setItem('schedule', JSON.stringify(data.data.schedule));
-            loadSchedule(data.data.schedule);
-          });
-        } else {
-          console.log('hitting cached');
-          $scope.$apply(function() {
-            loadSchedule(JSON.parse(schedule));
-          });
-        }
-
-      }, function(data, status) {
-        $scope.status = status;
+      $http({
+        url: '/schedule',
+        method: 'GET'
+      }).then(function(data) {
+        loadSchedule(data.data.schedule);
       });
     }
   ]);
