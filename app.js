@@ -220,7 +220,7 @@ app.post('/verify', function(request, response) {
       console.log('Users.login success', user.username);
       response.send({
         status: 1,
-        user: user
+        user: getPayload(request.session)
       });
     });
   });

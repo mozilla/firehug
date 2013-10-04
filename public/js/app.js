@@ -199,6 +199,7 @@
       if (payload.user) {
         $rootScope.user = payload.user;
         $rootScope.ready = true;
+        _gaq.push(['_setCustomVar', 1, 'LoggedIn', 'Yes', 2]);
       }
 
       $rootScope.$on('persona:login', function(event, user) {
@@ -246,7 +247,9 @@
       persona.load().then(function() {
         return persona.start(email);
       }).then(function() {
-        $rootScope.ready = true;
+        safeApply($scope, function() {
+          $rootScope.ready = true;
+        });
       });
 
       if (navigator.mozApps) {
@@ -300,8 +303,7 @@
   ]);
 
   app.controller('HomeCtrl', ['$scope', '$rootScope',
-    function($scope, $rootScope) {
-    }
+    function($scope, $rootScope) {}
   ]);
 
   app.controller('ScheduleCtrl', ['$scope', '$rootScope', '$http', '$sce', '$routeParams',
@@ -336,7 +338,7 @@
         return $scope.listing;
       };
 
-      $scope.refresh = function () {
+      $scope.refresh = function() {
         document.location.href = '/#!/schedule?schedule';
         document.location.reload();
       };
@@ -416,7 +418,7 @@
         $scope.selected = $scope.days[0];
       }
 
-      var loadSchedule = function (data) {
+      var loadSchedule = function(data) {
         $scope.loaded = true;
 
         for (var s in data) {
@@ -524,7 +526,7 @@
       }
 
       // TODO: Crude check, needs refresh to see questions
-      if ($scope.user.questionsDone || $scope.user.nextQuestions) {
+      if ($rootScope.user.questionsDone || $rootScope.user.nextQuestions) {
         return $location.path('/questions/thanks');
       }
 
@@ -589,7 +591,7 @@
         }).bind('typeahead:selected', function(obj, datum) {
           type.typeahead('setQuery', '');
           if (datum.name !== '000000') {
-            $scope.$apply(function() {
+            safeApply($scope, function() {
               $scope.influencers.push(datum);
             });
           } else {
@@ -620,7 +622,7 @@
         success(function() {
           // TODO: Store this serverside as well!
           $location.path('/questions/thanks');
-          $scope.user.questionsDone = true;
+          $rootScope.user.questionsDone = true;
         }).
         error(function(data) {
           if (!data || !(data = JSON.parse(data))) {
@@ -638,12 +640,17 @@
     }
   ]);
 
-  app.controller('QuestionsThanksCtrl', ['$scope',
-    function($scope) {
-      if (!$scope.user.questionsDone) {
+  app.controller('QuestionsThanksCtrl', ['$scope', '$rootScope',
+    function($scope, $rootScope) {
+      if (!$rootScope.user.questionsDone) {
         return $location.path('/questions');
       }
     }
   ]);
+
+  // $$
+  function safeApply(scope, fn) {
+    (scope.$$phase || scope.$root.$$phase) ? fn() : scope.$apply(fn);
+  }
 
 })();
